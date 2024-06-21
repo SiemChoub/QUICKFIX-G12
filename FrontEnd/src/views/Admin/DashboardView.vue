@@ -9,6 +9,7 @@ import AdminLayout from '@/Components/Layouts/AdminLayout.vue'
         <p class="text-lg md:text-2xl mb-8">Your journey to excellence starts here.</p>
         <p>Join Us Today and Get Started</p>
         <p>Join Us Today and Get Started</p>
+        <p>Join Us Today and Get Started</p>
       </div>
     </div>
   </AdminLayout>
