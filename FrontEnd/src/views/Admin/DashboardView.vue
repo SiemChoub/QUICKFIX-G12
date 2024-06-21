@@ -8,6 +8,8 @@ import AdminLayout from '@/Components/Layouts/AdminLayout.vue'
         <h1 class="text-4xl md:text-6xl font-bold mb-4">Welcome to Dashboard</h1>
         <p class="text-lg md:text-2xl mb-8">Your journey to excellence starts here.</p>
         <p>Join Us Today and Get Started</p>
+        <p>Join Us Today and Get Started</p>
+        <p>Join Us Today and Get Started</p>
       </div>
     </div>
   </AdminLayout>
