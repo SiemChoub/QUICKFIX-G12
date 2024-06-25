@@ -2,7 +2,7 @@
 import WebHeaderMenu from '@/Components/WebHeaderMenu.vue'
 </script>
 <template>
-  <WebHeaderMenu />
+  <WebHeaderMenu/>
   <div class="md:px-50 h-full">
     <div class="h-full">
       <slot />
@@ -10,4 +10,5 @@ import WebHeaderMenu from '@/Components/WebHeaderMenu.vue'
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
