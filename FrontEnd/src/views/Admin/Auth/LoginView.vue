@@ -18,7 +18,7 @@
             class="mt-3 w-full"
             :disabled="isSubmitting"
             type="primary"
-            native-type="submit"
+            native-type="submit"  auto-insert-space
             >Submit</el-button
           >
         </div>
