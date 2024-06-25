@@ -13,8 +13,8 @@
       <ul v-if="isBooking" id="list-booking" class="list-group w-100 gap-3 mt-2">
         <li
           id="list_booking_item"
-          class="list-group-item rounded-2 d-flex w-100 flex-column flex-md-row align-items-center gap-3"
-          style="border-left: Coral 15px solid; display: none"
+          class="list-group-item action rounded-2 d-flex w-100 flex-column flex-md-row align-items-center gap-3"
+         
         >
           <div class="right d-flex align-items-center gap-3">
             <img
@@ -60,7 +60,7 @@
           :key="i"
           id="list_booked_item"
           class="list-group-item rounded-2 d-flex flex-column flex-md-row align-items-center gap-3"
-          style="border-left: Coral 15px solid; display: none"
+         
         >
           <div class="right d-flex align-items-center gap-3">
             <img
@@ -287,11 +287,18 @@ export default {
 </script>
 
 <style>
-/* .info img {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-} */
+
+ #list_booking_item, #list_booked_item {
+  border-left: 15px solid rgb(129, 129, 129);
+  transition: transform 0.2s;
+ }
+ #list_booking_item:hover  {
+  transform: scale(1.02);
+ }
+ #list_booked_item:hover {
+  transform: scale(1.02);
+ }
+
 #list-booking {
   display: flex;
   flex-direction: column;
@@ -304,19 +311,11 @@ export default {
 .left {
   display: flex;
   justify-content: flex-start;
-
-  /* align-items: center; */
 }
-/* .date {
-  display: flex;
-  justify-self: flex-end;
-  align-items: center;
-  justify-items: flex-end;
-} */
+
 .info {
   display: flex;
   flex-direction: row;
-  /* align-items: center; */
   gap: 2px;
 }
 @media (min-width: 768px) {
@@ -328,7 +327,6 @@ export default {
 .left {
   display: flex;
   justify-content: flex-start;
-  /* align-items: center; */
 }
 
 .btn-groups {
@@ -342,9 +340,8 @@ export default {
   }
   #list_booked_item {
     display: flex;
-    flex-direction: co;
-    background-color: aqua;
-    border-left: Coral 15px solid;
+    flex-direction: column;
+    border-left: rgb(58, 58, 58) 15px solid;
     margin: 0px;
   }
   .right {
@@ -356,7 +353,6 @@ export default {
     gap: 0px;
     padding: 0;
     margin: 0;
-    /* background-color: blue; */
   }
   .left {
     background-color: antiquewhite;
