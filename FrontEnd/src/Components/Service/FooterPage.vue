@@ -43,7 +43,7 @@ export default {}
 #nav-footer {
   width: 100%;
   height: 40vh;
-  background-color: #c5c0c0;
+  background-color: #ffffff;
 }
 #footer-main {
   display: flex;

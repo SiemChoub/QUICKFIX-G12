@@ -25,6 +25,7 @@ export default {
         CardService2,
         ShowSlide2,
         FooterPage,
+        
     }
 }
 </script>
