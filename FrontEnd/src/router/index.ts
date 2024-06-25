@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import axiosInstance from '@/plugins/axios'
 import { useAuthStore } from '@/stores/auth-store'
 import { createAcl, defineAclRules } from 'vue-simple-acl'
+// import fixerUser from '@/views/Fixer/List.vue'
 
 const simpleAcl = createAcl({})
 const router = createRouter({
@@ -35,6 +36,41 @@ const router = createRouter({
       path: '/post',
       name: 'post',
       component: () => import('../views/Web/Post/ListView.vue')
+    },
+    {
+      path: '/HomeFixer',
+      name: 'HomeFixer',
+      component: () => import('../views/Fixer/HomeFixer.vue')
+    },
+    {
+      path: '/fixerUser',
+      name: 'fixerUser',
+      component: () => import('@/views/Fixer/List.vue')
+    },
+    {
+      path: '/Skill',
+      name: 'Skill-View',
+      component: () => import('../Components/Fixer/CardSkill.vue')
+    },
+    {
+      path: '/booking',
+      name: 'booking-View',
+      component: () => import('../Components/Fixer/ListBooking.vue')
+    },
+    {
+      path: '/HistoryView',
+      name: 'HistoryView',
+      component: () => import('../Components/Fixer/HistoryView.vue')
+    },
+    {
+      path: '/chatView',
+      name: 'chatView',
+      component: () => import('../Components/Fixer/ChatView.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'dash-board',
+      component: () => import('../Components/Fixer/DashBoard.vue'),
     }
   ]
 })
