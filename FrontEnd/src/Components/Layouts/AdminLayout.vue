@@ -6,8 +6,8 @@
       <slot />
     </div>
   </div>
-</template>
 
+</template>
 <script setup lang="ts">
 import HeaderMenu from '@/Components/HeaderMenu.vue'
 </script>
