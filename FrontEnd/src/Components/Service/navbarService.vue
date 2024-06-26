@@ -26,7 +26,7 @@
           <i class="bi bi-map text-34px"></i>
         </form>
         <form class="d-flex1">
-          <i class="bi bi-send-fill text-34px"></i>
+          <router-link to="/service/chat"><i class="bi bi-send-fill text-34px"></i></router-link>
         </form>
         <form class="d-flex1">
           <i class="bi bi-bell-fill text-34px"></i>
