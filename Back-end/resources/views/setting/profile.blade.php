@@ -11,14 +11,6 @@
             <div class="img">
               <img src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg" alt="camera" onclick=showFileInput()>
             </div>
-<<<<<<< HEAD
-        </main>
-    </div>
-</div>
-<!-- Include Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-=======
             <input type="file" id="thumbnailprev" style="display: none;">
             <h1 id="hi"></h1>
           </div>
@@ -97,7 +89,6 @@
   </main>
   </div>
 </x-app-layout>
->>>>>>> 06e35ce762870be868790a2584015442a8fc114e
 
 <script>
   function showFileInput() {
