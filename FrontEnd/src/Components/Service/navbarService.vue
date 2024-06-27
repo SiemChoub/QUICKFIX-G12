@@ -23,14 +23,7 @@
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
         </form>
         <form class="d-flex1">
-<<<<<<< HEAD
           <i class="bi bi-geo-alt text-34px"></i>
-=======
-          <router-link to="/map">
-             <i class="bi bi-map text-34px"></i>
-          </router-link>
-         
->>>>>>> 4d57fc1ae7ca266a82219a099b9b86c007c4027a
         </form>
         <form class="d-flex1">
           <i class="bi bi-chat-dots text-34px"></i>
