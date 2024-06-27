@@ -23,7 +23,6 @@ class AdminSeeder extends Seeder
             'password'=>bcrypt('password'),
             'profile' => 'user.avif',
             'role' => 'admin',
-
         ]);
 
         $writer = User::create([
