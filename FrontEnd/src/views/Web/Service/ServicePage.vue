@@ -1,5 +1,6 @@
 <template>
   <serviceNavbar/>
+
   <SlideShow/>
   <CardService1/>
   <ShowSlide1/>
