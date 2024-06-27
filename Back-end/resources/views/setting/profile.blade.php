@@ -45,10 +45,11 @@
               <span class="info-value">{{ auth()->user()->created_at->format('H:i:s') }}</span>
             </div>
           </div>
+          <!-- Modal -->
+          <button type="button" class="btn" style="background-color: gray;"><a href="{{route('admin.dashboard')}}">Back</a></button>
           <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">
             Edit information
           </button>
-          <!-- Modal -->
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -168,7 +169,7 @@
   .right button {
     border: 1px solid orange;
     padding: 5px 10px;
-    margin-top: 41%;
+    margin-top: 55%;
     background: orange;
     border-radius: 5px;
   }
