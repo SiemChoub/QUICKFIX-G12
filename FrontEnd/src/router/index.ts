@@ -32,6 +32,36 @@ const router = createRouter({
       component: () => import('../views/Web/Service/ServicePage.vue')
     },
     {
+      path: '/motorcycle',
+      name: 'motorcycle',
+      component: () => import('../views/Web/Service/MotorcyclePage.vue')
+    },
+    {
+      path: '/cars',
+      name: 'cars',
+      component: () => import('../views/Web/Service/CarService.vue')
+    },
+    {
+      path: '/tuktuk',
+      name: 'tuktuk',
+      component: () => import('../views/Web/Service/TukTukService.vue')
+    },
+    {
+      path: '/mobile',
+      name: 'mobile',
+      component: () => import('../views/Web/Service/MobileService.vue')
+    },
+    {
+      path: '/computer',
+      name: 'computer',
+      component: () => import('../views/Web/Service/ComputerService.vue')
+    },
+    {
+      path: '/electronic',
+      name: 'electronic',
+      component: () => import('../views/Web/Service/ElectronicService.vue')
+    },
+    {
       path: '/post',
       name: 'post',
       component: () => import('../views/Web/Post/ListView.vue')
