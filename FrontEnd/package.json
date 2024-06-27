@@ -15,25 +15,31 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@fortawesome/fontawesome-free": "^6.5.2",
     "@fullcalendar/core": "^6.1.14",
     "@fullcalendar/daygrid": "^6.1.14",
+    "@iconify-icons/bi": "^1.2.19",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-<<<<<<< HEAD
-=======
+    "bootstrap-vue": "^2.23.1",
     "canvasjs": "^1.8.3",
     "chart.js": "^4.4.3",
->>>>>>> fixer-interface
     "element-plus": "^2.7.4",
+    "firebase": "^10.12.2",
+    "gapi-script": "^1.2.0",
     "jquery": "^3.7.1",
+    "mapbox-gl": "^3.4.0",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.8",
     "vue": "^3.4.21",
     "vue-chartjs": "^5.3.1",
     "vue-gates": "^2.1.2",
-    "vue-router": "^4.3.0",
+    "vue-google-auth": "^1.0.5",
+    "vue-router": "^4.0.13",
     "vue-simple-acl": "^2.0.2",
+    "vue3-google-login": "^2.0.26",
+    "vue3-google-oauth2": "^1.0.7",
     "yup": "^1.4.0"
   },
   "devDependencies": {

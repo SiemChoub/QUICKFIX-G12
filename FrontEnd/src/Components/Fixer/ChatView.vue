@@ -2,9 +2,9 @@
   <Navbar />
   <div class="container w-auto">
     <div class="mb-3 w-auto">
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#edit">
+      <!-- <button class="btn" data-bs-toggle="modal" data-bs-target="#edit">
         <i class="bi text-primary text-25px bi-info-square"></i>
-      </button>
+      </button> -->
       <div id="card" class="card p-3 w-100">
         <div class="card-body">
           <div class="d-flex gap-3 mb-3">
@@ -107,7 +107,7 @@
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog mr-0 h-100 mt-0 modal-dialog-scrollable w-auto">
+    <div class="modal-dialog mr-0 h-100 mt-0 modal-dialog-scrollable w-50">
       <div class="modal-content rounded-0 h-100 mr-0">
         <div class="modal-header border-0"></div>
         <div class="card border-0 p-3">
@@ -185,9 +185,6 @@
                   </div>
                 </div>
                 <div class="send p-3 d-flex gap-1">
-                  <!-- <i class="bi bi-image"></i> -->
-                  <!-- <i class="bi bi-telephone"></i> -->
-                  <!-- <input type="file" class="form-conrol">  -->
                   <button class="btn">
                     <i class="bi text-25px text-success bi-image"></i>
                   </button>

@@ -2,9 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import axiosInstance from '@/plugins/axios'
 import { useAuthStore } from '@/stores/auth-store'
 import { createAcl, defineAclRules } from 'vue-simple-acl'
-// import fixerUser from '@/views/Fixer/List.vue'
+import LoginForm from '@/Components/loginPage.vue'
+import SignUpForm from '@/Components/SignUpPage.vue'
 
 const simpleAcl = createAcl({})
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -20,28 +22,57 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Admin/Auth/LoginView.vue')
+      component: LoginForm,
+      meta: {
+        requiresAuth: false // Public page, no authentication required
+      }
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpForm,
+      meta: {
+        requiresAuth: false // Public page, no authentication required
+      }
     },
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Web/Service/ServicePage.vue')
+      component: () => import('../views/Web/HomeView.vue'),
+      meta: {
+        requiresAuth: false // Public page, no authentication required
+      }
     },
     {
       path: '/service',
       name: 'service',
       component: () => import('../views/Web/Service/ServicePage.vue')
+
+    },
+    {
+      path: '/service/profile',
+      name: 'profile',
+      component: () => import('../views/Web/Service/ProfileView.vue')
+
+    },
+    {
+      path: '/profile/edit',
+      name: 'profile-edit',
+      component: () => import('../Components/Service/ProfileEdit/ProfileEdit.vue')
+
     },
     {
       path: '/post',
       name: 'post',
       component: () => import('../views/Web/Post/ListView.vue')
     },
+    
     {
       path: '/HomeFixer',
       name: 'HomeFixer',
       component: () => import('../views/Fixer/HomeFixer.vue')
     },
+    
     {
       path: '/fixerUser',
       name: 'fixerUser',
@@ -71,41 +102,15 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dash-board',
       component: () => import('../Components/Fixer/DashBoard.vue'),
-    }
+    },
+    {
+      path: '/map',
+      name: 'view-map',
+      component: () => import('../Components/Service/Map/Map.vue')
+    },
   ]
 })
 
-router.beforeEach(async (to, from, next) => {
-  const publicPages = ['/login']
-  const authRequired = !publicPages.includes(to.path)
-  const store = useAuthStore()
 
-  try {
-    const { data } = await axiosInstance.get('/me')
-
-    store.isAuthenticated = true
-    store.user = data.data
-
-    store.permissions = data.data.permissions.map((item: any) => item.name)
-    store.roles = data.data.roles.map((item: any) => item.name)
-
-    const rules = () =>
-      defineAclRules((setRule) => {
-        store.permissions.forEach((permission: string) => {
-          setRule(permission, () => true)
-        })
-      })
-
-    simpleAcl.rules = rules()
-  } catch (error) {
-    /* empty */
-  }
-
-  if (authRequired && !store.isAuthenticated) {
-    next('/login')
-  } else {
-    next()
-  }
-})
 
 export default { router, simpleAcl }

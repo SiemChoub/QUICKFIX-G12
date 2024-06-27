@@ -1,5 +1,6 @@
 <template>
   <serviceNavbar/>
+
   <SlideShow/>
   <CardService1/>
   <ShowSlide1/>
@@ -8,7 +9,7 @@
   <FooterPage/>
 </template>
 
-<script>
+<script >
 import serviceNavbar from '@/Components/Service/navbarService.vue'
 import SlideShow from '@/Components/Service/SlideShow.vue'
 import CardService1 from '@/Components/Service/CardService1.vue'

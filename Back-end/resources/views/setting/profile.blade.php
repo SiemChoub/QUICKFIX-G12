@@ -53,7 +53,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title" id="exampleModalLabel">Edit information</h1>
+                  <h1 class="modal-title" id="exampleModalLabel">Edit Profile</h1>
                 </div>
                 <div class="modal-body">
                   <form id="updateForm" ref="form">
@@ -168,7 +168,7 @@
   .right button {
     border: 1px solid orange;
     padding: 5px 10px;
-    margin-top: 50%;
+    margin-top: 41%;
     background: orange;
     border-radius: 5px;
   }
