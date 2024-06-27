@@ -23,16 +23,13 @@
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
         </form>
         <form class="d-flex1">
-          <router-link to="/map">
-             <i class="bi bi-map text-34px"></i>
-          </router-link>
-         
+          <i class="bi bi-geo-alt text-34px"></i>
         </form>
         <form class="d-flex1">
-          <i class="bi bi-send-fill text-34px"></i>
+          <i class="bi bi-chat-dots text-34px"></i>
         </form>
         <form class="d-flex1">
-          <i class="bi bi-bell-fill text-34px"></i>
+          <i class="bi bi-bell text-34px"></i>
         </form>
         <form class="d-flex1">
           <router-link :to="{ path: '/service/profile' }" tag="button">
@@ -58,19 +55,34 @@
 #navbarSupportedContent {
   padding-left: 60%;
 }
+#logo{
+  margin-left: 8%;
+}
 form{
   margin-left: 60%;
 }
 nav {
-  background-color: rgb(203, 201, 201);
+  background-color: rgb(255, 253, 253);
+  height: 10vh;
+  border-bottom:4px solid rgba(0, 0, 0, 0.249);
 }
 .d-flex1 {
   margin-left: -6%;
   padding-left: 8%;
   width: 30%;
 }
+.d-flex1 i {
+  transition: transform 0.1s ease, box-shadow 0.1s ease; 
+  display: inline-block; 
+}
+
+.d-flex1 i:hover {
+  transform: scale(1.3); 
+}
+
 #search {
   margin-right: 4%;
+  border: 2px solid black;
   margin-left: -11%;
   height: 6vh;
   width: 80%;

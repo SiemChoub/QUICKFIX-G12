@@ -2,9 +2,16 @@
     <div>
          <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
              <div class="container mx-auto px-6 py-8">
-                 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-                 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
                  <div class="product w-100 h-20 d-flex justify-content-around">
+                 <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
+                         <div class="content flex flex-col items-start">
+                         <h6 class="text-lg font-medium text-gray-800 mb-1">Categories</h6>
+                         <p class="text-gray-600 text-sm">99</p>
+                         </div>
+                         <div class="icon">
+                             <i class='bx bxs-category text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
+                         </div>
+                     </div>
                   <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md flex justify-between items-center">
                     <div class="content flex flex-col items-start">
                       <h6 class="text-lg font-medium text-gray-800 mb-1">Services</h6>
@@ -42,8 +49,7 @@
                          </div>
                      </div>
                 </div>
-                <div class="data p-4 row">
-                    
+                <div class="data p-2 pt-4 row">
                     <div class="left col-md-6">
                         <!-- ----------------top service----------------- -->
                       <section id="top-service">
@@ -58,8 +64,8 @@
                                         <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
                                         <div class="d-flex items-center">
                                             <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">+99
+                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;object-fit: cover;">
+                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;object-fit: cover;">+99
                                         </div>
                                     </div>
                                     <div class="evaluation">
@@ -273,26 +279,9 @@
                             </div>
                             <div class="topthan-info d-flex justify-content-center" >
                                 <!-- ...................................... -->
-                                <div class=" .card-boduy p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;">
-                                </div>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
-                                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
-                                    <div class="evaluation d-flex justify-content-center mb-2">
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                    </div>
-                                    <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>                              
-                                  </div>
-                                </div>
-                                <!-- ...................................... -->
-                                <!-- ...................................... -->
                                 <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
                                 <div class="d-flex justify-content-center">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;">
+                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
                                 </div>
                                 <div class="card-body text-center">
                                     <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
@@ -308,7 +297,23 @@
                                 <!-- ...................................... -->
                                 <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
                                 <div class="d-flex justify-content-center">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;">
+                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
+                                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
+                                    <div class="evaluation d-flex justify-content-center mb-2">
+                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                                    </div>
+                                  <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>                                </div>
+                                </div>
+                                <!-- ...................................... -->
+                                <!-- ...................................... -->
+                                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
+                                <div class="d-flex justify-content-center">
+                                    <img src="https://i.pinimg.com/564x/68/e3/5f/68e35faf0dc4ff48db6592251a66112f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
                                 </div>
                                 <div class="card-body text-center">
                                     <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>

@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\{
     MailSettingController,
     UserController,
 };
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Session\Middleware\AuthenticateSession;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('auth.login');
+    // return redirect()->route('login');
 });
 
 
@@ -61,6 +62,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('permissions','PermissionController');
         Route::resource('users','UserController');
         Route::resource('posts','PostController');
+        Route::resource('services','ServiceController');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
         Route::put('/update/{id}', [UserController::class, 'update']);
