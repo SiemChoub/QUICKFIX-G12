@@ -208,9 +208,15 @@
       </a>
     </li>
     <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-        <i class="bx bx-log-out text-danger me-2"></i>
-        <span class="text-gray-800">Logout</span>
+        {{-- <span class="text-gray-800">Logout {{route('admin.logout')}}</span> --}}
+        {{-- <form  action="{{route('admin.logout')}}" method="POST"></form> --}}
+        <form method="POST" action="{{ route('admin.logout') }}">
+          @csrf
+              <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();
+                                          this.closest('form').submit();"
+              class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">        <i class="bx bx-log-out text-danger me-2"></i>
+            </a>
+          </form>
       </a>
     </li>
   </ul>

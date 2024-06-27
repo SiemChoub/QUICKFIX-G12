@@ -34,7 +34,6 @@ class AuthenticatedSessionController extends Controller
 
         return redirect()->intended(RouteServiceProvider::ADMIN_HOME);
     }
-
     /**
      * Destroy an authenticated session.
      *

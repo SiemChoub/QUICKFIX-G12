@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\{
     ProfileController,
     MailSettingController,
 };
+use Illuminate\Session\Middleware\AuthenticateSession;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,7 @@ use App\Http\Controllers\Admin\{
 
 Route::get('/', function () {
     return view('auth.login');
+    // return redirect()->route('login');
 });
 
 
