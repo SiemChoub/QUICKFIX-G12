@@ -191,7 +191,12 @@
       </div>
       <div class="dropdown ms-3">
   <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+<<<<<<< HEAD
   <img src="/images/{{ auth()->user()->profile }}" class="rounded-circle me-2" alt="Profile Picture" style="width: 40px; height: 40px; object-fit: cover;">    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+=======
+    <img src="/images/{{ auth()->user()->profile }}" class="rounded-circle me-2" alt="Profile Picture" style="width: 35px; height: 32px;">
+    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
+>>>>>>> 06e35ce762870be868790a2584015442a8fc114e
   </a>
   <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="profileDropdown" style="width: 200px;">
     <li>

@@ -3,11 +3,11 @@
     <Navbar />
     <div class="container">
       <div class="mb-3">
-        <div class="card">
+        <div class="card border-0">
           <div class="card-body">
-            <h5 class="card-title d-flex gap-3 mb-3">
-              <button class="btn btn-outline-success">All</button>
-              <button class="btn btn-outline-success">
+            <h5 class="card-title d-flex justify-content-end w-100 gap-3 mb-3">
+              <!-- <button class="btn ">All</button> -->
+              <button class="btn ">
                 <input type="date" name="" id="date" class="form-control" value="">
               </button>
             </h5>

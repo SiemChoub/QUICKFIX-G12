@@ -1,12 +1,15 @@
 // Import CSS files
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css' // Import Bootstrap CSS
+import 'bootstrap/dist/js/bootstrap.min.js' // Import Bootstrap JS
 
 import './assets/main.css'
 
 // Import necessary Vue and related libraries
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+export const GOOGLE_CLIENT_ID="1061846549456-ap7pb6q2sn155qvvtuikofc581jdsqte.apps.googleusercontent.com";
+
 
 // Import root component and router configuration
 import App from './App.vue'

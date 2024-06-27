@@ -1,9 +1,9 @@
 <template>
   <div>
     <Navbar />
-    <div class="container">
+     <div class="container">
       <div class="mb-3">
-        <div class="card">
+      <!--  <div class="card">
           <div class="card-body">
             <h3 class="p-3">CardCurrently</h3>
             <ul class="list-group gap-1 w-auto">
@@ -11,7 +11,7 @@
                 v-for="(item, index) in items"
                 :key="index"
                 id="li"
-                class="list-group-item callout-danger border-1"
+                class="list-group-item border-1"
               >
                 <div class="pro">
                   <div class="profile w-auto d-flex gap-3">
@@ -26,7 +26,8 @@
             </ul>
           </div>
         </div>
-      </div>
+      </div> -->
+
       <div class="col-12 col-md-6 col-xl-4 mb-4">
         <div class="h-100 bg-white rounded p-4">
           <div class="d-flex align-items-center justify-content-between mb-4">
@@ -38,6 +39,8 @@
           </div>
         </div>
       </div>
+
+    </div>
     </div>
   </div>
 </template>
@@ -95,17 +98,15 @@ img {
 .pro p {
   margin: 0;
   color: rgb(0, 0, 0);
-  font-size: 16px; /* Default font size */
+  font-size: 16px; 
   text-align: right;
   padding: 8px;
   border-radius: 5px;
-  /* background-color: rgba(138, 130, 130, 0.43); */
-  /* box-shadow: 0px 1px 0px rgba(99, 89, 89, 0.2); */
 }
 
 @media (max-width: 992px) {
   .pro p {
-    font-size: 14px; /* Adjust font size for tablets */
+    font-size: 14px; 
   }
 }
 
@@ -132,11 +133,7 @@ img {
   .pro {
     font-size: 12px; /* Adjust font size for phones */
     width: auto;
-    /* display: grid; */
-    /* grid-template-columns: auto 1fr 2fr; */
   }
 }
 </style>
-
-<!-- jQuery -->
 

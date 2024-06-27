@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
     ProfileController,
     MailSettingController,
+    UserController,
 };
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +28,7 @@ Route::get('/test-mail',function(){
 
     $message = "Testing mail";
 
-    \Mail::raw('Hi, welcome!', function ($message) {
+    Mail::raw('Hi, welcome!', function ($message) {
       $message->to('ajayydavex@gmail.com')
         ->subject('Testing mail');
     });
@@ -62,7 +64,8 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('services','ServiceController');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
-        Route::put('/profile-update',[ProfileController::class,'update'])->name('profile.update');
+        Route::put('/update/{id}', [UserController::class, 'update']);
+        Route::post('/profile-update',[ProfileController::class,'update'])->name('profile.update');
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
 });

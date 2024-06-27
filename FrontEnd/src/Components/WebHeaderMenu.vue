@@ -30,6 +30,9 @@
                 <li class="nav-item px-4">
                   <router-link to="/contact" class="nav-link">Contact</router-link>
                 </li>
+                <li class="nav-item px-4">
+                  <router-link to="/fixerUser" class="nav-link">Repaire</router-link>
+                </li>
               </ul>
             </div>
           </div>
