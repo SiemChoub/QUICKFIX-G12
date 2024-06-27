@@ -21,19 +21,20 @@ class AdminSeeder extends Seeder
             'name'=>'Admin',
             'email'=>'admin@gmail.com',
             'password'=>bcrypt('password'),
-            'profile' => 'user.avif'
+            'profile' => 'user.avif',
+            'role' => 'admin',
         ]);
 
         $writer = User::create([
             'name'=>'User',
             'email'=>'user@gmail.com',
-            'password'=>bcrypt('password')
+            'password'=>bcrypt('password'),
         ]);
         
 
 
-        $admin_role = Role::create(['name' => 'admin']);
-        $writer_role = Role::create(['name' => 'user']);
+        $admin_role = User::get(['role' => 'admin']);
+        $writer_role = User::get(['role' => 'user']);
 
         $permission = Permission::create(['name' => 'Post access']);
         $permission = Permission::create(['name' => 'Post edit']);
