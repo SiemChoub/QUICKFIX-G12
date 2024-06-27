@@ -1,0 +1,57 @@
+<x-app-layout>
+  <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+    <div class="container mx-auto px-4 mt-4 py-1 pb-16">
+      <a href="{{ route('admin.services.index') }}" class="btn btn-warning shadow d-flex align-items-center border -mt-3 mb-2 border-none w-20">
+        <i class="bx bx-arrow-back me-2"></i>
+        Back
+      </a>
+      <div class="bg-white shadow-md rounded my-6 p-4">
+        <form method="POST" action="{{ route('admin.services.update', $service->id) }}">
+          @csrf
+          @method('put')
+          <div class="space-y-3">
+            <div>
+              <label for="name" class="text-gray-700 font-medium text-sm">Name</label>
+              <input id="name" type="text" name="name" value="{{ old('name', $service->name) }}"
+                placeholder="Enter name"
+                class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
+            </div>
+            <div>
+              <label for="description" class="text-gray-700 font-medium text-sm">Description</label>
+              <textarea name="description" id="description" placeholder="Enter description"
+                class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm"
+                rows="3">{{ old('description', $service->description) }}</textarea>
+            </div>
+            <div>
+              <label for="price" class="text-gray-700 font-medium text-sm">Price</label>
+              <input id="price" type="number" name="price" value="{{ old('price', $service->price) }}"
+                placeholder="Enter price"
+                class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
+            </div>
+            <div class="mb-3">
+              <label for="image" class="block text-warning-700 font-medium mb-1 text-sm">Image</label>
+              <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-warning-300 rounded-md py-1 px-2 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500 text-sm">
+            </div>
+            <div class="mb-3">
+              <div class="relative">
+                <label for="image" class="block text-warning-700 font-medium mb-1 text-sm">Category</label>
+                <select class="w-full border border-warning-300 rounded-md py-1 px-2 pr-6 text-warning-700 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500 appearance-none text-sm" name="publish">
+                  <option value="0">Draft</option>
+                  <option value="1">Publish</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-6 mb-6">
+          <button type="submit" class="bg-warning shadow hover:bg-warning-600 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-opacity-50 transition-colors">
+              <svg class="w-4 h-4 mr-2 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              </svg>
+              Submit
+          </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</x-app-layout>
