@@ -191,24 +191,20 @@
       </div>
       <div class="dropdown ms-3">
   <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <img src="https://i.pinimg.com/564x/33/77/71/3377714bc5e0b57ece1404e8b7a0eff5.jpg" class="rounded-circle me-2" alt="Profile Picture" style="width: 32px; height: 32px;">
-    <span class="d-none d-md-inline">John Doe</span>
+    <img src="/images/{{ auth()->user()->profile }}" class="rounded-circle me-2" alt="Profile Picture" style="width: 35px; height: 32px;">
+    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
   </a>
   <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="profileDropdown" style="width: 200px;">
     <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+      <a href="{{ route('admin.profile') }}" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
         <i class="bx bx-user text-primary me-2"></i>
         <span class="text-gray-800">Profile</span>
-      </a>
+      </a> 
     </li>
     <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-        <i class="bx bx-cog text-secondary me-2"></i>
-        <span class="text-gray-800">Settings</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+    <form method="POST" action="{{ route('admin.logout') }}">
+    @csrf
+      <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();this.closest('form').submit();" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
         <i class="bx bx-log-out text-danger me-2"></i>
         <span class="text-gray-800">Logout</span>
       </a>
