@@ -29,12 +29,20 @@ class AdminSeeder extends Seeder
             'name'=>'User',
             'email'=>'user@gmail.com',
             'password'=>bcrypt('password'),
+            'role' => 'customer',
+        ]);
+        $fixer = User::create([
+            'name'=>'fixer',
+            'email'=>'fixer@gmail.com',
+            'password'=>bcrypt('password'),
+            'role' => 'fixer',
         ]);
         
 
 
-        $admin_role = User::get(['role' => 'admin']);
-        $writer_role = User::get(['role' => 'user']);
+        $admin_role = Role::create(['name' => 'admin']);
+        $writer_role = Role::create(['name' => 'user']);
+        $fixer_role  = Role::create(['name' => 'fixer']);
 
         $permission = Permission::create(['name' => 'Post access']);
         $permission = Permission::create(['name' => 'Post edit']);
@@ -63,6 +71,7 @@ class AdminSeeder extends Seeder
 
         $admin->assignRole($admin_role);
         $writer->assignRole($writer_role);
+        $fixer->assignRole($fixer_role );
 
 
         $admin_role->givePermissionTo(Permission::all());
