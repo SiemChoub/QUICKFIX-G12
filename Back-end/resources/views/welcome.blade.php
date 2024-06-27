@@ -1,6 +1,5 @@
 <x-front-guest-layout>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700,900&display=swap" rel="stylesheet">
-
     <main class="bg-white font-montserrat">
         <header class="h-24 sm:h-32 flex items-center">
             <div class="container mx-auto px-6 sm:px-12 flex items-center justify-between">
@@ -298,11 +297,4 @@
             </div>
         </div>
     </main>
-
-
-
-
-
-
-
 </x-front-guest-layout>
