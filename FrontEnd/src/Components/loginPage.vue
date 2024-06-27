@@ -1,3 +1,4 @@
+
 <template>
   <div class="login-page d-flex align-items-center justify-content-center vh-100">
     <div class="login-container shadow-lg d-flex">
@@ -22,9 +23,17 @@
           <button class="btn btn-facebook w-100 mb-2" @click="loginWithFacebook">
             <i class="fab fa-facebook-f"></i> Login with Facebook
           </button>
-          <button class="btn btn-google w-100" @click="loginWithGoogle">
+          <google-login
+            :clientId="clientId"
+            :scope="scope"
+            :buttonText="buttonText"
+            @success="onGoogleLoginSuccess"
+            @failure="onGoogleLoginFailure"
+            @error="onGoogleLoginError"
+            class="btn btn-google w-100"
+          >
             <i class="fab fa-google"></i> Login with Google
-          </button>
+          </google-login>
           <p class="mt-3">
             Don't have an account? <router-link to="/signup">Sign Up</router-link>
           </p>
@@ -37,33 +46,44 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
+<script>
+import { defineComponent } from 'vue';
+import { GoogleLogin } from 'vue3-google-login';
+import { GOOGLE_CLIENT_ID } from '@/main';
 
-const username = ref('');
-const password = ref('');
-
-const login = () => {
-  // Perform login logic here
-  console.log('Login form submitted');
-  console.log('Username:', username.value);
-  console.log('Password:', password.value);
-  
-  // Clear the input fields after submission
-  username.value = '';
-  password.value = '';
-};
-
-const loginWithFacebook = () => {
-  // Perform login with Facebook logic here
-  console.log('Login with Facebook');
-};
-
-const loginWithGoogle = () => {
-  // Perform login with Google logic here
-  console.log('Login with Google');
-};
+export default defineComponent({
+  components: {
+    GoogleLogin,
+  },
+  data() {
+    return {
+      clientId: GOOGLE_CLIENT_ID,
+      scope: 'profile email',
+      buttonText: 'Login with Google',
+      username: '',
+      password: '',
+    };
+  },
+  methods: {
+    onGoogleLoginSuccess(googleUser) {
+      console.log('Logged in successfully with Google:', googleUser);
+    },
+    onGoogleLoginFailure(error) {
+      console.error('Google login failed:', error);
+    },
+    onGoogleLoginError(error) {
+      console.error('Error while logging in with Google:', error);
+    },
+    login() {
+      console.log('Regular login with username:', this.username, 'and password:', this.password);
+    },
+    loginWithFacebook() {
+      console.log('Login with Facebook clicked');
+    },
+  },
+});
 </script>
+
 
 <style scoped>
 @import '@fortawesome/fontawesome-free/css/all.css';

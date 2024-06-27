@@ -50,15 +50,29 @@ const router = createRouter({
 
     },
     {
+      path: '/service/profile',
+      name: 'profile',
+      component: () => import('../views/Web/Service/ProfileView.vue')
+
+    },
+    {
+      path: '/profile/edit',
+      name: 'profile-edit',
+      component: () => import('../Components/Service/ProfileEdit/ProfileEdit.vue')
+
+    },
+    {
       path: '/post',
       name: 'post',
       component: () => import('../views/Web/Post/ListView.vue')
     },
+    
     {
       path: '/HomeFixer',
       name: 'HomeFixer',
       component: () => import('../views/Fixer/HomeFixer.vue')
     },
+    
     {
       path: '/fixerUser',
       name: 'fixerUser',
@@ -88,7 +102,12 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dash-board',
       component: () => import('../Components/Fixer/DashBoard.vue'),
-    }
+    },
+    {
+      path: '/map',
+      name: 'view-map',
+      component: () => import('../Components/Service/Map/Map.vue')
+    },
   ]
 })
 

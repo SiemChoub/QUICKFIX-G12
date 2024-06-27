@@ -4,11 +4,11 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand" href="#">
-        <span class="panel"><i class="bx bxl-bootstrap"></i> Admin Panel</span>
+        <span class="panel"><i class="bx bxl-bootstrap"></i>Admin Panel</span>
       </a>
       <div class="d-flex align-items-center">
       <div class="dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="nav-link dropdown-toggle" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bx bx-mail-send"></i>
           <span class="badge bg-warning rounded-pill">5</span>
         </a>
@@ -16,7 +16,7 @@
           <div class="message-info space-y-2 d-flex flex-col gap-3" style="height: 300px; overflow-y: scroll;">
             <!-- --------------------------------- -->
             <div class="message-card dropdown-item d-flex border border-warning justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;object-fit: cover;  ">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
                 <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Chhaiya Sophorn</h5>
                 <p class="text-600 fw-bold text-sm truncate" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
@@ -31,7 +31,22 @@
             <!-- -------------------------------- -->
             <!-- --------------------------------- -->
             <div class="message-card dropdown-item d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;object-fit: cover;">
+              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Chhaiya Sophorn</h5>
+                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+              </div>
+              <div class="evaluation">
+                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0">
+                  <i class="bx bx-love"></i>
+                  view more
+                </button>
+              </div>
+            </div>
+            <!-- -------------------------------- -->
+            <!-- --------------------------------- -->
+            <div class="message-card dropdown-item d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;object-fit: cover;">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
                 <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Chhaiya Sophorn</h5>
                 <p class="text-gray-600 text-sm truncate" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
@@ -76,22 +91,7 @@
             <!-- -------------------------------- -->
             <!-- --------------------------------- -->
             <div class="message-card dropdown-item d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Chhaiya Sophorn</h5>
-                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-              </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0">
-                  <i class="bx bx-love"></i>
-                  view more
-                </button>
-              </div>
-            </div>
-            <!-- -------------------------------- -->
-            <!-- --------------------------------- -->
-            <div class="message-card dropdown-item d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;object-fit: cover;">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
                 <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Chhaiya Sophorn</h5>
                 <p class="text-gray-600 text-sm truncate" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
@@ -191,15 +191,14 @@
       </div>
       <div class="dropdown ms-3">
   <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <img src="https://i.pinimg.com/564x/33/77/71/3377714bc5e0b57ece1404e8b7a0eff5.jpg" class="rounded-circle me-2" alt="Profile Picture" style="width: 32px; height: 32px;">
-    <span class="d-none d-md-inline">John Doe</span>
+  <img src="/images/{{ auth()->user()->profile }}" class="rounded-circle me-2" alt="Profile Picture" style="width: 40px; height: 40px; object-fit: cover;">    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
   </a>
   <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="profileDropdown" style="width: 200px;">
     <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+      <a href="{{ route('admin.profile') }}" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
         <i class="bx bx-user text-primary me-2"></i>
         <span class="text-gray-800">Profile</span>
-      </a>
+      </a> 
     </li>
     <li>
       <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
@@ -208,9 +207,16 @@
       </a>
     </li>
     <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-        <i class="bx bx-log-out text-danger me-2"></i>
-        <span class="text-gray-800">Logout</span>
+        {{-- <span class="text-gray-800">Logout {{route('admin.logout')}}</span> --}}
+        {{-- <form  action="{{route('admin.logout')}}" method="POST"></form> --}}
+        <form method="POST" action="{{ route('admin.logout') }}">
+          @csrf
+              <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();
+                                          this.closest('form').submit();"
+              class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">        <i class="bx bx-log-out text-danger me-2">  logout</i>
+
+            </a>
+          </form>
       </a>
     </li>
   </ul>
@@ -220,9 +226,9 @@
     </div>
   </nav>
 </header>
+
 <style>
 
-  
 /* Tablet styles */
 @media (max-width: 991px) and (min-width: 768px) {
 
