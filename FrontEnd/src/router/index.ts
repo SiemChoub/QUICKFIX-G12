@@ -21,7 +21,7 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/Admin/Auth/LoginView.vue')
     },
-  {
+    {
       path: '/service/chat',
       name: 'chat',
       component: () => import('../Components/Service/Chats/ChatsService.vue')
@@ -29,7 +29,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/Web/Service/ServicePage.vue')
+      component: () => import('../views/Web/HomeView.vue')
     },
     {
       path: '/service',
