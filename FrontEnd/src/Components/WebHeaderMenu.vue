@@ -1,47 +1,118 @@
-<script setup lang="ts">
-import { Icon } from '@iconify/vue'
-</script>
 <template>
-  <header class="flex justify-between px-20 py-3 bg-white items-center">
-    <!-- Logo -->
-    <div class="flex items-center space-x-2">
-      <Icon icon="skill-icons:Circleto-dark" style="font-size: 45px" />
-      <span class="text-xl font-bold " style="font-size:35px">QUICKFIX</span>
-    </div>
-
-    <!-- Menu Items -->
-    <nav class="flex justify-center space-x-4">
-      <a
-        href="/post"
-        class="font-bold px-3 py-2 text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900"
-        >Home</a
-      >
-      <a
-        href="/team"
-        class="font-bold px-3 py-2 text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900"
-        >Service</a
-      >
-      <a
-        href="/projects"
-        class="font-bold px-3 py-2 text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900"
-        >About</a
-      >
-      <a
-        href="/reports"
-        class="font-bold px-3 py-2 text-slate-700 rounded-lg hover:bg-slate-100 hover:text-slate-900"
-        >Contact</a
-      >
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-5 py-2">
+      <div class="container">
+        <div class="row w-100 align-items-center">
+          <div class="col-lg-3 col-6 d-flex align-items-center position-relative">
+            <div class="col-lg-3 col-6 position-relative">
+              <img
+                src="../assets/images/logo.png"
+                alt="Logo"
+                style="width: 80px; height: 75px; border-radius: 50%"
+              />
+              <router-link to="/" class="navbar-brand position-absolute top-50 start-30 translate-middle">
+                <b>QUICKFIX</b>
+              </router-link>
+            </div>
+          </div>
+          <div class="col-lg-6 col-6">
+            <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+              <ul class="navbar-nav d-flex justify-content-space-evently">
+                <li class="nav-item active px-4">
+                  <router-link to="/" class="nav-link">Home <span class="sr-only">(current)</span></router-link>
+                </li>
+                <li class="nav-item px-4">
+                  <router-link to="/services" class="nav-link">Services</router-link>
+                </li>
+                <li class="nav-item px-4">
+                  <router-link to="/about" class="nav-link">About</router-link>
+                </li>
+                <li class="nav-item px-4">
+                  <router-link to="/contact" class="nav-link">Contact</router-link>
+                </li>
+                <li class="nav-item px-4">
+                  <router-link to="/fixerUser" class="nav-link">Repaire</router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-3 col-12 d-flex justify-content-end align-items-center">
+            <div>
+              <router-link to="/login" class="btn btn-outline-orange mx-2">Login</router-link>
+              <router-link to="/signup" class="btn btn-danger mx-2">Sign Up</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
-
-    <!-- Sign In -->
-    <div class="d-flex">
-      <div class="px-4 py-2 rounded font-semibold btn btn-danger">Sign Up</div>
-      <div class="px-4 py-2 rounded font-semibold">Sign In</div>
-    </div>
   </header>
 </template>
+
+<script setup lang="ts">
+import { Icon } from '@iconify/vue';
+</script>
+
 <style scoped>
-  a{
-    text-decoration: none;
-  }
+a {
+  text-decoration: none;
+}
+
+.navbar {
+  border-radius: 5px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #343a40;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #007bff;
+}
+
+.navbar-light .navbar-brand {
+  color: #343a40;
+  font-size: 40px;
+}
+
+.navbar-light .navbar-toggler {
+  border-color: #343a40;
+}
+
+.navbar-light .navbar-toggler-icon {
+  background-color: #343a40;
+}
+
+.navbar-light .form-inline .form-control {
+  border-radius: 20px;
+  padding: 0.375rem 0.75rem;
+}
+
+.navbar-light .form-inline .btn-outline-success {
+  border-radius: 20px;
+}
+
+.navbar-light .dropdown-menu {
+  border-radius: 5px;
+}
+
+.nav-item .nav-link {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-letter {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.btn-outline-orange {
+  color: #ff7f50;
+  border-color: #ff7f50;
+}
+
+.btn-outline-orange:hover {
+  background-color: #ff7f50;
+  color: #fff;
+}
 </style>
