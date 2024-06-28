@@ -19,8 +19,7 @@ import { Icon } from '@iconify/vue'
           <p style="color:white">
             Our Commitment: We are dedicated to providing fast and reliable service solutions to
             meet your needs. Our team consists of highly skilled technicians who are committed to
-            delivering the best repair solutions. With years of experience and a focus on customer
-            satisfaction, we strive to exceed expectations with every service call.
+            delivering the best repair solutions.
           </p>
         </div>
         <img

@@ -187,18 +187,18 @@ const submitForm = () => {
 }
 
 .logo img {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
 }
 
 .logo p {
   color: black;
-  font-size: 3rem;
+  font-size: 2rem;
   text-align: center;
   position: absolute;
-  bottom: 1px;
-  left: 130%;
+  bottom: -8px;
+  left: 140%;
   transform: translateX(-50%);
   font-weight: bolder;
 }
@@ -210,7 +210,6 @@ const submitForm = () => {
   padding: 5px 20px;
   margin-top: 50px;
   border-radius: 4px;
-  margin-right: 80px;
 }
 
 @media (max-width: 768px) {

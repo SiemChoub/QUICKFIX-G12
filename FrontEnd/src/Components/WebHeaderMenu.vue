@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-5 py-2">
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow p-0 px-5 py-2">
       <div class="container">
         <div class="row w-100 align-items-center">
           <div class="col-lg-3 col-6 d-flex align-items-center position-relative">
@@ -8,7 +8,7 @@
               <img
                 src="../assets/images/logo.png"
                 alt="Logo"
-                style="width: 80px; height: 75px; border-radius: 50%"
+                style="width: 70px; height: 65px; border-radius: 50%"
               />
               <router-link to="/" class="navbar-brand position-absolute top-50 start-30 translate-middle">
                 <b>QUICKFIX</b>
@@ -19,16 +19,16 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
               <ul class="navbar-nav d-flex justify-content-space-evently">
                 <li class="nav-item active px-4">
-                  <router-link to="/" class="nav-link">Home <span class="sr-only">(current)</span></router-link>
+                  <router-link to="/" class="nav-link" exact>Home</router-link>
                 </li>
                 <li class="nav-item px-4">
-                  <router-link to="/services" class="nav-link">Services</router-link>
+                  <router-link to="#" class="nav-link">Services</router-link>
                 </li>
                 <li class="nav-item px-4">
-                  <router-link to="/about" class="nav-link">About</router-link>
+                  <router-link to="#" class="nav-link">About</router-link>
                 </li>
                 <li class="nav-item px-4">
-                  <router-link to="/contact" class="nav-link">Contact</router-link>
+                  <router-link to="#" class="nav-link">Region</router-link>
                 </li>
               </ul>
             </div>
@@ -55,16 +55,22 @@ a {
 }
 
 .navbar {
-  border-radius: 5px;
+  border-radius: 5px 5px 0 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; 
 }
 
 .navbar-light .navbar-nav .nav-link {
   color: #343a40;
 }
 
-.navbar-light .navbar-nav .nav-link:hover {
-  color: #007bff;
-}
+/* .navbar-light .navbar-nav .nav-link:hover,
+.router-link-active {
+  color: black;
+  font-weight: bold;
+} */
 
 .navbar-light .navbar-brand {
   color: #343a40;

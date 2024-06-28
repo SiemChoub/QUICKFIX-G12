@@ -1,6 +1,6 @@
 
 <template>
-   <transition name="fade">
+  <transition name="fade">
     <router-view />
   </transition>
   <WebLayout>
@@ -18,7 +18,7 @@
             class="active"
             aria-current="true"
             aria-label="Slide 1"
-          ></button>  
+          ></button>
           <button
             type="button"
             data-bs-target="#carouselExampleIndicators"
@@ -83,7 +83,11 @@
       <header class="overlay text-center d-flex flex-column align-items-center mx-auto">
         <h1 class="main-title mb-3">THE BEST REPAIR AND MANTERNENCE SERVICES</h1>
         <h1 class="sub-title">QUICKFIX</h1>
-        <button class="btn btn-primary button mt-3">Use Now!</button>
+        <div class="button-container">
+    <router-link to="/login">
+      <button class="btn btn-primary button mt-3">Use Now!</button>
+    </router-link>
+  </div>
       </header>
       <div class="content mt-5">
         <div class="row service">
@@ -111,25 +115,25 @@ import AboutPage from '@/Components/AboutPage.vue'
 import FooterPage from '@/Components/FooterPage.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
 </script>
 <style scoped>
 .carousel.slide {
   width: 90%;
+  top: 50px;
 }
 
 .carousel-item img {
-  height: 80vh; /* Adjust the height of the carousel */
+  height: 90vh; /* Adjust the height of the carousel */
   object-fit: cover;
 }
 
 .overlay {
   position: absolute;
-  bottom: 70px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   width: 90%;
-  height: 60%;
+  height: 70%;
   z-index: 3;
   background: rgba(0, 0, 0, 0.3);
   display: flex;
@@ -138,19 +142,27 @@ const router = useRouter()
   padding: 20px;
   pointer-events: none;
 }
-.button.btn-primary {
+.button-container {
+  position: relative; /* Ensure the container is positioned correctly */
+  z-index: 1000; /* Example z-index */
+}
+
+.button {
   background-color: orange;
   border-color: orange;
   cursor: pointer;
   padding: 15px 30px;
   transition: background-color 0.3s, border-color 0.3s;
-  font-size: 30px;
+  z-index: 1001; /* Ensure the button has a higher z-index if needed */
+  position: relative;
+  pointer-events: auto; /* Ensure pointer events are enabled */
 }
 
-.button.btn-primary:hover {
+.button:hover {
   background-color: darkorange;
   border-color: darkorange;
 }
+
 
 .main-title {
   font-size: 3rem;
@@ -180,9 +192,9 @@ const router = useRouter()
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 50%;
+  top: 80%;
   transform: translateY(-50%);
-  z-index: 4; /* Ensure buttons are above overlay */
+  z-index: 7; /* Ensure buttons are above overlay */
 }
 
 .custom-prev {
@@ -197,13 +209,13 @@ const router = useRouter()
 .custom-next:hover {
   background-color: darkorange;
 }
- 
+
 .custom-prev-icon,
 .custom-next-icon {
   filter: invert(1);
 }
 
-.content { 
+.content {
   padding-top: 20px;
 }
 </style>

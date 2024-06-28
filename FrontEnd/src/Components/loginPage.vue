@@ -1,9 +1,17 @@
 <template>
   <div class="login-page d-flex align-items-center justify-content-center vh-100">
+    <transition name="fade">
+      <div v-if="showSpinner" class="spinner-container position-fixed w-100 h-100 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-warning" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </transition>
+
     <div class="login-container shadow-lg d-flex">
       <div class="image-container">
         <img src="@/assets/images/image.png" alt="Login Image" />
-      </div>
+      </div> 
       <div class="form-container p-5">
         <h2 class="mb-4">Login</h2>
         <form @submit.prevent="login">
@@ -22,9 +30,17 @@
           <button class="btn btn-facebook w-100 mb-2" @click="loginWithFacebook">
             <i class="fab fa-facebook-f"></i> Login with Facebook
           </button>
-          <button class="btn btn-google w-100" @click="loginWithGoogle">
+          <google-login
+            :clientId="clientId"
+            :scope="scope"
+            :buttonText="buttonText"
+            @success="onGoogleLoginSuccess"
+            @failure="onGoogleLoginFailure"
+            @error="onGoogleLoginError"
+            class="btn btn-google w-100"
+          >
             <i class="fab fa-google"></i> Login with Google
-          </button>
+          </google-login>
           <p class="mt-3">
             Don't have an account? <router-link to="/signup">Sign Up</router-link>
           </p>
@@ -39,29 +55,39 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { GoogleLogin } from 'vue3-google-login';
+import { GOOGLE_CLIENT_ID } from '@/main';
+
+const showSpinner = ref(true); // Initially show spinner
+setTimeout(() => {
+  showSpinner.value = false; // Hide spinner after timeout
+}, 300);
 
 const username = ref('');
 const password = ref('');
 
+const clientId = GOOGLE_CLIENT_ID;
+const scope = 'profile email';
+const buttonText = 'Login with Google';
+
 const login = () => {
-  // Perform login logic here
-  console.log('Login form submitted');
-  console.log('Username:', username.value);
-  console.log('Password:', password.value);
-  
-  // Clear the input fields after submission
-  username.value = '';
-  password.value = '';
+  console.log('Regular login with username:', username.value, 'and password:', password.value);
 };
 
 const loginWithFacebook = () => {
-  // Perform login with Facebook logic here
-  console.log('Login with Facebook');
+  console.log('Login with Facebook clicked');
 };
 
-const loginWithGoogle = () => {
-  // Perform login with Google logic here
-  console.log('Login with Google');
+const onGoogleLoginSuccess = (googleUser) => {
+  console.log('Logged in successfully with Google:', googleUser);
+};
+
+const onGoogleLoginFailure = (error) => {
+  console.error('Google login failed:', error);
+};
+
+const onGoogleLoginError = (error) => {
+  console.error('Error while logging in with Google:', error);
 };
 </script>
 
@@ -74,12 +100,13 @@ const loginWithGoogle = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  width: 100%;
 }
 
 .login-container {
-  max-width: 1000px;
+  max-width: 100%;
   display: flex;
-  border-radius: 10px;
+  height: 100%;
   overflow: hidden;
   background-color: white;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -149,7 +176,6 @@ label {
   transition: background-color 0.3s ease;
   text-align: center;
   cursor: pointer;
-  width: 100%;
 }
 
 .btn-facebook:hover {
@@ -173,7 +199,6 @@ label {
   transition: background-color 0.3s ease;
   text-align: center;
   cursor: pointer;
-  width: 100%;
 }
 
 .btn-google:hover {
@@ -207,5 +232,28 @@ label {
 
 .social-login a:hover {
   text-decoration: underline;
+}
+
+.spinner-container {
+  background-color:white;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
