@@ -1,82 +1,106 @@
 <template>
   <div class="auth-page d-flex align-items-center justify-content-center vh-100">
-    <div class="auth-container shadow-lg d-flex flex-column flex-lg-row">
-      <div class="image-container">
-        <img src="@/assets/images/image.png" alt="Auth Image" />
+    <transition name="fade">
+      <div
+        v-if="showSpinner"
+        class="spinner-container position-fixed w-100 h-100 d-flex align-items-center justify-content-center"
+      >
+        <div class="spinner-border text-warning" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
-      <div class="form-container p-5">
-        <h2 class="mb-4">Sign Up</h2>
-        <form @submit.prevent="signUp">
-          <div class="form-group mb-4">
-            <label for="username">Username:</label>
-            <input type="text" id="username" v-model="username" class="form-control" required />
-          </div>
-          <div class="form-group mb-4">
-            <label for="email">Email:</label>
-            <input type="email" id="email" v-model="email" class="form-control" required />
-          </div>
-          <div class="form-group mb-4">
-            <label for="password">Password:</label>
-            <input type="password" id="password" v-model="password" class="form-control" required />
-          </div>
-          <button type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
-        </form>
-        <div class="social-login">
-          <h3 class="mb-3">Or Sign Up with:</h3>
-          <button class="btn btn-facebook w-100 mb-2" @click="loginWithFacebook">
-            <i class="fab fa-facebook-f"></i> Facebook
-          </button>
-          <button class="btn btn-google w-100" @click="loginWithGoogle">
-            <i class="fab fa-google"></i> Google
-          </button>
+    </transition>
+    <transition name="fade">
+      <div class="auth-container shadow-lg d-flex flex-column flex-lg-row">
+        <div class="image-container">
+          <img src="@/assets/images/image.png" alt="Auth Image" />
         </div>
-        <div class="toggle-auth mt-4">
-          <p>
-            Already Have Account?
-            <a href="#" @click.prevent="toggleAuth">Login</a>
-          </p>
-        </div>
+        <div class="form-container p-5">
+          <h2 class="mb-4">Sign Up</h2>
+          <form @submit.prevent="signUp">
+            <div class="form-group mb-4">
+              <label for="username">Username:</label>
+              <input type="text" id="username" v-model="username" class="form-control" required />
+            </div>
+            <div class="form-group mb-4">
+              <label for="email">Email:</label>
+              <input type="email" id="email" v-model="email" class="form-control" required />
+            </div>
+            <div class="form-group mb-4">
+              <label for="password">Password:</label>
+              <input
+                type="password"
+                id="password"
+                v-model="password"
+                class="form-control"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
+          </form>
+          <div class="social-login">
+            <h3 class="mb-3">Or Sign Up with:</h3>
+            <button class="btn btn-facebook w-100 mb-2" @click="loginWithFacebook">
+              <i class="fab fa-facebook-f"></i> Facebook
+            </button>
+            <button class="btn btn-google w-100" @click="loginWithGoogle">
+              <i class="fab fa-google"></i> Google
+            </button>
+          </div>
+          <div class="toggle-auth mt-4">
+            <p>
+              Already Have Account?
+            <router-link to="/login">Login</router-link>
+            </p>
+          </div>
           <p>
             <router-link to="/">Back to Home</router-link>
           </p>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const isLogin = ref(true);
-const username = ref('');
-const email = ref('');
-const password = ref('');
+const isLogin = ref(true)
+const username = ref('')
+const email = ref('')
+const password = ref('')
 
 const signUp = () => {
-  console.log('Sign Up form submitted');
-  console.log('Username:', username.value);
-  console.log('Email:', email.value);
-  console.log('Password:', password.value);
+  console.log('Sign Up form submitted')
+  console.log('Username:', username.value)
+  console.log('Email:', email.value)
+  console.log('Password:', password.value)
   // Here you can implement your sign-up logic, e.g., call an API
   // After successful sign-up, you might redirect the user or update state
-  username.value = '';
-  email.value = '';
-  password.value = '';
-};
+  username.value = ''
+  email.value = ''
+  password.value = ''
+}
+const showSpinner = ref(true) // Initially show spinner
+showSpinner.value = true
+setTimeout(() => {
+  showSpinner.value = false
+  // Transition to the next screen or perform other actions
+}, 300)
 
 const loginWithFacebook = () => {
-  console.log('Login with Facebook');
+  console.log('Login with Facebook')
   // Here you can implement Facebook login logic, e.g., using Facebook SDK
-};
+}
 
 const loginWithGoogle = () => {
-  console.log('Login with Google');
+  console.log('Login with Google')
   // Here you can implement Google login logic, e.g., using Google SDK
-};
+}
 
 const toggleAuth = () => {
-  isLogin.value = !isLogin.value;
-};
+  isLogin.value = !isLogin.value
+}
 </script>
 
 <style scoped>
@@ -258,5 +282,16 @@ label {
 
 .back-home .btn-secondary:hover {
   background-color: #5a6268;
+}
+.spinner-container {
+  background-color:white;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
