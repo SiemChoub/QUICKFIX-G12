@@ -9,7 +9,7 @@
         @csrf
         <div class="mb-4">
           <label for="name" class="block text-warning-700 font-medium mb-1">Name</label>
-          <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Enter name" class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500">
+          <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Enter name" class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500" require>
         </div>
 
         <div class="mb-4">
@@ -27,15 +27,23 @@
           <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500">
         </div>
 
+        @if (count($categories) > 0)
         <div class="mb-4">
-          <div class="relative">
-            <label for="image" class="block text-warning-700 font-medium mb-1">Category</label>
-            <select class="w-full border border-warning-300 rounded-md py-2 px-3 pr-8 text-warning-700 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500 appearance-none" name="publish">
-              <option value="0">Draft</option>
-              <option value="1">Publish</option>
-            </select>
-          </div>
+            <div class="relative">
+                <label for="category_id" class="block text-warning-700 font-medium mb-1">Category</label>
+                <select class="w-full border border-warning-300 rounded-md py-2 px-3 pr-8 text-warning-700 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500 appearance-none" name="category_id" require>
+                    <option value="">Select a category</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
+    @else
+        <div class="mb-4 text-warning-700">
+            No categories available. Please create a category first.
+        </div>
+    @endif
 
         <div class="text-center mt-4">
         <button type="submit" class="bg-warning shadow hover:bg-warning-600 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-opacity-50 transition-colors">

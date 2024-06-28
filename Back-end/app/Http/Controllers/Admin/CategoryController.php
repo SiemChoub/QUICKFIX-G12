@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Service;
 use App\Models\Category;
 use Auth;
-class ServiceController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +14,10 @@ class ServiceController extends Controller
      */
     function __construct()
     {
-        $this->middleware('role_or_permission:Service access|Service create|Service edit|Service delete', ['only' => ['index','show']]);
-        $this->middleware('role_or_permission:Service create', ['only' => ['create','store']]);
-        $this->middleware('role_or_permission:Service edit', ['only' => ['edit','update']]);
-        $this->middleware('role_or_permission:Service delete', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Category access|Category create|Category edit|Category delete', ['only' => ['index','show']]);
+        $this->middleware('role_or_permission:Category create', ['only' => ['create','store']]);
+        $this->middleware('role_or_permission:Category edit', ['only' => ['edit','update']]);
+        $this->middleware('role_or_permission:Category delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -28,23 +27,19 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $Service= Service::paginate(5);
-        $services = Service::with('category')->get();
-        return view('service.index',['services'=>$Service]);
+        $Category= Category::paginate(5);
+
+        return view('category.index',['categories'=>$Category]);
     }
-
-
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     public function create()
     {
-        $categories = Category::all();
-        return view('service.new', compact('categories'));
+        return view('category.new');
     }
 
     /**
@@ -55,10 +50,9 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        $data= $request->all();
-        $data['user_id'] = Auth::user()->id;
-        $Service = Service::create($data);
-        return redirect('admin/services')->withSuccess('Service created !!!');
+        $data = $request->all();
+        $category = Category::create($data);
+        return redirect('admin/categories')->withSuccess('Category created!!!');
     }
 
     /**
@@ -78,9 +72,9 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit(Category $category)
     {
-       return view('service.edit',['service' => $service]);
+       return view('category.edit',['category' => $category]);
     }
 
     /**
@@ -90,10 +84,10 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, Category $category)
     {
-        $service->update($request->all());
-        return redirect('admin/services')->withSuccess('Service updated !!!');
+        $category->update($request->all());
+        return redirect('admin/categories')->withSuccess('Category updated!!!');
 
     }
 
@@ -103,9 +97,9 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy(Category $category)
     {
-        $service->delete();
-        return redirect()->back()->withSuccess('Service deleted !!!');
+        $category->delete();
+        return redirect()->back()->withSuccess('Category deleted !!!');
     }
 }
