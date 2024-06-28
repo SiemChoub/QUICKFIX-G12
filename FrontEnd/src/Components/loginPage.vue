@@ -54,44 +54,6 @@
   </div>
 </template>
 
-<<<<<<< HEAD
-<script>
-import { defineComponent } from 'vue';
-import { GoogleLogin } from 'vue3-google-login';
-import { GOOGLE_CLIENT_ID } from '@/main';
-
-export default defineComponent({
-  components: {
-    GoogleLogin,
-  },
-  data() {
-    return {
-      clientId: GOOGLE_CLIENT_ID,
-      scope: 'profile email',
-      buttonText: 'Login with Google',
-      username: '',
-      password: '',
-    };
-  },
-  methods: {
-    onGoogleLoginSuccess(googleUser) {
-      console.log('Logged in successfully with Google:', googleUser);
-    },
-    onGoogleLoginFailure(error) {
-      console.error('Google login failed:', error);
-    },
-    onGoogleLoginError(error) {
-      console.error('Error while logging in with Google:', error);
-    },
-    login() {
-      console.log('Regular login with username:', this.username, 'and password:', this.password);
-    },
-    loginWithFacebook() {
-      console.log('Login with Facebook clicked');
-    },
-  },
-});
-=======
 <script setup lang="ts">
 import { ref } from 'vue';
 import { GoogleLogin } from 'vue3-google-login';
@@ -128,7 +90,6 @@ const onGoogleLoginFailure = (error) => {
 const onGoogleLoginError = (error) => {
   console.error('Error while logging in with Google:', error);
 };
->>>>>>> front-home
 </script>
 
 
