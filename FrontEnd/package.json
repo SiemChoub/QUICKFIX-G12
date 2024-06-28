@@ -31,6 +31,7 @@
     "vee-validate": "^4.12.8",
     "vue": "^3.4.21",
     "vue-chartjs": "^5.3.1",
+    "vue-float-action-button": "^0.7.9",
     "vue-gates": "^2.1.2",
     "vue-router": "^4.0.13",
     "vue-simple-acl": "^2.0.2",

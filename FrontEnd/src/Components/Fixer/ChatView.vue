@@ -112,6 +112,8 @@
         <div class="modal-header border-0"></div>
         <div class="card border-0 p-3">
           <div class="div h-auto text-center w-auto">
+          <router-link to="/service/chat" class="d-flex text-start" ><i class="bi bi-arrows-angle-expand"></i></router-link>
+
             <div class="card-group border-1 ml-5 mt-5" style="width: 28rem">
               <div class="card-body border-1 p-0 rounded-3 w-auto shadow-lg">
                 <h5 class="card-title">

@@ -8,8 +8,8 @@
         <h2 class="mb-4">Login</h2>
         <form @submit.prevent="login">
           <div class="form-group mb-4">
-            <label for="username">Email:</label>
-            <input type="email" id="username" v-model="username" class="form-control" required />
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="email" class="form-control" required />
           </div>
           <div class="form-group mb-4">
             <label for="password">Password:</label>
@@ -25,9 +25,7 @@
           <button class="btn btn-google w-100" @click="loginWithGoogle">
             <i class="fab fa-google"></i> Login with Google
           </button>
-          <p class="mt-3">
-            Don't have an account? <router-link to="/signup">Sign Up</router-link>
-          </p>
+          <p class="mt-3">Don't have an account? <router-link to="/signup">Sign Up</router-link></p>
           <p>
             <router-link to="/">Back to Home</router-link>
           </p>
@@ -37,32 +35,38 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-
-const username = ref('');
-const password = ref('');
-
-const login = () => {
-  // Perform login logic here
-  console.log('Login form submitted');
-  console.log('Username:', username.value);
-  console.log('Password:', password.value);
-  
-  // Clear the input fields after submission
-  username.value = '';
-  password.value = '';
-};
-
-const loginWithFacebook = () => {
-  // Perform login with Facebook logic here
-  console.log('Login with Facebook');
-};
-
-const loginWithGoogle = () => {
-  // Perform login with Google logic here
-  console.log('Login with Google');
-};
+<script>
+import axios from 'axios'
+export default {
+  data() {
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    login() {
+      axios
+        .post('http://127.0.0.1:8000/api/login', {
+          email: this.email,
+          password: this.password
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.$router.push('/service')
+        })
+        .catch((error) => {
+          console.error(error.response.data)
+        })
+    },
+    loginWithFacebook() {
+      console.log('Logging in with Facebook')
+    },
+    loginWithGoogle() {
+      console.log('Logging in with Google')
+    }
+  }
+}
 </script>
 
 <style scoped>

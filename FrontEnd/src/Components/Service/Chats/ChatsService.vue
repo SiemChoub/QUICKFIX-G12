@@ -23,7 +23,7 @@
                                 <div class="d-flex flex-row">
                                   <div>
                                     <img
-                                      src="./assets/images/lee-min-ho.jpg"
+                                      src="https://i.pinimg.com/236x/dc/2a/0f/dc2a0f3d5d34fbb95fd66dc3f4a7bf6f.jpg"
                                       alt="avatar" class="d-flex align-self-center me-3 rounded-circle me-2 img-fluid" style="width:50px; height:50px"  >
                                     <span class="badge bg-success badge-dot"></span>
                                   </div>
@@ -43,7 +43,7 @@
                                 <div class="d-flex flex-row">
                                   <div>
                                     <img
-                                      src="./assets/home.jpg"
+                                      src="https://i.pinimg.com/236x/77/d2/6c/77d26cf758a8a6708aa2f4df8fc16570.jpg"
                                       alt="avatar" class="d-flex align-self-center me-3 rounded-circle me-2 img-fluid" style="width:50px; height:50px">
                                     <span class="badge bg-warning badge-dot"></span>
                                   </div>
@@ -63,7 +63,7 @@
                                 <div class="d-flex flex-row">
                                   <div>
                                     <img
-                                      src="./assets/heart.jpg"
+                                      src="https://i.pinimg.com/236x/00/7e/15/007e15956a798ebd7a2bc7a1a72530ae.jpg"
                                       alt="avatar" class="d-flex align-self-center me-3 rounded-circle me-2 img-fluid" style="width:50px; height:50px">
                                     <span class="badge bg-success badge-dot"></span>
                                   </div>
@@ -82,7 +82,7 @@
                                 <div class="d-flex flex-row">
                                   <div>
                                     <img
-                                      src="./assets/coca-team.jpg"
+                                      src="https://i.pinimg.com/236x/04/05/47/0405473eecff8edc74768c62ae9c5529.jpg"
                                       alt="avatar" class="d-flex align-self-center me-3 rounded-circle me-2 img-fluid" style="width:50px; height:50px">
                                     <span class="badge bg-danger badge-dot"></span>
                                   </div>
@@ -103,7 +103,7 @@
                   <div class="col-md-6 col-lg-7 col-xl-8">
                     <h5 class="card-title">
                       <div class="profile w-100 p-1 rounded-2 d-flex gap-3 shadow align-items-center">
-                        <img id="imgPro" src="./assets/lee-min-ho.jpg" class="rounded-circle me-2 img-fluid" style="width: 40px; height: 40px;"  />
+                        <img id="imgPro" src="https://i.pinimg.com/236x/62/11/02/621102890e79c3fd76458d9da6e589a4.jpg" class="rounded-circle me-2 img-fluid" style="width: 40px; height: 40px;"  />
                         <h4 class="align-baseline">Lee Min-Ho</h4>
                         <div class="ms-auto">
                           <button type="button" class="btn-close " aria-label="Close"></button>  
@@ -111,7 +111,7 @@
                       </div>
                     </h5>
                     <div class="card-body p-4 d-flex flex-column align-items-center">
-                      <img src="./assets/lee-min-ho.jpg" alt="User Avatar" class="rounded-circle mb-3 img-fluid" style="width: 100px; height:100px" />
+                      <img src="https://i.pinimg.com/236x/62/11/02/621102890e79c3fd76458d9da6e589a4.jpg" alt="User Avatar" class="rounded-circle mb-3 img-fluid" style="width: 100px; height:100px" />
                       <h5 class="card-title mb-1">Lee Min-Ho</h5>
                       <div class="d-flex align-items-center">
                         <div class="me-2 status-indicator bg-success rounded-circle"></div>
@@ -167,7 +167,7 @@ export default {
       userProfilePicture: './assets/coca-team.jpg',
       otherUserProfilePicture: './assets/coca-team.jpg',
       userName: 'Coca Team',
-      otherUserName: 'SREYNUCH LOVE',
+      otherUserName: 'Lee Min-Ho',
     };
   },
   methods: {
