@@ -1,52 +1,37 @@
 <template>
-  <div class="container">
-    <div class="left">
-      <img :src="user.image" alt="Img" />
-      <div class="img">
-        <img
-          src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg"
-          alt="camera"
-        />
+  <div class="profile-edit-container">
+    <div class="profile-image">
+      <img :src="user.image" alt="Profile Image" />
+      <div class="edit-icon">
+        <img src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg" alt="camera" />
       </div>
     </div>
-    <div class="right">
-      <div class="left2">
-        <div class="info">
-          <label>Role:</label>
-          <input type="text" v-model="user.role" class="info-value" />
+    <div class="profile-form">
+      <div class="form-fields">
+        <div class="form-group">
+          <label for="name">User Name:</label>
+          <input type="text" id="name" v-model="user.name" class="form-control" />
         </div>
-        <div class="info">
-          <label>User Name:</label>
-          <input type="text" v-model="user.name" class="info-value" />
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" v-model="user.email" class="form-control" />
         </div>
-        <div class="info">
-          <label>Email:</label>
-          <input type="text" v-model="user.email" class="info-value" />
-        </div>
-        <div class="info">
-          <label>Phone Number:</label>
-          <input type="text" v-model="user.phone" class="info-value" />
-        </div>
-        <div class="info">
-          <label>Create Date:</label>
-          <input type="text" v-model="user.createDate" class="info-value" />
-        </div>
-        <div class="info">
-          <label>Create Time:</label>
-          <input type="text" v-model="user.createTime" class="info-value" />
+        <div class="form-group">
+          <label for="phone">Phone Number:</label>
+          <input type="text" id="phone" v-model="user.phone" class="form-control" />
         </div>
       </div>
-      <router-link to="/service/profile">
-        <button type="button" class="btn" style="background-color: gray;">Cancel</button> </router-link>
+      <div class="form-actions">
         <router-link to="/service/profile">
-            <button type="button" class="btn button2" > Update </button>
-        </router-link>                                                            
-        
+          <button type="button" class="btn btn-cancel">Cancel</button>
+        </router-link>
+        <router-link to="/service/profile">
+          <button type="button" class="btn btn-update">Update</button>
+        </router-link>
+      </div>
     </div>
-    <router-link/>
   </div>
 </template>
-
 
 <script>
 export default {
@@ -61,100 +46,92 @@ export default {
         createTime: '08:18:17',
         image: 'https://i.pinimg.com/564x/58/b6/52/58b6528f3b6c1b77a119f9efc2ef8f61.jpg'
       }
-    }
+    };
   }
-}
+};
 </script>
 
-<style>
-.container {
+<style scoped>
+.profile-edit-container {
   display: flex;
-  height: 80vh;
-  margin-top: 30px;
-}
-#jj {
-
-  margin-left: -70px;
-}
-.left {
-  width: 40%;
-  /* background-color: rgb(200, 197, 197); */
-  height: 100%;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 7rem;
+  height: 100vh;
 }
-.right {
-  width: 60%;
-  /* background-color: rgb(224, 208, 211); */
-  height: 100%;
-}
-.left img {
-  height: 50%;
-  width: 50%;
-  border-radius: 20px;
 
+.profile-image {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 20px;
 }
-.left2 {
-  float: left;
-  width: 60%;
+
+.profile-image img {
+  width: 100%;
   height: 100%;
-  padding-top: 13%;
- 
+  object-fit: cover;
 }
-.right button {
-  border: 1px solid;
-  padding: 5px 10px;
-  margin-top: 55%;
-  background-color: orange;
-  border-radius: 5px;
-  gap: 20px;
+
+.edit-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 50px;
 }
-.left2 label {
+
+.edit-icon img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.profile-form {
+  width: 60%;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
   display: block;
   font-weight: bold;
+}
 
-}
-.info {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.info-value {
-  flex: 1;
-  text-align: start;
-  margin-left: 50px;
-}
-.info label {
-  width: 120px;
-  margin-top: 5px;
-}
-.img {
-  position: absolute;
-  bottom: 140px;
-  right: 0;
-  width: 10%;
-  height: 15%;
-  margin-right: 63%;
-
-}
-input {
+.form-control {
   width: 100%;
-  padding: 7px;
-  border-radius: 5px;
+  padding: 8px;
   border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 14px;
-  color: #333;
-  transition: border-color 0.3s ease;
-  
 }
 
-input:hover,
-input:focus {
-  outline: none;
-  border-color: #666;
+.form-actions {
+  margin-top: 20px;
 }
-.button2{
-    margin-left: 10px;
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-update {
+  background-color: orange;
+  color: white;
+  margin-left: 20px;
+}
+
+.btn:hover {
+  opacity: 0.8;
 }
 </style>

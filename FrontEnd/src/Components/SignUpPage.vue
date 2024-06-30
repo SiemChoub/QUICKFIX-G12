@@ -1,9 +1,9 @@
 <template>
-  <div class="auth-page d-flex align-items-center justify-content-center vh-100">
+  <div class="auth-page d-flex align-items-center justify-content-center">
     <transition name="fade">
       <div
         v-if="showSpinner"
-        class="spinner-container position-fixed w-100 h-100 d-flex align-items-center justify-content-center"
+        class="spinner-container position-fixed w-100 d-flex align-items-center justify-content-center"
       >
         <div class="spinner-border text-warning" role="status">
           <span class="visually-hidden">Loading...</span>
@@ -11,7 +11,7 @@
       </div>
     </transition>
     <transition name="fade">
-      <div class="auth-container shadow-lg d-flex flex-column flex-lg-row">
+      <div class="auth-container shadow-lg d-flex flex-column flex-lg-row w-100">
         <div class="image-container">
           <img src="@/assets/images/image.png" alt="Auth Image" />
         </div>
@@ -40,9 +40,7 @@
           </form>
           <div class="social-login">
             <h3 class="mb-3">Or Sign Up with:</h3>
-            <button class="btn btn-facebook w-100 mb-2" @click="loginWithFacebook">
-              <i class="fab fa-facebook-f"></i> Facebook
-            </button>
+
             <button class="btn btn-google w-100" @click="loginWithGoogle">
               <i class="fab fa-google"></i> Google
             </button>
@@ -50,12 +48,10 @@
           <div class="toggle-auth mt-4">
             <p>
               Already Have Account?
-            <router-link to="/login">Login</router-link>
+              <router-link to="/login">Login</router-link>
             </p>
           </div>
-          <p>
-            <router-link to="/">Back to Home</router-link>
-          </p>
+        
         </div>
       </div>
     </transition>
@@ -63,12 +59,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
-const isLogin = ref(true)
 const username = ref('')
 const email = ref('')
 const password = ref('')
+const showSpinner = ref(true) // Initially show spinner
+
+onMounted(() => {
+  setTimeout(() => {
+    showSpinner.value = false
+  }, 1000)
+})
 
 const signUp = () => {
   console.log('Sign Up form submitted')
@@ -81,25 +83,10 @@ const signUp = () => {
   email.value = ''
   password.value = ''
 }
-const showSpinner = ref(true) // Initially show spinner
-showSpinner.value = true
-setTimeout(() => {
-  showSpinner.value = false
-  // Transition to the next screen or perform other actions
-}, 300)
-
-const loginWithFacebook = () => {
-  console.log('Login with Facebook')
-  // Here you can implement Facebook login logic, e.g., using Facebook SDK
-}
 
 const loginWithGoogle = () => {
   console.log('Login with Google')
   // Here you can implement Google login logic, e.g., using Google SDK
-}
-
-const toggleAuth = () => {
-  isLogin.value = !isLogin.value
 }
 </script>
 
@@ -109,19 +96,20 @@ const toggleAuth = () => {
 .auth-page {
   background-color: #f0f2f5;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70vh;
+  /* justify-content: center; */
+  /* align-items: center; */
+  /* height: auto; */
 }
 
 .auth-container {
-  max-width: 1000px;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   overflow: hidden;
   background-color: white;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  /* width: 90%; */
+  /* max-width: 900px; */
 }
 
 @media (min-width: 992px) {
@@ -131,7 +119,7 @@ const toggleAuth = () => {
 }
 
 .image-container {
-  flex: 1;
+  flex: 1.5;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -140,13 +128,12 @@ const toggleAuth = () => {
 
 .image-container img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
 }
 
 .form-container {
   flex: 1;
-  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -166,19 +153,20 @@ label {
 }
 
 .form-control {
-  margin-bottom: 1.5rem;
-  padding: 12px;
+  /* margin-bottom: 1.5rem; */
+  /* padding: 12px; */
   font-size: 1.1rem;
   border: 1px solid #ced4da;
   border-radius: 5px;
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: orange;
   border-color: #007bff;
   font-size: 1.2rem;
-  padding: 12px;
+  padding: 8px;
   border-radius: 5px;
+  border: none;
 }
 
 .btn-secondary {
@@ -186,7 +174,6 @@ label {
   color: white;
   border-color: #6c757d;
   font-size: 1.2rem;
-  padding: 12px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
@@ -195,35 +182,11 @@ label {
   background-color: #5a6268;
 }
 
-.btn-facebook {
-  background-color: #3b5998;
-  color: white;
-  font-size: 1.1rem;
-  padding: 12px;
-  border-radius: 5px;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-  text-align: center;
-  cursor: pointer;
-  width: 100%;
-}
-
-.btn-facebook:hover {
-  background-color: #2d4373;
-}
-
-.btn-facebook i {
-  margin-right: 10px;
-}
-
 .btn-google {
   background-color: #dd4b39;
   color: white;
   font-size: 1.1rem;
-  padding: 12px;
+  padding: 8px;
   border-radius: 5px;
   border: none;
   display: flex;
@@ -283,15 +246,30 @@ label {
 .back-home .btn-secondary:hover {
   background-color: #5a6268;
 }
+
 .spinner-container {
-  background-color:white;
+  background-color:white; /* Semi-transparent background */
+  z-index: 999; /* Ensure it's above other content */
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #ffc107; /* Yellow color */
 }
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s;
 }
-
-.fade-enter, .fade-leave-to {
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
 </style>
