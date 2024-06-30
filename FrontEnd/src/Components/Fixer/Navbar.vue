@@ -14,10 +14,10 @@
           <i class="bi icon text-25px bi-list" data-bs-toggle="dropdown"></i>
 
           <div class="dropdown-menu dropdown-menu-end bg-white shadow-lg border-0 rounded-2 m-0">
-            <a href="#" class="dropdown-item">Change Profile</a>
-            <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-              Edit
-            </button>
+            <a href="#" class="dropdown-item">Details</a>
+            <a href="#" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+              Change
+            </a>
             <a href="#" class="dropdown-item">Log Out</a>
           </div>
         </div>
@@ -27,17 +27,21 @@
 
 <!-- Modal -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
+  <div class="modal-dialog w-full">
+    <div class="modal-content ">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Edit Profile</h5>
+        <h5 class="modal-title text-dark" id="staticBackdropLabel">Edit Profile</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- Form for editing profile details -->
         <form id="updateForm">
           <div class="mb-3">
-            <label for="name" class="form-label">Name:</label>
+            <label for="name" class="form-label text-dark">Picture:</label>
+            <input type="file" class="form-control" id="name" value="koeuk"  />
+          </div>
+          <div class="mb-3">
+            <label for="name" class="form-label text-dark">Name:</label>
             <input type="text" class="form-control" id="name" value="koeuk"  />
           </div>
           
@@ -45,54 +49,62 @@
       </div>
       <div class="modal-footer">
         
-        <button type="button" class="btn btn-primary" style="background-color: orange;">Update</button>
+        <button type="submit" class="btn border-0 btn-primary" style="background-color: orange;">Update</button>
       </div>
     </div>
   </div>
 </div>
 
-  <div class="container">
-    <div id="current" class="mb-3 row flex-lg-wrap mt-5">
-      <div id="cardCurr" class="col w-auto">
-        <div class="cards d-flex flex-column justify-content-center align-items-center">
-          <h5 class="card-title">Repaired: 23</h5>
-        </div>
-      </div>
-      <div id="cardCurr" class="col w-auto">
-        <div class="cards d-flex flex-column justify-content-center align-items-center">
-          <h5 class="card-title">Booking: 4</h5>
-        </div>
-      </div>
-      <div id="cardCurr" class="col w-auto">
-        <div class="cards d-flex flex-column justify-content-center align-items-center">
-          <h5 class="card-title">Booked: 3</h5>
-        </div>
-      </div>
+<div class="container">
+  <div class="mb-3 ">
+    <div id="cardbtn" class="d-flex  align-content-center w-auto mt-5">
+      <router-link
+        to="/dashboard"
+        class="btn btn-outline pl-xl"
+        :class="{ active: $route.path === '/dashboard' }"
+        type="button"
+      >
+        Dashboard
+      </router-link>
+      <router-link
+        to="/booking"
+        class="btn btn-outline pl-xl"
+        :class="{ active: $route.path === '/booking' }"
+        type="button"
+      >
+        List Booking
+      </router-link>
+      <router-link
+        to="/Skill"
+        class="btn btn-outline pl-xl"
+        :class="{ active: $route.path === '/Skill' }"
+        type="button"
+      >
+        My Skill
+      </router-link>
+      <router-link
+        to="/chatView"
+        class="btn btn-outline pl-xl position-relative"
+        :class="{ active: $route.path === '/chatView' }"
+        type="button"
+      >
+        Message
+        <h5 class="notification bg-white text-dark rounded-30 position-absolute top-0 start-100 translate-middle">2</h5>
+      </router-link>
+      <router-link
+        to="/HistoryView"
+        class="btn btn-outline pl-xl"
+        :class="{ active: $route.path === '/HistoryView' }"
+        type="button"
+      >
+        History
+      </router-link>
     </div>
+   
   </div>
+</div>
 
-  <div class="container">
-    <div class="mb-3">
-      <div id="cardbtn" class="btn d-flex align-content-center w-auto mt-5">
-        <router-link to="/dashboard" class="btn pl-xl btn-outline" type="button">
-          <i class="bi bi-grid-fill text-36px"></i>
-        </router-link>
-        <router-link to="/booking" class="btn rounded-0 btn-outline-orange" type="button">
-          <i class="bi text-coral text-36px bi-cart3"></i>
-        </router-link>
-        <router-link to="/Skill" class="btn rounded-0 btn-xxl btn-outline-secondary" type="button">
-          <i class="bi text-36px bi-reddit"></i>
-        </router-link>
-        <router-link to="/chatView" class="btn rounded-0 btn-xxl btn-outline-secondary position-relative" type="button">
-          <i class="bi bi-messenger text-36px"></i>
-          <h5 class="notification bg-white text-dark rounded-30 position-absolute top-0 start-100 translate-middle">2</h5>
-        </router-link>
-        <router-link to="/HistoryView" class="btn rounded-0 book pl-xl btn-outline btn-outline-secondary" type="button">
-          <i class="bi text-36px bi-book-half"></i>
-        </router-link>
-      </div>
-    </div>
-  </div>
+
   <section></section>
 </template>
 
@@ -109,66 +121,62 @@ export default {
 </script>
 
 <style scoped>
-#current {
+/* #current {
   display: flex;
   flex-wrap: wrap;
-}
+} */
 
 .card-body {
   background-color: #fff;
   border-radius: 0 0 40px 40px;
+  color: #434343;
 }
 
-.btn i {
-  color: #eb9170;
+/* .btn  {
+  width: auto;
+
+} */
+
+/* .btn i {
+  color: orange;
 }
 
 .btn i:hover {
   color: #fff;
-}
+} */
 
-#cardCurr {
+/* #cardCurr {
   width: 200px;
   display: flex;
   align-content: center;
   margin: 0;
-}
+} */
 
-.cards {
-  margin: 10px;
-  padding: 10px;
-  width: 250px;
-  height: 120px;
-  border-radius: 5px 50px;
-  background: #fff;
-  border-left: 20px solid #e08665;
-  transition: 0.3s;
-}
 
-.cards:hover {
-  border-left: 5px solid #e67248;
-  background-color: rgba(255, 127, 80, 0.327);
-  background-color: linear-gradient(to right, rgba(255, 127, 80, 0.196) 0%, rgba(255, 127, 80, 0.196) 100%);
-}
+
 
 .notification {
-  background-color: #434343;
+  background-color: orange;
   color: #fff;
+  padding: 3px;
+  width: 30px;
+}
+.btn.active {
+  background-color: orange; /* Change this to your desired active background color */
 }
 
+/* 
 .icon:hover {
   scale: 1.3;
   transition: 0.3s;
   font-size: 24px;
-  color: coral;
-}
-
-#btn1 {
   border: none;
-  width: 100px;
-}
+  color: coral;
+} */
 
-#btn1:hover {
+
+
+/* #btn1:hover {
   background-color: #5a5a5a;
   color: #fff;
   border-radius: 10px;
@@ -179,22 +187,42 @@ export default {
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-}
+} */
 
 #cardbtn {
   height: 80px;
+
   align-items: center;
-  width: 50%;
   display: flex;
-  background-color: #fff;
+  width: 50%;
   color: #fff;
   border-radius: 10px;
   border: none;
   padding: 0;
   font-size: 20px;
+  gap: 10px;
   font-weight: bold;
   cursor: pointer;
   align-content: center;
+  justify-content: start;
+}
+.btn {
+  font-size: 20px;
+  border-bottom: 2px solid rgb(82, 82, 82);
+  border-radius: 5px 5px 5px 5px;
+}
+.btn:hover{
+  align-items: center;
+  display: flex;
+  background-color: orange;
+  box-shadow: #434343 0px 5px;
+  color: #fff;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  align-content: center;
+  justify-content: center;
 }
 
 #card-body {
@@ -214,6 +242,19 @@ export default {
 }
 
 @media (max-width: 512px) {
+
+  #cardbtn {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+  }
+  #cardbtn .btn{
+    width: auto;
+    display: flex;
+    font-size: 6px;
+
+  } 
   .profile {
     width: auto;
     display: flex;
@@ -246,23 +287,33 @@ export default {
     font-size: 10px;
     width: auto;
   }
-
-  #cardCurr {
+.notification {
+  font-size: 12px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  
+}
+  /* #cardCurr {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-  }
+  } */
 
-  .cards {
+  /* .cards {
     background-color: #fff;
     width: 80%;
     height: 100%;
     display: flex;
     align-items: center;
-  }
+  } */
+  /* .btn.pl-xl {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    } */
 
   .card-body {
     width: 100%;
@@ -284,7 +335,7 @@ export default {
     justify-content: center;
   }
 
-  #cardbtn #btn {
+  /* #cardbtn #btn {
     height: 100%;
     background-color: #05a2a2;
     display: flex;
@@ -292,13 +343,13 @@ export default {
     justify-content: center;
     flex-direction: column;
     padding: 10px;
-  }
+  } */
 
-  .btn i {
+  /* .btn i {
     font-size: 20px;
-  }
+  } */
 
-  #btn1 .book:hover {
+  /* #btn1 .book:hover {
     background-color: #ff7b00;
     color: #fff;
     border-radius: 10px;
@@ -307,6 +358,6 @@ export default {
     border: none;
     font-size: 20px;
     font-weight: bold;
-  }
+  } */
 }
 </style>
