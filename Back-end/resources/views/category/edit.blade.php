@@ -10,15 +10,15 @@
           @csrf
           @method('put')
           <div class="space-y-3">
-            <div>
-              <label for="name" class="text-gray-700 font-medium text-sm">Name</label>
+            <div class="mb-4">
+              <label for="name" class="block text-warning-700 font-medium mb-1">Name</label>
               <input id="name" type="text" name="name" value="{{ old('name', $category->name) }}"
                 placeholder="Enter name"
                 class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
             </div>
           </div>
           <div>
-              <label for="description" class="text-gray-700 font-medium text-sm">Description</label>
+              <label for="description" class="block text-warning-700 font-medium mb-1">Description</label>
               <textarea name="description" id="description" placeholder="Enter description"
                 class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm"
                 rows="3">{{ old('description', $category->description) }}</textarea>
@@ -35,4 +35,7 @@
       </div>
     </div>
   </div>
+  <!-- Include Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </x-app-layout>

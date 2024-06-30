@@ -55,10 +55,13 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        $data= $request->all();
+        $data = $request->all();
         $data['user_id'] = Auth::user()->id;
-        $Service = Service::create($data);
-        return redirect('admin/services')->withSuccess('Service created !!!');
+        $service = Service::create($data);
+    
+        // Display success alert popup
+        return redirect('admin/services')
+            ->with('showAlertCreate', true);
     }
 
     /**
@@ -80,7 +83,11 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-       return view('service.edit',['service' => $service]);
+    //    return view('service.edit',['service' => $service]);
+        $categories = Category::all();
+            
+            return view('service.edit',['service' => $service], compact('categories'));
+
     }
 
     /**
@@ -93,7 +100,7 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $service->update($request->all());
-        return redirect('admin/services')->withSuccess('Service updated !!!');
+        return redirect('admin/services')->with('showAlertEdit', true);
 
     }
 
@@ -106,6 +113,6 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $service->delete();
-        return redirect()->back()->withSuccess('Service deleted !!!');
+        return redirect()->back()->with('showAlertDelete', true);
     }
 }

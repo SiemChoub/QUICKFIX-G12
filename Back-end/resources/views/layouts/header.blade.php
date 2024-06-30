@@ -138,7 +138,7 @@
                 </button>
               </div>
             </a>
-            <a href="#" class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+            <a class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
                 <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 3</h5>
                 <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the third notification.</p>
@@ -150,7 +150,7 @@
                 </button>
               </div>
             </a>
-            <a href="#" class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+            <a class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
                 <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 3</h5>
                 <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the third notification.</p>
