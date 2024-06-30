@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { createAcl, defineAclRules } from 'vue-simple-acl'
 import LoginForm from '@/Components/loginPage.vue'
 import SignUpForm from '@/Components/SignUpPage.vue'
+import MessangerComponent from '@/Components/Messanger.vue'
 
 const simpleAcl = createAcl({})
 
@@ -36,6 +37,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/messanger',
+      name: 'messanger',
+      component: MessangerComponent,
+      meta: {
+        requiresAuth: false // Public page, no authentication required
+      }
+    },
+    {
       path: '/',
       name: 'home',
       component: () => import('../views/Web/HomeView.vue'),
@@ -50,7 +59,7 @@ const router = createRouter({
 
     },
     {
-      path: '/service/profile',
+      path: '/profile',
       name: 'profile',
       component: () => import('../views/Web/Service/ProfileView.vue')
 
@@ -92,6 +101,11 @@ const router = createRouter({
       component: () => import('../views/Web/Service/ElectronicService.vue')
     },
     {
+      path: '/fixer',
+      name: 'fixer',
+      component: () => import('../Components/FixerVue.vue')
+    },
+    {
       path: '/post',
       name: 'post',
       component: () => import('../views/Web/Post/ListView.vue')
@@ -124,6 +138,11 @@ const router = createRouter({
       component: () => import('../Components/Fixer/HistoryView.vue')
     },
     {
+      path: '/map',
+      name: 'map',
+      component: () => import('../Components/Map.vue')
+    },
+    {
       path: '/chatView',
       name: 'chatView',
       component: () => import('../Components/Fixer/ChatView.vue')
@@ -132,11 +151,6 @@ const router = createRouter({
       path: '/dashboard',
       name: 'dash-board',
       component: () => import('../Components/Fixer/DashBoard.vue'),
-    },
-    {
-      path: '/map',
-      name: 'view-map',
-      component: () => import('../Components/Service/Map/Map.vue')
     },
   ]
 })

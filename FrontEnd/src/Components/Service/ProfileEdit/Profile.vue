@@ -1,26 +1,27 @@
 <template>
-  <div class="container">
-    <div class="left">
-      <img
-        :src="user.image"
-        alt="Img"
-      />
-      <div class="img">
-        <img
-          src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg"
-          alt="camera"
-        />
-      </div>
+     <div class="profile-right">
+      <button class="btn btn-back" @click="goBack">
+        <i class="bi bi-arrow-left"></i> Back
+      </button>
     </div>
-    <div class="right">
-      <div class="left2">
+  <div class="profile-container">
+    <div class="profile-left">
+      <div class="profile-image">
+        <div class="edit-profile">
+          <router-link to="/profile/edit" class="btn btn-orange">
+            <i class="bi bi-camera-fill"></i> Edit Profile
+          </router-link>
+        </div>
+        <img :src="user.image" alt="Profile Image" class="center-image" />
+      </div>
+      <div class="profile-info">
         <div class="info">
           <label>Role:</label>
           <span class="info-value">{{ user.role }}</span>
         </div>
         <div class="info">
           <label>User Name:</label>
-          <span class="info-value">{{user.name}}</span>
+          <span class="info-value">{{ user.name }}</span>
         </div>
         <div class="info">
           <label>Email:</label>
@@ -28,22 +29,21 @@
         </div>
         <div class="info">
           <label>Phone Number:</label>
-          <span class="info-value">{{user.phone}} </span>
+          <span class="info-value">{{ user.phone }}</span>
         </div>
         <div class="info">
           <label>Create Date:</label>
-          <span class="info-value">{{user.createDate}}</span>
+          <span class="info-value">{{ user.createDate }}</span>
         </div>
         <div class="info">
           <label>Create Time:</label>
-          <span class="info-value">{{user.createTime}}</span>
+          <span class="info-value">{{ user.createTime }}</span>
         </div>
       </div>
-      <router-link to="/profile/edit"><button type="button" id="jj" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Edit information
-      </button></router-link>
     </div>
+    
   </div>
+ 
 </template>
 
 <script>
@@ -60,77 +60,128 @@ export default {
         image: 'https://i.pinimg.com/564x/58/b6/52/58b6528f3b6c1b77a119f9efc2ef8f61.jpg'
       }
     };
+  },
+  methods: {
+    goBack() {
+      this.$router.go(-1); // Go back to previous route
+    }
   }
-}
+};
 </script>
 
-<style>
-.container {
+<style scoped>
+.profile-container {
   display: flex;
+  justify-content: center;
+  align-items: center;
   height: 80vh;
   margin-top: 30px;
-  background: #b6b3b3;
+  background-color: #b6b3b3;
   border-radius: 5px;
+  padding: 20px;
 }
 
-.left {
-  width: 40%;
-  height: 100%;
+.profile-left {
+  width: 70%;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
- 
+  align-self: center;
 }
-.right {
-  width: 60%;
-  height: 100%;
-}
-.left img {
-  height: 50%;
-  width: 50%;
-  border-radius: 20px;
 
+.profile-right {
+  width: 10%;
+  margin-left: 20px;
 }
-.left2 {
-  float: left;
-  width: 50%;
-  height: 100%;
-  padding-top: 12%;
-  padding-left: 20px;
+
+.profile-image {
+  position: relative;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 20px;
 }
-#jj {
+
+.profile-image img {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.edit-profile {
+  position: absolute;
+  bottom: 10px; /* Adjust the positioning as needed */
+  right: 10px; /* Adjust the positioning as needed */
+}
+
+.edit-profile .btn {
+  background-color: orange;
+  color: white;
   border: 1px solid orange;
-  padding: 5px 10px;
-  margin-top: 45%;
-  background: orange;
+  padding: 8px 16px;
   border-radius: 5px;
-
-}
-.left2 label {
-  display: block;
-  font-weight: bold;
-}
-.info {
+  text-decoration: none;
+  transition: background-color 0.3s ease;
   display: flex;
   align-items: center;
+}
+
+.edit-profile .btn:hover {
+  background-color: #ff7f50; /* Lighter shade of orange */
+}
+
+.btn-back {
+  background-color: #6c757d;
+  color: white;
+  border: 1px solid #6c757d;
+  padding: 8px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.btn-back:hover {
+  background-color: #495057; /* Darker shade of gray */
+}
+
+.profile-info {
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.info {
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
-.info-value {
-  flex: 1;
-  text-align: start;
-  margin-left: 50px;
-}
+
 .info label {
   width: 120px;
-  margin-top: 5px;
+  font-weight: bold;
 }
-.img {
-  position: absolute;
-  bottom: 155px;
-  right: 0;
-  width: 10%;
-  height: 15%;
-  margin-right: 63%;
 
+.info-value {
+  flex: 1;
+  margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .profile-left {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .profile-info {
+    padding: 10px;
+  }
 }
 </style>

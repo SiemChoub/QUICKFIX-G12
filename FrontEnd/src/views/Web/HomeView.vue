@@ -1,98 +1,92 @@
-
 <template>
   <transition name="fade">
     <router-view />
   </transition>
   <WebLayout>
     <div class="container-fluid p-0">
-      <div
-        id="carouselExampleIndicators"
-        class="carousel slide carousel-fade mx-auto"
-        data-bs-ride="carousel"
-      >
+      <!-- Carousel -->
+      <div id="headerCarousel" class="carousel slide carousel-fade mx-auto" data-bs-ride="carousel" data-interval="3000">
+        <!-- Indicators -->
         <div class="carousel-indicators">
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="0"
-            class="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="3"
-            aria-label="Slide 4"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide-to="4"
-            aria-label="Slide 5"
-          ></button>
+          <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="0" class="active"></button>
+          <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="1"></button>
+          <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="2"></button>
+          <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="3"></button>
+          <button type="button" data-bs-target="#headerCarousel" data-bs-slide-to="4"></button>
         </div>
+
+        <!-- Slides -->
         <div class="carousel-inner">
+          <!-- Slide 1 -->
           <div class="carousel-item active">
-            <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 1" />
+            <div class="carousel-blur-background">
+              <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 1" />
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h2 class="carousel-title">THE BEST REPAIR AND MAINTENANCE SERVICES</h2>
+              <p class="carousel-subtitle">Providing top-notch solutions for your needs.</p>
+            </div>
           </div>
+
+          <!-- Slide 2 -->
           <div class="carousel-item">
-            <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 2" />
+            <div class="carousel-blur-background">
+              <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 2" />
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h2 class="carousel-title">FAST AND RELIABLE FIXES</h2>
+              <p class="carousel-subtitle">Quick solutions that you can trust.</p>
+            </div>
           </div>
+
+          <!-- Slide 3 -->
           <div class="carousel-item">
-            <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 3" />
+            <div class="carousel-blur-background">
+              <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 3" />
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h2 class="carousel-title">EXPERT SERVICE PROVIDERS</h2>
+              <p class="carousel-subtitle">Skilled professionals at your service.</p>
+            </div>
           </div>
+
+          <!-- Slide 4 -->
           <div class="carousel-item">
-            <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 4" />
+            <div class="carousel-blur-background">
+              <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 4" />
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h2 class="carousel-title">CUSTOMER SATISFACTION GUARANTEED</h2>
+              <p class="carousel-subtitle">Your happiness is our priority.</p>
+            </div>
           </div>
+
+          <!-- Slide 5 -->
           <div class="carousel-item">
-            <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 5" />
+            <div class="carousel-blur-background">
+              <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 5" />
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h2 class="carousel-title">24/7 SUPPORT AVAILABLE</h2>
+              <p class="carousel-subtitle">Always here when you need us.</p>
+            </div>
           </div>
         </div>
-        <button
-          class="carousel-control-prev custom-prev"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="prev"
-        >
+
+        <!-- Controls -->
+        <button class="carousel-control-prev custom-prev" type="button" data-bs-target="#headerCarousel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>
         </button>
-        <button
-          class="carousel-control-next custom-next"
-          type="button"
-          data-bs-target="#carouselExampleIndicators"
-          data-bs-slide="next"
-        >
+        <button class="carousel-control-next custom-next" type="button" data-bs-target="#headerCarousel" data-bs-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Next</span>
         </button>
       </div>
-      <header class="overlay text-center d-flex flex-column align-items-center mx-auto">
-        <h1 class="main-title mb-3">THE BEST REPAIR AND MANTERNENCE SERVICES</h1>
-        <h1 class="sub-title">QUICKFIX</h1>
-        <div class="button-container">
-    <router-link to="/login">
-      <button class="btn btn-primary button mt-3">Use Now!</button>
-    </router-link>
-  </div>
-      </header>
-      <div class="content mt-5">
-        <div class="row service">
-          <ServiceLayout />
-        </div>
+
+      <!-- Additional Content -->
+      <div class="content">
+          <WebService />
         <div class="row mt-5 mapProvince">
           <ProvinceMap />
         </div>
@@ -106,20 +100,22 @@
     </div>
   </WebLayout>
 </template>
+
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue'
-import WebLayout from '@/Components/Layouts/WebLayout.vue'
-import ServiceLayout from '@/Components/WebServiceCustomer.vue'
-import ProvinceMap from '@/Components/ProvinceMap.vue'
-import AboutPage from '@/Components/AboutPage.vue'
-import FooterPage from '@/Components/FooterPage.vue'
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { onMounted, onBeforeUnmount } from 'vue';
+import WebLayout from '@/Components/Layouts/WebLayout.vue';
+import ProvinceMap from '@/Components/ProvinceMap.vue';
+import AboutPage from '@/Components/AboutPage.vue';
+import FooterPage from '@/Components/FooterPage.vue';
+import WebService from '@/Components/WebServiceCustomer.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 </script>
+
 <style scoped>
 .carousel.slide {
-  width: 90%;
-  top: 50px;
+  width: 100%;
 }
 
 .carousel-item img {
@@ -127,58 +123,30 @@ const router = useRouter()
   object-fit: cover;
 }
 
-.overlay {
+
+
+.carousel-caption {
   position: absolute;
-  bottom: 40px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  height: 70%;
-  z-index: 3;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  pointer-events: none;
-}
-.button-container {
-  position: relative; /* Ensure the container is positioned correctly */
-  z-index: 1000; /* Example z-index */
-}
-
-.button {
-  background-color: orange;
-  border-color: orange;
-  cursor: pointer;
-  padding: 15px 30px;
-  transition: background-color 0.3s, border-color 0.3s;
-  z-index: 1001; /* Ensure the button has a higher z-index if needed */
-  position: relative;
-  pointer-events: auto; /* Ensure pointer events are enabled */
-}
-
-.button:hover {
-  background-color: darkorange;
-  border-color: darkorange;
+  transform: translate(-50%, 15%);
+  text-align: center;
+  color: #fff;
+  width: 100%;
+  z-index: 1; 
+  background: rgba(11, 11, 11, 0.142); /* Adjust the rgba values to get the desired gray color with opacity */
+  padding: 10px; /* Add padding to make text more readable */
 }
 
 
-.main-title {
+.carousel-title {
   font-size: 3rem;
   font-weight: bold;
-  color: white;
-  padding: 20px 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  pointer-events: all; /* Ensure text remains clickable */
+  margin-bottom: 10px;
 }
 
-.sub-title {
-  color: orange;
-  font-weight: bolder;
-  font-size: 4rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  pointer-events: all; /* Ensure text remains clickable */
+.carousel-subtitle {
+  font-size: 1.5rem;
 }
 
 .custom-prev,
@@ -192,9 +160,9 @@ const router = useRouter()
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: 80%;
+  top: 50%;
   transform: translateY(-50%);
-  z-index: 7; /* Ensure buttons are above overlay */
+  z-index: 2; /* Ensure buttons are above blurred background */
 }
 
 .custom-prev {
@@ -210,14 +178,7 @@ const router = useRouter()
   background-color: darkorange;
 }
 
-.custom-prev-icon,
-.custom-next-icon {
-  filter: invert(1);
-}
-
 .content {
   padding-top: 20px;
 }
 </style>
-
-

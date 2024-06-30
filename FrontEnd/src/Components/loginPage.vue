@@ -24,13 +24,10 @@
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" class="form-control" required />
           </div>
-          <button type="submit" class="btn btn-primary w-100 mb-4">Login</button>
+          <button type="submit" class="btn btn-primary w-100 mb-4" style="background:orange;border:none">Login</button>
         </form>
         <div class="social-login">
           <h3 class="mb-3">Or login with:</h3>
-          <button class="btn btn-facebook w-100 mb-2" @click="loginWithFacebook">
-            <i class="fab fa-facebook-f"></i> Login with Facebook
-          </button>
           <google-login
             :clientId="clientId"
             :scope="scope"
@@ -101,25 +98,23 @@ const onGoogleLoginError = (error) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  width: 100%;
 }
 
 .login-container {
-  max-width: 100%;
   display: flex;
   height: 100%;
   overflow: hidden;
   background-color: white;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
 .image-container {
-  flex: 1;
+  flex: 1.5;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #007bff;
+  /* background-color: #007bff; */
 }
 
 .image-container img {

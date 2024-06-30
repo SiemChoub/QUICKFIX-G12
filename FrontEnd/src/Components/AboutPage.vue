@@ -25,7 +25,7 @@ import { Icon } from '@iconify/vue'
         <img
           src="../assets/images/image.png"
           alt="Description of the right image"
-          style="height: 95%; widht: 100%"
+          style="height: 100%; widht: 300px"
         />
       </div>
     </div>
