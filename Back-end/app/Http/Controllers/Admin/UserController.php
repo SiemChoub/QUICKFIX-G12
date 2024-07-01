@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -18,14 +19,15 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::latest()->get();
+        $users = User::paginate(5);
 
         return view('setting.user.index', ['users' => $users]);
     }
 
     public function create()
     {
-        return view('setting.user.new');
+        $roles = Role::all();
+        return view('setting.user.new',compact('roles'));
     }
 
     public function store(Request $request)
@@ -33,16 +35,18 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
+            'address' => 'required',
             'password' => 'required|confirmed',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'address' => $request->address,
+            'phone' => $request->phone,
+            'role' => $request->role,
             'password' => bcrypt($request->password),
         ]);
-
-        $user->role = $request->role;
         $user->save();
 
         return redirect()->back()->withSuccess('User created!');
@@ -50,7 +54,8 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('setting.user.edit', ['user' => $user]);
+        $roles = Role::all();
+        return view('setting.user.edit', ['user' => $user],compact('roles'));
     }
 
     // app/Http/Controllers/UserController.php
@@ -62,6 +67,7 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
+            'address' => 'required',
         ]);
 
         // Update the user data
@@ -70,6 +76,7 @@ class UserController extends Controller
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
+        $user->address = $request->input('address');
         $user->save();
 
         return response()->json(['message' => 'User updated successfully']);
