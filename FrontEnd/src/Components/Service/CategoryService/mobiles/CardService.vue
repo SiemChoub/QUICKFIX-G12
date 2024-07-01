@@ -11,7 +11,7 @@
             <p class="card-text">
              Known for iPhones, iPads, Mac computers, Apple Watches, and accessories.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
             <p class="card-text">
              Offers a diverse range of products including smartphones (Galaxy series), tablets, TVs, home appliances.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
             <p class="card-text">
               OPPO is a Chinese consumer electronics and mobile communications company.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
             <p class="card-text">
              Huawei is a global technology company headquartered in Shenzhen, China, known for its telecommunications.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
             <p class="card-text">
                Known for smartphones with innovative features like high-resolution front cameras and in-display fingerprint scanners.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
             <p class="card-text">
               Sony is known for Xperia smartphones, focusing on camera technology and multimedia capabilities.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@
             <p class="card-text">
               Offers smartphones under the Mi and Redmi series, known for their value-for-money offerings.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -124,7 +124,7 @@
               Realme is a wider card with supporting text below as a natural lead-in to additional
               content. This content is a little bit longer.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -141,7 +141,7 @@
               LG is a wider card with supporting text below as a natural lead-in to additional
               content. This content is a little bit longer.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -157,7 +157,7 @@
             <p class="card-text">
               Nokia smartphones are often praised for their robust build quality, reliability.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -194,4 +194,9 @@ export default {}
     font-weight: bold;
     border-radius: 50vh;
  }
+ #Booking-btn a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
 </style>

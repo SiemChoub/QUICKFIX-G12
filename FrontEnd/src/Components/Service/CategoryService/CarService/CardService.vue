@@ -11,7 +11,7 @@
             <p class="card-text">
              Honda motorcycles are extremely popular in Cambodia due to their reliability, fuel efficiency.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
             <p class="card-text">
              Yamaha is another major player in the Cambodian motorcycle market. Models like the Yamaha Fino, Yamaha Nouvo.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
             <p class="card-text">
               Suzuki motorcycles have a significant presence in Cambodia as well. Models like the Suzuki Smash.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
             <p class="card-text">
               While less common compared to Honda and Yamaha, Kawasaki motorcycles are still well-regarded in Cambodia.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
             <p class="card-text">
               SYM, a Taiwanese brand, has gained popularity in Cambodia with models like the SYM Attila.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -92,7 +92,7 @@
               Ducati is a wider card with supporting text below as a natural lead-in to additional
               content. This content is a little bit longer.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -132,4 +132,9 @@ export default {}
     font-weight: bold;
     border-radius: 50vh;
  }
+ #Booking-btn a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
 </style>

@@ -20,7 +20,7 @@
     <div class="card">  
       <img src="https://as1.ftcdn.net/v2/jpg/01/17/97/12/1000_F_117971249_DPPcWS8JHcHWUDWhlaZRSaFg8recmFNp.jpg" height="350vh" class="card-img-top" alt="..." />
       <div class="card-body">
-        <h5 class="card-title">TukTuk​ Repair</h5>
+        <h5 class="card-title">TukTuk Repair</h5>
         <p class="card-text"><small class="text-muted">TukTuk repair is a specialized field that demands expertise in electrical and mechanical engineering. </small></p>
         <button id="click">Click Now!</button>
       </div>

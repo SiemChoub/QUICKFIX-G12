@@ -11,7 +11,7 @@
             <p class="card-text">
              Mac computers including MacBook Air, MacBook Pro, iMac, and Mac Pro. Apple computers are known for their sleek design.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
             <p class="card-text">
              Dell is a variety of laptops (HP Spectre, HP Envy, HP Pavilion), desktops (HP Elite, HP Slimline).
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
             <p class="card-text">
               Suzuki motorcycles have a significant presence in Cambodia as well. Models like the Suzuki Smash.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
             <p class="card-text">
               Offers laptops (ThinkPad, IdeaPad, Yoga), desktop computers (ThinkCentre), tablets (Lenovo Tab).
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
             <p class="card-text">
               its range of laptops (Asus ZenBook, Asus VivoBook, Asus ROG for gaming), desktop computers, motherboards.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
             <p class="card-text">
                Provides laptops (Acer Swift, Acer Aspire, Acer Predator for gaming), desktop computers (Acer Veriton).
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@
             <p class="card-text">
               Microsoft manufactures Surface devices including Surface Pro (convertible tablet/laptop), Surface Laptop, Surface Book.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@
             <p class="card-text">
               MSI is gaming laptops (MSI GE Series, MSI GS Series), desktop computers, motherboards.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
             <p class="card-text">
                Razer is gaming laptops (Razer Blade series), gaming desktops (Razer Tomahawk), and gaming peripherals.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@
             <p class="card-text">
               Specializes in high-performance gaming laptops (Alienware mSeries), desktop computers.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -191,4 +191,9 @@ export default {}
     font-weight: bold;
     border-radius: 50vh;
  }
+ #Booking-btn a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
 </style>

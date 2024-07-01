@@ -11,7 +11,7 @@
             <p class="card-text">
              Known for consumer electronics such as TVs, audio equipment, cameras, gaming consoles.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
             <p class="card-text">
              Dell is a variety of laptops (HP Spectre, HP Envy, HP Pavilion), desktops (HP Elite, HP Slimline).
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
             <p class="card-text">
               Known for TVs, home appliances (refrigerators, washing machines), smartphones, and display panels.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
             <p class="card-text">
                Offers a diverse range of products including smartphones, TVs, home appliances, semiconductors, and display panels.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@
             <p class="card-text">
               Specializes in imaging and optical products including cameras, camcorders, printers, and medical equipment.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
             <p class="card-text">
                Honeywell aerospace systems, building technologies (HVAC systems, security solutions), performance materials.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
   </div>
 </template>
 
-<script>
+<button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button><script>
 export default {}
 </script>
 
@@ -127,4 +127,9 @@ export default {}
     font-weight: bold;
     border-radius: 50vh;
  }
+ #Booking-btn a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
 </style>

@@ -11,7 +11,7 @@
             <p class="card-text">
               Tuk Tuk Factory is a well-known manufacturer based in Cambodia. They produce a range.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
             <p class="card-text">
              electric tuk tuks as concerns over pollution and fuel costs increase. 
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@
             <p class="card-text">
                It features a motorcycle or scooter with a larger trailer-like carriage attached to the rear.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
             <p class="card-text">
               Piaggio is an Italian company that manufactures the Ape series of vehicles, which include auto rickshaws.
             </p>
-            <button id="Booking-btn">Booking Now!</button>
+            <button id="Booking-btn" @click="navigateToBooking"><router-link to="/booking">Booking Now!</router-link></button>
           </div>
         </div>
       </div>
@@ -80,15 +80,6 @@ export default {}
     margin-top: 2%;
     margin: 2%;
 }
-/* #moto-brand {
-    width: 100%;
-    margin-left: 12%;
-} */
-
-/* #moto-image img {
-    width: 100%;
-    height: 40vh;
-} */
  #Booking-btn {
     background-color: orange;
     border: none;
@@ -96,7 +87,11 @@ export default {}
     height: 5vh;
     margin-top: 17%;
     margin-left: 68%;
-    font-weight: bold;
     border-radius: 50vh;
  }
+ #Booking-btn a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
 </style>
