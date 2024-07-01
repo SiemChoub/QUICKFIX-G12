@@ -1,53 +1,88 @@
 <template>
   <div>
     <Navbar />
-     <div class="container">
-      <div class="mb-3">
-      <!--  <div class="card">
-          <div class="card-body">
-            <h3 class="p-3">CardCurrently</h3>
-            <ul class="list-group gap-1 w-auto">
-              <li
-                v-for="(item, index) in items"
-                :key="index"
-                id="li"
-                class="list-group-item border-1"
-              >
-                <div class="pro">
-                  <div class="profile w-auto d-flex gap-3">
-                    <img src="/src/assets/img/cat.jpeg" alt="" class="rounded-25" />
-                    <h5>
-                      Repair: <b>{{ item.id }}</b>
-                    </h5>
-                  </div>
-                  <p>Date : {{ item.date }}</p>
+    <div class="container">
+      <div class="mb-3 d-flex">
+        <div class="row w-full h-auto w-100  rounded-2 p-0 d-flex p-3">
+          <!-- <div class="col-sm-12"> -->
+            <div class="card border-0 w-100">
+              <div class="card-body row d-flex g-3 justify-content-between">
+                <div
+                  class="cards d-flex flex-column shadow-lg gap-3 justify-content-center align-items-center"
+                >
+                  <h5 class="card-title">Repaired</h5>
+                  <h5
+                    class="card-title rounded-3 d-flex border-1 p-2 w-auto align-items-center justify-content-center shadow"
+                  >
+                    23
+                  </h5>
                 </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div> -->
-
-      <div class="col-12 col-md-6 col-xl-4 mb-4">
-        <div class="h-100 bg-white rounded p-4">
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Calendar</h6>
-            <a href="">Show All</a>
-          </div>
-          <div id="calendar">
-            <input type="date" class="form-control">
-          </div>
+                <div
+                  class="cards d-flex flex-column shadow-lg gap-3 justify-content-center align-items-center"
+                >
+                  <h5 class="card-title">Currently</h5>
+                  <h5
+                    class="card-title rounded-3 d-flex border-1 p-2 w-auto align-items-center justify-content-center shadow"
+                  >
+                    23
+                  </h5>
+                </div>
+                <div
+                  class="cards d-flex flex-column shadow-lg gap-3 justify-content-center align-items-center"
+                >
+                  <h5 class="card-title">Booked</h5>
+                  <h5
+                    class="card-title rounded-3 d-flex border-1 p-2 w-auto align-items-center justify-content-center shadow"
+                  >
+                    23
+                  </h5>
+                </div>
+              </div>
+            </div>
+          <!-- </div> -->
         </div>
       </div>
-
-    </div>
+      
+      <div class="row w-full">
+        <div class="col-sm-8">
+          <div class="card w-100 ml-2 border-0 p-4">
+            <canvas id="myChart"></canvas>
+          </div>
+        </div>
+        <div class="col-sm-4 h-100">
+          <div class="card w-100 ml-2 border-0 p-4">
+            <div class="d-flex align-items-center justify-content-between">
+              <h6 class="mb-0">Calendar</h6>
+              <a href="">Show All</a>
+            </div>
+            <div id="calendar" class="w-100">
+              <input type="date" class="form-control" />
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-sm-4">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                  <h6 class="mb-0">Calendar</h6>
+                  <a href="">Show All</a>
+                </div>
+                <div id="calendar" class="w-100">
+                  <input type="date" class="form-control w-100" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from "../Fixer/Navbar.vue";
-
+import Chart from "chart.js/auto";
 export default {
   name: "HistoryView",
   components: {
@@ -62,17 +97,65 @@ export default {
       ],
     };
   },
+  mounted() {
+    const ctx = document.getElementById("myChart");
+    // const ctx = Utils.months({count: 7});
+    const myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [
+          {
+            label: "# of Votes",
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(75, 192, 192, 0.2)",
+              "rgba(153, 102, 255, 0.2)",
+              "rgba(255, 159, 64, 0.2)",
+            ],
+            borderColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(255, 206, 86, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(153, 102, 255, 1)",
+              "rgba(255, 159, 64, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+    myChart;
+  },
 };
-
-// $(document).ready(function(){
-//         $('#calendar').datetimepicker({
-//             inline: true,
-//             format: 'L'
-//         });
-//     });
 </script>
 
 <style>
+.cards {
+  width: 250px;
+  height: 120px;
+  border-radius: 5px 5px 5px 50px;
+  background: #fff;
+  border-left: 20px solid orange;
+  transition: 0.3s;
+  color: #434343;
+}
+.cards:hover {
+  border-left: 5px solid orange;
+  background-color: rgb(241, 241, 241);
+  color: orange;
+}
 img {
   width: 16%;
   height: 100%;
@@ -82,32 +165,10 @@ img {
   border-left: 5px solid coral;
 }
 
-.profile {
-  display: flex;
-  align-items: center;
-  width: auto;
-}
-
-.pro {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
-  align-items: center;
-}
-
-.pro p {
-  margin: 0;
-  color: rgb(0, 0, 0);
-  font-size: 16px; 
-  text-align: right;
-  padding: 8px;
-  border-radius: 5px;
-}
-
 @media (max-width: 992px) {
-  .pro p {
+  /* .pro p {
     font-size: 14px; 
-  }
+  } */
 }
 
 @media (max-width: 768px) {
@@ -123,6 +184,11 @@ img {
   }
 }
 @media (max-width: 512px) {
+  .w-full {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
   .profile {
     width: auto;
   }
@@ -134,6 +200,28 @@ img {
     font-size: 12px; /* Adjust font size for phones */
     width: auto;
   }
+
+  #current {
+    display: flex;
+    flex-wrap: wrap;
+    /* background: #000; */
+    margin-left: 10px;
+  }
+  .cards {
+    display: flex;
+    width: 45%;
+    height: 80px;
+    padding: 0px;
+    border-radius: 10px;
+    gap: 0px;
+    /* background: #000; */
+  }
+  .box-shadow {
+    border-radius: 10px;
+    box-shadow: #434343 px 2px 2px 2px;
+  }
+  .cards .card-title {
+    font-size: 12px;
+  }
 }
 </style>
-
