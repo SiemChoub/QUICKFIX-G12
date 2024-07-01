@@ -89,11 +89,11 @@
             </tbody>
         </table>
     </div>
-    @can('Users access')
+    @can('User access', $users)
     <div class="text-right mt-6">
         {{ $users->links() }}
     </div>
-    @endcan
+@endcan
 </div>
 
 <!-- -----------user detail------ -->
