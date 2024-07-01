@@ -3,7 +3,7 @@
   <div class="container">
     <div class="mb-3 p-2">
       <div class="list-btn d-flex gap-sm-4">
-        <h3 id="booking" class="btn btn-outline-secondary text-16px" @click="showBooking">
+        <h3 id="booking" class="btn btn-outline-secondary text-dark text-16px" @click="showBooking">
           Booking
         </h3>
         <h3 id="booked" class="btn btn-outline-success text-16px" @click="showBooked">

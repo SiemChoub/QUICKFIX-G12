@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\{
     UserController,
 };
 use Illuminate\Session\Middleware\AuthenticateSession;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,8 +67,8 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('categories','CategoryController');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
-        Route::put('/update/{id}', [UserController::class, 'update']);
-        Route::post('/profile-update',[ProfileController::class,'update'])->name('profile.update');
+        Route::put('/update/{id}', [UserController::class, 'updateInformation']);
+        Route::post('/update/profile/{id}',[UserController::class,'updateProfile'])->name('profile.update');
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
 });
