@@ -23,4 +23,8 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
                     ->middleware('auth')
                     ->name('logout');
+    Route::put('/profile', [AuthenticatedSessionController::class, 'destroy'])
+                    ->middleware('auth')
+                    ->name('logout');
+
 });

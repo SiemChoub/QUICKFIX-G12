@@ -20,6 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/update/profile/{id}', [AuthController::class, 'updateProfile']);
 Route::post('/logout', [AuthController::class, 'logout'])-> middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/list', [AuthController::class, 'list']);
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');

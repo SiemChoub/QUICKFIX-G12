@@ -38,7 +38,7 @@
                 @can('Service access')
                 @foreach ($services as $service)
                 <tr>
-                    <td class='text-center' style=" width=:5px; text-overf: ellipsis;">{{ $service->name }}</td>
+                    <td class='text-center' style=" width:5px; text-overf: ellipsis;">{{ $service->name }}</td>
                     <td class='text-center'>{{ $service->description }}</td>
                     <td class='text-center'>{{ $service->price }}$</td>
                     <td class='text-center'>Mazin fixer</td>

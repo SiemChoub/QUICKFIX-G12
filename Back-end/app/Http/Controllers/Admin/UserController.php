@@ -60,7 +60,6 @@ class UserController extends Controller
         $request->validate([
             'role' => 'required',
             'name' => 'required',
-            'email' => 'required|email',
             'phone' => 'required',
         ]);
 
@@ -68,7 +67,6 @@ class UserController extends Controller
         $user = auth()->user();
         $user->role = $request->input('role');
         $user->name = $request->input('name');
-        $user->email = $request->input('email');
         $user->phone = $request->input('phone');
         $user->save();
 

@@ -8,6 +8,7 @@
         <div class="left">
           <div class="image-container">
             <img src="https://i.pinimg.com/564x/58/b6/52/58b6528f3b6c1b77a119f9efc2ef8f61.jpg" alt="Your Image">
+            <button type="button" class="puton">Delete profile</button>
             <div class="img">
               <img src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg" alt="camera" onclick=showFileInput()>
             </div>
@@ -46,10 +47,11 @@
             </div>
           </div>
           <!-- Modal -->
-          <button type="button" class="btn" style="background-color: gray;"><a href="{{route('admin.dashboard')}}">Back</a></button>
+          <button type="button" class="btn" style="background-color: gray;  "><a href="{{route('admin.dashboard')}}">Back</a></button>
           <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Edit information
+            Edit profile
           </button>
+
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -57,28 +59,29 @@
                   <h1 class="modal-title" id="exampleModalLabel">Edit Profile</h1>
                 </div>
                 <div class="modal-body">
-                  <form id="updateForm" ref="form">
+                  <form id="updateForm">
                     <div class="mb-3">
                       <label for="role" class="form-label">Role:</label>
                       <select class="form-control" id="role">
-                        <option value="User" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
-                        <option value="Admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="Fixer" {{ $user->role == 'fixer' ? 'selected' : '' }}>Fixer</option>
+                        <option value="User" {{ auth()->user()->role == 'user' ? 'selected' : '' }}>User</option>
+                        <option value="Admin" {{ auth()->user()->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="Fixer" {{ auth()->user()->role == 'fixer' ? 'selected' : '' }}>Fixer</option>
                       </select>
                     </div>
                     <div class="mb-3">
+                      <input type="hidden" value="{{ auth()->user()->id }}" id="id">
                       <label for="username" class="form-label">User Name:</label>
                       <input type="text" class="form-control" id="username" value="{{ auth()->user()->name }}">
                     </div>
                     <div class="mb-3">
                       <label for="phone" class="form-label">Phone Number:</label>
-                      <input type="tel" class="form-control" id="phone" value="{{auth()->user()->phone}}">
+                      <input type="tel" class="form-control" id="phone" value="{{ auth()->user()->phone }}">
                     </div>
                   </form>
                 </div>
                 <div class="modal-footer">
                   <div type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</div>
-                  <div type="button" style="background-color: orange;" class="btn" id="updateBtn" onclick="updateUser(1)">Update</div>
+                  <div type="button" style="background-color: orange;" class="btn" id="updateBtn" onclick="updateUser()">Update</div>
                 </div>
               </div>
             </div>
@@ -99,50 +102,45 @@
       var fileName = fileInput.value.split("\\").pop();
       document.getElementById("hi").textContent = fileName;
     });
-    
-    
+
+
   }
-  function updateUser(id) {
-    console.log(id);
-    console.log("Updating user");
-    // var id = document.getElementById("id").value;
-  var role = document.getElementById("role").value;
-  var username = document.getElementById("username").value;
-  var phone = document.getElementById("phone").value;
-  var body ={
-    role: role,
-    name: username,
-    phone: phone,
-    
-  }
-  console.log(body);
-  // var formData = new FormData();
-  // formData.append('role', role);
-  // formData.append('name', username);
-  // formData.append('email', email);
-  // formData.append('phone', phone);
-  // console.log("Data",formData);
-  fetch(`/admin/update/${id}`, {
-      method: 'PUT',
-      body: body,
-    })
-    .then(function(response) {
-      if (response.ok) {
-        return response.json();
-      }
-      throw new Error('Network response was not ok.');
-    })
-    .then(function(data) {
-      // Handle the success response
-      console.log('User updated successfully:', data);
-      // Optionally, you can show a success message or redirect to another page
-      window.location.reload(); // Reload the page to reflect the updated user information
-    })
-    .catch(function(error) {
-      // Handle errors
-      console.error('Error updating user:', error);
-    });
-}
+
+  function updateUser() {
+        var id = document.getElementById("id").value;
+        console.log(id);
+        var role = document.getElementById("role").value;
+        var username = document.getElementById("username").value;
+        var phone = document.getElementById("phone").value;
+        
+        var body = JSON.stringify({
+            role: role,
+            name: username,
+            phone: phone
+        });
+
+        fetch(`/admin/update/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: body,
+        })
+        .then(function(response) {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(function(data) {
+            console.log('User updated successfully:', data);
+            window.location.reload(); // Reload the page to reflect the updated user information
+        })
+        .catch(function(error) {
+            console.error('Error updating user:', error);
+        });
+    }
+
 </script>
 <style>
   .left {
@@ -157,9 +155,16 @@
     display: inline-block;
   }
 
+  .puton {
+    margin-left: 30%;
+    margin-top: 5%;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+
   .img {
     position: absolute;
-    bottom: 30px;
+    bottom: 70px;
     right: 0;
     width: 22%;
     height: 22%;
@@ -169,9 +174,9 @@
   .right button {
     border: 1px solid orange;
     padding: 5px 10px;
+    border-radius: 5px;
     margin-top: 55%;
     background: orange;
-    border-radius: 5px;
   }
 
   .right {
