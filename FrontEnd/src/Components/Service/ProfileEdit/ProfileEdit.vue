@@ -71,6 +71,7 @@ export default {
   display: flex;
   height: 80vh;
   margin-top: 30px;
+    background: #b6b3b3;
 }
 #jj {
 
@@ -131,7 +132,7 @@ export default {
 }
 .img {
   position: absolute;
-  bottom: 140px;
+  bottom: 150px;
   right: 0;
   width: 10%;
   height: 15%;

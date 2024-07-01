@@ -6,7 +6,6 @@
         <router-link to="/service"><p>Back</p></router-link>
       </div>
       <div class="custom-sibarimg">
-        <h2>Information</h2>
         <img src="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" alt="">
       </div>
       <div class="custom-infor">
@@ -66,7 +65,7 @@ export default {
 
 .custom-contan {
   background: rgb(232, 233, 229);
-  width: 35%;
+  width: 40%;
   padding-top: 20px;
   padding-left: 25px;
 }
@@ -83,17 +82,17 @@ export default {
 
 .custom-infor {
   display: flex;
-  gap: 18%;
-  padding-top: 30px;
+  gap: 13%;
+  padding-top: 27px;
 }
 
 .custom-sibarimg {
-  padding-top: 10px;
+  padding-top: 8px;
 }
 
 img {
   margin-top: 10px;
-  width: 48vh;
+  width: 55vh;
   height: 40vh;
   border-radius: 10px;
   background: #000;
