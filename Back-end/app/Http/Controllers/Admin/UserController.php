@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-<<<<<<< HEAD
 use App\Models\Role;
-=======
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
->>>>>>> efcad16cf826679cf60233e4dff9b799342aaac9
 
 class UserController extends Controller
 {
@@ -54,7 +51,8 @@ class UserController extends Controller
         ]);
         $user->save();
 
-        return redirect()->back()->withSuccess('User created!');
+        return redirect('admin/users')
+        ->with('showAlertCreate', true);
     }
 
     public function edit(User $user)
@@ -63,7 +61,6 @@ class UserController extends Controller
         return view('setting.user.edit', ['user' => $user],compact('roles'));
     }
 
-<<<<<<< HEAD
     // app/Http/Controllers/UserController.php
     public function update(Request $request)
     {
@@ -85,8 +82,9 @@ class UserController extends Controller
         $user->address = $request->input('address');
         $user->save();
 
-        return response()->json(['message' => 'User updated successfully']);
-=======
+        return redirect('admin/users')
+        ->with('showAlertUpdate', true);
+    }
     public function updateProfile(Request $request)
 {
     $validator = Validator::make($request->all(), [
@@ -95,7 +93,6 @@ class UserController extends Controller
 
     if ($validator->fails()) {
         return response()->json(['errors' => $validator->errors()], 422);
->>>>>>> efcad16cf826679cf60233e4dff9b799342aaac9
     }
 
     $user_id = Auth::id();
@@ -121,7 +118,8 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect()->back()->withSuccess('User deleted!');
+        return redirect('admin/users')
+        ->with('showAlertDelete', true);
     }
 
     public function updateInformation(Request $request)
@@ -141,3 +139,4 @@ class UserController extends Controller
         return response()->json(['message' => 'User updated successfully']);
     }
 }
+
