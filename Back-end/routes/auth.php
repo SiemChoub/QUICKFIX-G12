@@ -17,7 +17,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
                     ->middleware('guest')
                     ->name('login');
 
-    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+    Route::post('/login', [AuthenticatedSessionController::class, 's tore'])
                     ->middleware('guest');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])

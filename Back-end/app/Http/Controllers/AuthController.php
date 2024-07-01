@@ -13,50 +13,54 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'email'     => 'required|string|max:255',
-            'password'  => 'required|string'
-          ]);
+{
+    $validator = Validator::make($request->all(), [
+        'email'     => 'required|string|email|max:255',
+        'password'  => 'required|string'
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        }
-
-        $credentials = $request->only('email', 'password');
-
-        if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 401);
-        }
-
-        $user   = User::where('email', $request->email)->firstOrFail();
-        $token  = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message'       => 'Login success',
-            'access_token'  => $token,
-            'token_type'    => 'Bearer'
-        ]);
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 422); // Return validation errors with status code 422
     }
-    
+
+    $credentials = $request->only('email', 'password');
+
+    if (!Auth::attempt($credentials)) {
+        return response()->json(['message' => 'Invalid credentials'], 401); // Unauthorized
+    }
+
+    $user   = User::where('email', $request->email)->firstOrFail();
+    $token  = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message'       => 'Login successful',
+        'access_token'  => $token,
+        'token_type'    => 'Bearer',
+        'user'          => $user // Optionally return user data
+    ]);
+}
     public function index(Request $request)
     {
         $user = $request->user();
-        // $permissions = $user->getAllPermissions();
-        // $roles = $user->getRoleNames();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated',
+            ], 401); // Unauthorized status code
+        }
+
         return response()->json([
             'message' => 'Login success',
-            'data' =>$user,
+            'data' => $user,
         ]);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
+
         return response()->json([
-            'message' => 'Logout successful'
+            'message' => 'Logged out successfully'
         ]);
     }
     public function register(Request $request): JsonResponse

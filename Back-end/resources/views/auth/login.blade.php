@@ -29,10 +29,6 @@
               </div>
             </div>
           </form>
-
-          <div class="flex justify-center text-gray-500 text-sm">
-            <p>Copyright <script>document.write(new Date().getFullYear());</script></p>
-          </div>
         </div>
     </div>
  

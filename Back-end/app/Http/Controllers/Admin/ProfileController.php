@@ -7,7 +7,8 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Traits\UploadImage;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -35,31 +36,49 @@ class ProfileController extends Controller
     }
 
 
-    public function update(Request $request)
+    /**
+     * Update the authenticated user's profile.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = User::find(Auth::id());
 
-        $validated = $request->validate([
-            'email' => 'required|email|unique:users,email,'.$user->id.',id',
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'profile' => 'nullable|image|max:2048', // optional image upload validation
         ]);
 
-
-
-        if($request->password != null){
-            $request->validate([
-                'password' => 'required|confirmed'
-            ]);
-            $validated['password'] = bcrypt($request->password);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        if($request->hasFile('profile')){
-            if($name = $this->saveImage($request->profile)){
-                $validated['profile'] = $name;
-            }
+        // Update user attributes
+        $user->email = $request->email;
+
+        // Handle profile image upload if provided
+        if ($request->hasFile('profile')) {
+            $image = $request->file('profile');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+            // Convert image to base64
+            $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
+
+            // Create the base64 string in the format: data:image/{mime};base64,{base64data}
+            $base64String = 'data:image/' . $image->getClientOriginalExtension() . ';base64,' . $imageBase64;
+
+            $user->profile = $base64String;
         }
 
-        $user->update($validated);
+        // Save the updated user
+        $user->save();
 
-        return redirect()->back()->withSuccess('User updated !!!');
+        return response()->json([
+            'message' => 'User profile updated successfully',
+            'user' => $user,
+        ], 200);
     }
 }
