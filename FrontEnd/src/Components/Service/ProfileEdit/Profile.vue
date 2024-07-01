@@ -1,9 +1,7 @@
 <template>
-     <div class="profile-right">
-      <button class="btn btn-back" @click="goBack">
-        <i class="bi bi-arrow-left"></i> Back
-      </button>
-    </div>
+  <div class="profile-right">
+   <router-link to="/"><button class="btn btn-back" ><i class="bi bi-arrow-left"></i> Back</button></router-link> 
+  </div>
   <div class="profile-container">
     <div class="profile-left">
       <div class="profile-image">
@@ -12,7 +10,14 @@
             <i class="bi bi-camera-fill"></i> Edit Profile
           </router-link>
         </div>
-        <img :src="user.image" alt="Profile Image" class="center-image" />
+        <img
+          :src="
+            user.profile ||
+            'https://static.vecteezy.com/system/resources/thumbnails/037/336/395/small_2x/user-profile-flat-illustration-avatar-person-icon-gender-neutral-silhouette-profile-picture-free-vector.jpg'
+          "
+          alt="Profile Image"
+          class="center-image"
+        />
       </div>
       <div class="profile-info">
         <div class="info">
@@ -41,32 +46,60 @@
         </div>
       </div>
     </div>
-    
   </div>
- 
 </template>
 
 <script>
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+
 export default {
   data() {
     return {
       user: {
-        role: 'admin',
-        name: 'Admin',
-        email: 'admin@gmail.com',
-        phone: '123-456-7890',
-        createDate: '2024-06-24',
-        createTime: '08:18:17',
-        image: 'https://i.pinimg.com/564x/58/b6/52/58b6528f3b6c1b77a119f9efc2ef8f61.jpg'
+        role: '',
+        name: '',
+        email: '',
+        phone: '',
+        createDate: '',
+        createTime: '',
+        profile: ''
       }
-    };
+    }
   },
   methods: {
-    goBack() {
-      this.$router.go(-1); // Go back to previous route
+    async fetchUserProfile(token) {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        const userData = response.data.data
+        this.user = {
+          role: userData.role,
+          name: userData.name,
+          email: userData.email,
+          phone: userData.phone,
+          createDate: userData.created_at,
+          createTime: userData.created_at,
+          profile: userData.profile
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error)
+      }
+    }
+  },
+  mounted() {
+    const storedToken = localStorage.getItem('token')
+    if (storedToken) {
+      this.fetchUserProfile(storedToken)
+    } else {
+      this.$router.push('/login')
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -185,3 +218,4 @@ export default {
   }
 }
 </style>
+

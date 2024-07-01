@@ -25,7 +25,7 @@ const router = createRouter({
       name: 'login',
       component: LoginForm,
       meta: {
-        requiresAuth: false // Public page, no authentication required
+        requiresAuth: false 
       }
     },
     {
@@ -33,7 +33,7 @@ const router = createRouter({
       name: 'signup',
       component: SignUpForm,
       meta: {
-        requiresAuth: false // Public page, no authentication required
+        requiresAuth: false 
       }
     },
     {
@@ -41,7 +41,7 @@ const router = createRouter({
       name: 'messanger',
       component: MessangerComponent,
       meta: {
-        requiresAuth: false // Public page, no authentication required
+        requiresAuth: false
       }
     },
     {

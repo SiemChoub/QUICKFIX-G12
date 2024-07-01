@@ -22,10 +22,10 @@
         </div>
       </div>
       <div class="form-actions">
-        <router-link to="/service/profile">
+        <router-link to="/profile">
           <button type="button" class="btn btn-cancel">Cancel</button>
         </router-link>
-        <router-link to="/service/profile">
+        <router-link to="/profile">
           <button type="button" class="btn btn-update">Update</button>
         </router-link>
       </div>

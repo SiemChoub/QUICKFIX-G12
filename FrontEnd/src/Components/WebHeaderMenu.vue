@@ -52,7 +52,10 @@
             <span class="tooltip-text">Messages</span>
             <span class="badge bg-danger rounded-pill notification-badge">1</span>
           </li>
-          <li class="nav-item d-flex align-items-center position-relative" @click="toggleNotifications">
+          <li
+            class="nav-item d-flex align-items-center position-relative"
+            @click="toggleNotifications"
+          >
             <i class="bi bi-bell icon" title="Notifications"></i>
             <span class="tooltip-text">Notifications</span>
             <span class="badge bg-danger rounded-pill notification-badge">1</span>
@@ -97,6 +100,7 @@
 <script>
 import ChatModal from '@/Components/Messanger.vue'
 import BookingForm from '@/Components/BookingForm.vue'
+// import Lo
 
 export default {
   components: {
@@ -113,23 +117,39 @@ export default {
         'New comment on your post',
         'New like on your photo',
         'Friend request received'
-        // Add more notifications as needed
       ]
     }
   },
   methods: {
-    logout() {
-      console.log('Logging out...')
-    },
-    toggleOptions() {
-      this.showOptions = !this.showOptions
-    },
-    viewServices() {
-      console.log('View Services clicked')
-    },
-    toggleNotifications() {
-      this.showNotifications = !this.showNotifications
+    async logout() {
+      try {
+        await axios.post(
+          'http://127.0.0.1:8000/api/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+          }
+        )
+
+        localStorage.removeItem('token')
+        console.log('Logout successful')
+
+        // this.$router.push('/')
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
     }
+  },
+  toggleOptions() {
+    this.showOptions = !this.showOptions
+  },
+  viewServices() {
+    console.log('View Services clicked')
+  },
+  toggleNotifications() {
+    this.showNotifications = !this.showNotifications
   }
 }
 </script>

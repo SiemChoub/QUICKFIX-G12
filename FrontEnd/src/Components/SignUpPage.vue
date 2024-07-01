@@ -20,7 +20,7 @@
           <form @submit.prevent="signUp">
             <div class="form-group mb-4">
               <label for="username">Username:</label>
-              <input type="text" id="username" v-model="username" class="form-control" required />
+              <input type="text" id="username" v-model="name" class="form-control" required />
             </div>
             <div class="form-group mb-4">
               <label for="email">Email:</label>
@@ -51,43 +51,63 @@
               <router-link to="/login">Login</router-link>
             </p>
           </div>
-        
         </div>
       </div>
     </transition>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
+<script>
+import { ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-const username = ref('')
-const email = ref('')
-const password = ref('')
-const showSpinner = ref(true) // Initially show spinner
+export default {
+  data() {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      showSpinner: false,
+      errors: {},
+    };
+  },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
+  methods: {
+    async signUp() {
+      this.showSpinner = true;
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/register', {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+        });
 
-onMounted(() => {
-  setTimeout(() => {
-    showSpinner.value = false
-  }, 1000)
-})
-
-const signUp = () => {
-  console.log('Sign Up form submitted')
-  console.log('Username:', username.value)
-  console.log('Email:', email.value)
-  console.log('Password:', password.value)
-  // Here you can implement your sign-up logic, e.g., call an API
-  // After successful sign-up, you might redirect the user or update state
-  username.value = ''
-  email.value = ''
-  password.value = ''
-}
-
-const loginWithGoogle = () => {
-  console.log('Login with Google')
-  // Here you can implement Google login logic, e.g., using Google SDK
-}
+        console.log('Registration successful:', response.data);
+        this.name = '';
+        this.email = '';
+        this.password = '';
+        this.errors = {};
+        this.showSpinner = false;
+        this.router.push('/'); 
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          this.errors = error.response.data;
+          console.log('Validation errors:', this.errors);
+        } else {
+          console.error('Registration failed:', error);
+        }
+        this.showSpinner = false;
+      }
+    },
+    loginWithGoogle() {
+      console.log('Login with Google');
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -96,9 +116,6 @@ const loginWithGoogle = () => {
 .auth-page {
   background-color: #f0f2f5;
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* height: auto; */
 }
 
 .auth-container {

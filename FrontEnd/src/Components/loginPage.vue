@@ -1,4 +1,3 @@
-
 <template>
   <div class="login-page d-flex align-items-center justify-content-center vh-100">
     <transition name="fade">
@@ -15,7 +14,7 @@
       </div> 
       <div class="form-container p-5">
         <h2 class="mb-4">Login</h2>
-        <form @submit.prevent="login">
+        <form @submit.prevent="handleSubmit">
           <div class="form-group mb-4">
             <label for="username">Email:</label>
             <input type="email" id="username" v-model="username" class="form-control" required />
@@ -24,7 +23,7 @@
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" class="form-control" required />
           </div>
-          <button type="submit" class="btn btn-primary w-100 mb-4" style="background:orange;border:none">Login</button>
+          <button type="submit" class="btn btn-primary w-100 mb-4" style="background: orange; border: none;">Login</button>
         </form>
         <div class="social-login">
           <h3 class="mb-3">Or login with:</h3>
@@ -51,44 +50,63 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
+<script>
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 import { GoogleLogin } from 'vue3-google-login';
 import { GOOGLE_CLIENT_ID } from '@/main';
 
-const showSpinner = ref(true); // Initially show spinner
-setTimeout(() => {
-  showSpinner.value = false; // Hide spinner after timeout
-}, 300);
-
-const username = ref('');
-const password = ref('');
-
-const clientId = GOOGLE_CLIENT_ID;
-const scope = 'profile email';
-const buttonText = 'Login with Google';
-
-const login = () => {
-  console.log('Regular login with username:', username.value, 'and password:', password.value);
-};
-
-const loginWithFacebook = () => {
-  console.log('Login with Facebook clicked');
-};
-
-const onGoogleLoginSuccess = (googleUser) => {
-  console.log('Logged in successfully with Google:', googleUser);
-};
-
-const onGoogleLoginFailure = (error) => {
-  console.error('Google login failed:', error);
-};
-
-const onGoogleLoginError = (error) => {
-  console.error('Error while logging in with Google:', error);
+export default {
+  name: 'Login',
+  components: {
+    GoogleLogin,
+  },
+  data() {
+    return {
+      showSpinner: false,
+      username: '',
+      password: '',
+      clientId: GOOGLE_CLIENT_ID,
+      scope: 'profile email',
+      buttonText: 'Login with Google',
+    };
+  },
+  methods: {
+    async handleSubmit() {
+      try {
+        this.showSpinner = true;
+        const response = await axios.post('http://127.0.0.1:8000/api/login', {
+          email: this.username,
+          password: this.password
+        });
+        
+        const { access_token } = response.data;
+        localStorage.setItem('token', access_token);
+        
+        // Navigate to home page
+        this.$router.push('/'); // Navigate to home page
+      } catch (error) {
+        console.error('Login error:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        this.showSpinner = false;
+      }
+    },
+    onGoogleLoginSuccess(googleUser) {
+      console.log('Logged in successfully with Google:', googleUser);
+      // Handle Google login success as needed
+    },
+    onGoogleLoginFailure(error) {
+      console.error('Google login failed:', error);
+      // Handle Google login failure as needed
+    },
+    onGoogleLoginError(error) {
+      console.error('Error while logging in with Google:', error);
+      // Handle Google login error as needed
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 @import '@fortawesome/fontawesome-free/css/all.css';
@@ -114,7 +132,6 @@ const onGoogleLoginError = (error) => {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: #007bff; */
 }
 
 .image-container img {
