@@ -12,7 +12,7 @@ class ServiceController extends Controller
     {
         // dd(1);
         // Retrieve all services
-        $posts = Service::all();
+        $services = Service::all();
 
         // Return services as a JSON response
         return response()->json($services);
