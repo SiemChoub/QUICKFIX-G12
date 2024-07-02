@@ -51,8 +51,7 @@ class UserController extends Controller
         ]);
         $user->save();
 
-        return redirect('admin/users')
-        ->with('showAlertCreate', true);
+        return redirect()->back()->withSuccess('User created!');
     }
 
     public function edit(User $user)
@@ -61,39 +60,6 @@ class UserController extends Controller
         return view('setting.user.edit', ['user' => $user],compact('roles'));
     }
 
-    // app/Http/Controllers/UserController.php
-    public function update(Request $request)
-    {
-        // Validate the request data
-        $request->validate([
-            'role' => 'required',
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'address' => 'required',
-        ]);
-
-        // Update the user data
-        $user = auth()->user();
-        $user->role = $request->input('role');
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->phone = $request->input('phone');
-        $user->address = $request->input('address');
-        $user->save();
-
-        return redirect('admin/users')
-        ->with('showAlertUpdate', true);
-    }
-    public function updateProfile(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'profile' => 'nullable|image|max:2048',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
-    }
 
     $user_id = Auth::id();
     $user = User::find($user_id);
@@ -118,8 +84,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect('admin/users')
-        ->with('showAlertDelete', true);
+        return redirect()->back()->withSuccess('User deleted!');
     }
 
     public function updateInformation(Request $request)
@@ -139,4 +104,3 @@ class UserController extends Controller
         return response()->json(['message' => 'User updated successfully']);
     }
 }
-
