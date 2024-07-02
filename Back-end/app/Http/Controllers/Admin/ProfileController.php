@@ -62,4 +62,5 @@ class ProfileController extends Controller
 
         return redirect()->back()->withSuccess('User updated !!!');
     }
+   
 }
