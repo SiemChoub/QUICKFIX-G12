@@ -64,7 +64,7 @@
 
     <main class="flex-1 ">
       <div class="container mt-4">
-      <a href="{{route('admin.dashboard')}}" class="btn btn-warning btn-custom me-2 hover-fade"><i class="bx bx-arrow-back me-2"></i>Back</a>
+        <a href="{{route('admin.dashboard')}}" class="btn btn-warning btn-custom me-2 hover-fade"><i class="bx bx-arrow-back me-2"></i>Back</a>
         <div class="text-center mb-3">
           <h7 class="text-primary display-7 font-weight-bold">Welcome, {{ auth()->user()->name }}!</h7>
         </div>
@@ -73,11 +73,17 @@
             <div class="card card-custom hover-glow" style="height: 300px;">
               <div class="card-body text-center d-flex flex-column justify-content-center">
                 <div class="mb-3 d-flex flex-col">
+                  @if (auth()->user()->profile)
+                  <img src="{{ auth()->user()->profile }}" alt="Your Image" class="img-thumbnail img-thumbnail-custom" style="height: 270px;">
+                  @else
                   <img src="https://i.pinimg.com/564x/58/b6/52/58b6528f3b6c1b77a119f9efc2ef8f61.jpg" alt="Your Image" class="img-thumbnail img-thumbnail-custom" style="height: 270px;">
-                  <div class="img d-flex justify-content-center">
-                    <img src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg" alt="camera" onclick="showFileInput()" class="img-thumbnail img-thumbnail-custom hover-zoom" style="height: 50px;margin-top:-40px;">
+                  @endif <div class="img d-flex justify-content-center">
+                    <img src="https://i.pinimg.com/originals/61/54/18/61541805b3069740ecd60d483741e5bb.jpg" alt="camera" onclick="showFileInput();" class="img-thumbnail img-thumbnail-custom hover-zoom" style="height: 50px; margin-top: -40px;">
                   </div>
                   <input type="file" id="thumbnailprev" style="display: none;">
+                  <button class="btn btn-primary mt-3" onclick="updateUserProfile({{ auth()->user()->id }})" style="background:orange">
+                    <i class="fas fa-camera"></i> Save Update
+                  </button>
                 </div>
               </div>
             </div>
@@ -138,14 +144,6 @@
               <div class="modal-body">
                 <form id="updateForm" ref="form">
                   <div class="mb-3">
-                    <label for="role" class="form-label">Role:</label>
-                    <select class="form-control" id="role">
-                      <option value="User" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
-                      <option value="Admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                      <option value="Fixer" {{ $user->role == 'fixer' ? 'selected' : '' }}>Fixer</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
                     <label for="username" class="form-label">User Name:</label>
                     <input type="text" class="form-control" id="username" value="{{ auth()->user()->name }}">
                   </div>
@@ -157,7 +155,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-custom hover-fade" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-custom hover-fade" id="updateBtn" onclick="updateUser(1)">Update</button>
+                <button type="button" class="btn btn-primary btn-custom hover-fade" id="updateBtn" onclick="updateUser({{ auth()->user()->id }})">Update</button>
               </div>
             </div>
           </div>
@@ -167,12 +165,59 @@
   </div>
 </x-app-layout>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   function showFileInput() {
     document.getElementById('thumbnailprev').click();
   }
 
+  function updateUserProfile(userId) {
+    var fileInput = document.getElementById('thumbnailprev');
+    var file = fileInput.files[0];
+
+    var formData = new FormData();
+    formData.append('profile', file);
+
+    $.ajax({
+      url: '/admin/update/profile/' + userId,
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      headers: {
+        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+      },
+      success: function(response) {
+        alert(response.message);
+        window.location.reload();
+      },
+      error: function() {
+        alert('Failed to update profile picture');
+      }
+    });
+  }
+
   function updateUser(userId) {
-    // Your update logic here
+    var name = $('#username').val();
+    var phone = $('#phone').val();
+
+    var userData = {
+      name: name,
+      phone: phone,
+      _token: '{{ csrf_token() }}'
+    };
+
+    $.ajax({
+      url: '/admin/update/' + userId,
+      type: 'PUT',
+      data: userData,
+      success: function(response) {
+        $('#exampleModal').modal('hide');
+        window.location.reload();
+      },
+      error: function(xhr) {
+        console.error('Error updating information:', xhr.responseText);
+      }
+    });
   }
 </script>
