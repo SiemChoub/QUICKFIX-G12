@@ -9,6 +9,7 @@ use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class PromotionService extends Controller
+
 {
     /**
      * Display a listing of the resource.
