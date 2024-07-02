@@ -85,6 +85,17 @@
                 <span class="mx-3">Services</span>
                 </a>
                 @endcanany
+
+                @canany('Discount access','Discount add','Discount edit','Discount delete')
+                <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.discounts.index') ? 'active' : '' }}"
+                href="{{ route('admin.discounts.index')}}">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
+                    </path>
+                </svg>
+                <span class="mx-3">Discount</span>
+                </a>
+                @endcanany
          
                 @canany('Mail access','Mail edit')
                  <a class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 fw-semibold text-decoration-none hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.mail.index') ? 'active' : '' }}"
