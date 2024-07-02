@@ -78,7 +78,7 @@ class UserController extends Controller
         'message' => 'User profile image updated successfully',
         'user' => $user,
     ], 200);
-}
+
 
     public function destroy(User $user)
     {
