@@ -1,9 +1,10 @@
 <template>
-     <div class="profile-right">
-      <button class="btn btn-back" @click="goBack">
-        <i class="bi bi-arrow-left"></i> Back
-      </button>
-    </div>
+  <div class="profile-right">
+<router-link to="/">
+  <button class="btn btn-back">
+    <i class="bi bi-arrow-left"></i> Back
+  </button>
+</router-link>  </div>
   <div class="profile-container">
     <div class="profile-left">
       <div class="profile-image">
@@ -12,61 +13,42 @@
             <i class="bi bi-camera-fill"></i> Edit Profile
           </router-link>
         </div>
-        <img :src="user.image" alt="Profile Image" class="center-image" />
+        <img :src="authStore.user.profile" alt="Profile Image" class="center-image" />
       </div>
       <div class="profile-info">
         <div class="info">
           <label>Role:</label>
-          <span class="info-value">{{ user.role }}</span>
+          <span class="info-value">{{ authStore.user.role }}</span>
         </div>
         <div class="info">
           <label>User Name:</label>
-          <span class="info-value">{{ user.name }}</span>
+          <span class="info-value">{{ authStore.user.name }}</span>
         </div>
         <div class="info">
           <label>Email:</label>
-          <span class="info-value">{{ user.email }}</span>
+          <span class="info-value">{{ authStore.user.email }}</span>
         </div>
         <div class="info">
           <label>Phone Number:</label>
-          <span class="info-value">{{ user.phone }}</span>
+          <span class="info-value">{{ authStore.user.phone }}</span>
         </div>
         <div class="info">
           <label>Create Date:</label>
-          <span class="info-value">{{ user.createDate }}</span>
+          <span class="info-value">{{ authStore.user.created_at }}</span>
         </div>
         <div class="info">
           <label>Create Time:</label>
-          <span class="info-value">{{ user.createTime }}</span>
+          <span class="info-value">{{ authStore.user.created_at }}</span>
         </div>
       </div>
     </div>
-    
   </div>
- 
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      user: {
-        role: 'admin',
-        name: 'Admin',
-        email: 'admin@gmail.com',
-        phone: '123-456-7890',
-        createDate: '2024-06-24',
-        createTime: '08:18:17',
-        image: 'https://i.pinimg.com/564x/58/b6/52/58b6528f3b6c1b77a119f9efc2ef8f61.jpg'
-      }
-    };
-  },
-  methods: {
-    goBack() {
-      this.$router.go(-1); // Go back to previous route
-    }
-  }
-};
+<script setup>
+import { useAuthStore } from '@/stores/auth-store'
+
+const authStore = useAuthStore()
 </script>
 
 <style scoped>
@@ -99,6 +81,10 @@ export default {
   text-align: center;
   justify-content: center;
   margin-bottom: 20px;
+}
+.profile-right a{
+  list-style: none;
+  text-decoration: none;
 }
 
 .profile-image img {
@@ -143,7 +129,7 @@ export default {
 }
 
 .btn-back:hover {
-  background-color: #495057; /* Darker shade of gray */
+  background-color: orange; /* Darker shade of gray */
 }
 
 .profile-info {

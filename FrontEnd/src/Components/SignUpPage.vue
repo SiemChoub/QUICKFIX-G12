@@ -17,21 +17,21 @@
         </div>
         <div class="form-container p-5">
           <h2 class="mb-4">Sign Up</h2>
-          <form @submit.prevent="signUp">
+          <form @submit.prevent="registerUser">
             <div class="form-group mb-4">
-              <label for="username">Username:</label>
-              <input type="text" id="username" v-model="username" class="form-control" required />
+              <label for="name">Username:</label>
+              <input type="text" id="name" v-model="formData.name" class="form-control" required />
             </div>
             <div class="form-group mb-4">
               <label for="email">Email:</label>
-              <input type="email" id="email" v-model="email" class="form-control" required />
+              <input type="email" id="email" v-model="formData.email" class="form-control" required />
             </div>
             <div class="form-group mb-4">
               <label for="password">Password:</label>
               <input
                 type="password"
                 id="password"
-                v-model="password"
+                v-model="formData.password"
                 class="form-control"
                 required
               />
@@ -40,7 +40,7 @@
           </form>
           <div class="social-login">
             <h3 class="mb-3">Or Sign Up with:</h3>
-
+            <!-- Example button for Google login -->
             <button class="btn btn-google w-100" @click="loginWithGoogle">
               <i class="fab fa-google"></i> Google
             </button>
@@ -51,44 +51,56 @@
               <router-link to="/login">Login</router-link>
             </p>
           </div>
-        
+          <p v-if="errorMessage" class="text-danger">{{ errorMessage }}</p>
         </div>
       </div>
     </transition>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
+<script>
+import axios from 'axios';
 
-const username = ref('')
-const email = ref('')
-const password = ref('')
-const showSpinner = ref(true) // Initially show spinner
-
-onMounted(() => {
-  setTimeout(() => {
-    showSpinner.value = false
-  }, 1000)
-})
-
-const signUp = () => {
-  console.log('Sign Up form submitted')
-  console.log('Username:', username.value)
-  console.log('Email:', email.value)
-  console.log('Password:', password.value)
-  // Here you can implement your sign-up logic, e.g., call an API
-  // After successful sign-up, you might redirect the user or update state
-  username.value = ''
-  email.value = ''
-  password.value = ''
-}
-
-const loginWithGoogle = () => {
-  console.log('Login with Google')
-  // Here you can implement Google login logic, e.g., using Google SDK
-}
+export default {
+  data() {
+    return {
+      formData: {
+        name: '',
+        email: '',
+        password: ''
+      },
+      errorMessage: '',
+      showSpinner: false // Ensure this is properly handled in your setup
+    };
+  },
+  methods: {
+    async registerUser() {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/register', this.formData);
+        const { user, access_token } = response.data;
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('access_token', access_token);
+        alert('User registered successfully!');
+        this.$router.push('/');
+        location.reload();
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          this.errorMessage = Object.values(error.response.data).flat().join(' ');
+        } else {
+          console.error('Error registering user:', error.message);
+          this.errorMessage = 'Registration failed. Please try again.';
+        }
+      }
+    },
+    loginWithGoogle() {
+      // Implement Google login functionality if needed
+    }
+  }
+};
 </script>
+
+
+
 
 <style scoped>
 @import '@fortawesome/fontawesome-free/css/all.css';
@@ -96,9 +108,12 @@ const loginWithGoogle = () => {
 .auth-page {
   background-color: #f0f2f5;
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* height: auto; */
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
 }
 
 .auth-container {

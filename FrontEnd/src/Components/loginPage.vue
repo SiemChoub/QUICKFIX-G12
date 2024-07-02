@@ -1,8 +1,10 @@
-
 <template>
   <div class="login-page d-flex align-items-center justify-content-center vh-100">
     <transition name="fade">
-      <div v-if="showSpinner" class="spinner-container position-fixed w-100 h-100 d-flex align-items-center justify-content-center">
+      <div
+        v-if="loading"
+        class="spinner-container position-fixed w-100 h-100 d-flex align-items-center justify-content-center"
+      >
         <div class="spinner-border text-warning" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
@@ -12,19 +14,25 @@
     <div class="login-container shadow-lg d-flex">
       <div class="image-container">
         <img src="@/assets/images/image.png" alt="Login Image" />
-      </div> 
+      </div>
       <div class="form-container p-5">
         <h2 class="mb-4">Login</h2>
-        <form @submit.prevent="login">
+        <form @submit.prevent="handleLogin">
           <div class="form-group mb-4">
-            <label for="username">Email:</label>
-            <input type="email" id="username" v-model="username" class="form-control" required />
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="email" class="form-control" required />
           </div>
           <div class="form-group mb-4">
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" class="form-control" required />
           </div>
-          <button type="submit" class="btn btn-primary w-100 mb-4" style="background:orange;border:none">Login</button>
+          <button
+            type="submit"
+            class="btn btn-primary w-100 mb-4"
+            style="background: orange; border: none"
+          >
+            Login
+          </button>
         </form>
         <div class="social-login">
           <h3 class="mb-3">Or login with:</h3>
@@ -32,16 +40,11 @@
             :clientId="clientId"
             :scope="scope"
             :buttonText="buttonText"
-            @success="onGoogleLoginSuccess"
-            @failure="onGoogleLoginFailure"
-            @error="onGoogleLoginError"
             class="btn btn-google w-100"
           >
             <i class="fab fa-google"></i> Login with Google
           </google-login>
-          <p class="mt-3">
-            Don't have an account? <router-link to="/signup">Sign Up</router-link>
-          </p>
+          <p class="mt-3">Don't have an account? <router-link to="/signup">Sign Up</router-link></p>
           <p>
             <router-link to="/">Back to Home</router-link>
           </p>
@@ -51,44 +54,81 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import { GoogleLogin } from 'vue3-google-login';
-import { GOOGLE_CLIENT_ID } from '@/main';
+<script>
+import { ref } from 'vue'
+import { GoogleLogin } from 'vue3-google-login'
+import { GOOGLE_CLIENT_ID } from '@/main'
+import axios from 'axios'
+import { useAuthStore } from '@/stores/auth-store'
+import { useRouter } from 'vue-router'
 
-const showSpinner = ref(true); // Initially show spinner
-setTimeout(() => {
-  showSpinner.value = false; // Hide spinner after timeout
-}, 300);
+export default {
+  components: {
+    GoogleLogin
+  },
+  setup() {
+    const loading = ref(true)
+    setTimeout(() => {
+      loading.value = false
+    }, 300)
 
-const username = ref('');
-const password = ref('');
+    const email = ref('')
+    const password = ref('')
+    const { setAuthUser } = useAuthStore()
+    const authStore = useAuthStore()
+    const router = useRouter()
 
-const clientId = GOOGLE_CLIENT_ID;
-const scope = 'profile email';
-const buttonText = 'Login with Google';
+    const clientId = GOOGLE_CLIENT_ID
+    const scope = 'profile email'
+    const buttonText = 'Login with Google'
 
-const login = () => {
-  console.log('Regular login with username:', username.value, 'and password:', password.value);
-};
+    async function handleLogin() {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/login', {
+          email: email.value,
+          password: password.value
+        })
+        const user = response.data.user
+        localStorage.setItem('user',user)
+        setAuthUser(user)
+        router.push('/')
+      } catch (error) {
+        console.error('Login failed:', error)
+      }
+    }
 
-const loginWithFacebook = () => {
-  console.log('Login with Facebook clicked');
-};
+    async function handleGoogleLogin(googleUser) {
+      try {
+        const idToken = googleUser.tokenId
+        const response = await axios.post('http://127.0.0.1:8000/api/google-login', {
+          id_token: idToken
+        })
+        console.log(response.data)
+        await setAuthUser(response.data)
+        router.push('/')
+      } catch (error) {
+        console.error('Google login failed:', error)
+      }
+    }
 
-const onGoogleLoginSuccess = (googleUser) => {
-  console.log('Logged in successfully with Google:', googleUser);
-};
+    function handleGoogleLoginError(error) {
+      console.error('Google login error:', error)
+    }
 
-const onGoogleLoginFailure = (error) => {
-  console.error('Google login failed:', error);
-};
-
-const onGoogleLoginError = (error) => {
-  console.error('Error while logging in with Google:', error);
-};
+    return {
+      loading,
+      email,
+      password,
+      clientId,
+      scope,
+      buttonText,
+      handleLogin,
+      handleGoogleLogin,
+      handleGoogleLoginError
+    }
+  }
+}
 </script>
-
 
 <style scoped>
 @import '@fortawesome/fontawesome-free/css/all.css';
@@ -232,7 +272,7 @@ label {
 }
 
 .spinner-container {
-  background-color:white;
+  background-color: white;
   z-index: 999;
   display: flex;
   justify-content: center;
