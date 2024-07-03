@@ -65,12 +65,6 @@ const router = createRouter({
 
     },
     {
-      path: '/promotion',
-      name: 'promotion',
-      component: () => import('../Components/Service/PromotionCard.vue')
-
-    },
-    {
       path: '/profile/edit',
       name: 'profile-edit',
       component: () => import('../Components/Service/ProfileEdit/ProfileEdit.vue')

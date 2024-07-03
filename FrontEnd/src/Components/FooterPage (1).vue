@@ -31,11 +31,8 @@ const submitForm = () => {
             </a>
             <div class="footer-bottom">
               <div class="logo">
-                <img
-                  src="../assets/images/logo.png"
-                  alt="Logo"
-                  style="width: 100%; height: 100%; object-fit: cover; border-radius: 50vh;"
-                  />
+                <img src="../assets/images/logo.png" alt="QuickFix Logo" />
+                <p class="logo-text display-6">QUICKFIX</p>
               </div>
             </div>
           </div>
