@@ -62,29 +62,23 @@ class UserController extends Controller
     }
 
     // app/Http/Controllers/UserController.php
-    public function update(Request $request)
+    public function update(Request $request, User $user)
     {
         // Validate the request data
         $request->validate([
             'role' => 'required',
             'name' => 'required',
-            'email' => 'required|email',
             'phone' => 'required',
+            'email' => 'required|email',
             'address' => 'required',
         ]);
 
-        // Update the user data
-        $user = auth()->user();
-        $user->role = $request->input('role');
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->phone = $request->input('phone');
-        $user->address = $request->input('address');
-        $user->save();
-
+        $user->update($request->all());
         return redirect('admin/users')
-        ->with('showAlertUpdate', true);
+        ->with('showAlertEdit', true);
     }
+
+    
     public function updateProfile(Request $request)
 {
     $validator = Validator::make($request->all(), [

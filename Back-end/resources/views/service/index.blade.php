@@ -44,8 +44,8 @@
                     <td class='text-center'>{{ $service->price }}$</td>
                     <td class='text-center'>{{ $service->category->name }}</td>                    
                     <td class="table-actions d-flex justify-content-around text-center">
-                        <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#serviceDetailsModal"
-                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
+                        <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#serviceDetailsModal" 
+                            data-service-image="{{$service->image }}"
                             data-service-title="{{$service->name}}"
                             data-service-description="{{$service->description}}"
                             data-service-category="{{ $service->category->name }}"
@@ -109,8 +109,8 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="service-image-container">
-                            <img src="" class="img-fluid rounded" alt="Service Image" id="service-image">
+                        <div class="service-image-container" style="height: 230px;">
+                            <img src="" class="img-fluid rounded" style="object-fit: cover;width:100%;height:100%"  alt="Base64 Image" id="service-image">
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -176,6 +176,31 @@
     });
 </script>
 @endif
+<script>
+    function updateUser(userId) {
+    // var name = $('#username').val();
+    // var phone = $('#phone').val();
+
+    var userData = {
+      name: name,
+      phone: phone,
+      _token: '{{ csrf_token() }}'
+    };
+
+    $.ajax({
+      url: '/admin/update/' + userId,
+      type: 'PUT',
+      data: userData,
+      success: function(response) {
+        $('#exampleModal').modal('hide');
+        window.location.reload();
+      },
+      error: function(xhr) {
+        console.error('Error updating information:', xhr.responseText);
+      }
+    });
+  }
+</script>
 <style>
         .modal-content {
         animation: fadeIn 0.5s;

@@ -1,3 +1,46 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
+import ChatModal from '@/Components/Messanger.vue'
+import BookingForm from '@/Components/BookingForm.vue'
+import axios from 'axios'
+
+const authStore = useAuthStore()
+const showChat = ref(false)
+const showBookingForm = ref(false)
+const showOptions = ref(false)
+const showNotifications = ref(false)
+const notifications = ref([
+  'New comment on your post',
+  'New like on your photo',
+  'Friend request received'
+  // Add more notifications as needed
+])
+
+const isLoggedIn = computed(() => !!authStore.user)
+
+const logout = async () => {
+  try {
+    authStore.logout()
+    alert('User registered successfully!')
+    location.reload();
+  } catch (error) {
+    console.error('Error logging out:')
+  }
+}
+
+const toggleOptions = () => {
+  showOptions.value = !showOptions.value
+}
+
+const viewServices = () => {
+  console.log('View Services clicked')
+}
+
+const toggleNotifications = () => {
+  showNotifications.value = !showNotifications.value
+}
+</script>
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top h-20">
     <div class="container-fluid">
@@ -52,7 +95,10 @@
             <span class="tooltip-text">Messages</span>
             <span class="badge bg-danger rounded-pill notification-badge">1</span>
           </li>
-          <li class="nav-item d-flex align-items-center position-relative" @click="toggleNotifications">
+          <li
+            class="nav-item d-flex align-items-center position-relative"
+            @click="toggleNotifications"
+          >
             <i class="bi bi-bell icon" title="Notifications"></i>
             <span class="tooltip-text">Notifications</span>
             <span class="badge bg-danger rounded-pill notification-badge">1</span>
@@ -75,14 +121,32 @@
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <i class="bi bi-person-circle icon" title="Profile"></i>
+              <img
+                :src="
+                  authStore.user && authStore.user.profile
+                    ? authStore.user.profile
+                    : 'https://st3.depositphotos.com/1767687/17621/v/450/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg'
+                "
+                alt="Profile"
+                title="Profile"
+                class="profile-image"
+              />
+
               <span class="tooltip-text">Profile</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><router-link to="/profile" class="dropdown-item">View Profile</router-link></li>
-              <li><a href="#" class="dropdown-item" @click="logout">Logout</a></li>
-              <li><router-link to="/signup" class="dropdown-item">Sign Up</router-link></li>
-              <li><router-link to="/login" class="dropdown-item">Sign In</router-link></li>
+              <li v-if="isLoggedIn">
+                <router-link to="/profile" class="dropdown-item">View Profile</router-link>
+              </li>
+              <li v-if="isLoggedIn">
+                <a href="#" class="dropdown-item" @click="logout">Logout</a>
+              </li>
+              <li v-if="!isLoggedIn">
+                <router-link to="/signup" class="dropdown-item">Sign Up</router-link>
+              </li>
+              <li v-if="!isLoggedIn">
+                <router-link to="/login" class="dropdown-item">Sign In</router-link>
+              </li>
             </ul>
           </li>
         </ul>
@@ -97,6 +161,8 @@
 <script>
 import ChatModal from '@/Components/Messanger.vue'
 import BookingForm from '@/Components/BookingForm.vue'
+import axios from 'axios'
+// import { useAuthStore } from '@/store/auth'
 
 export default {
   components: {
@@ -118,9 +184,6 @@ export default {
     }
   },
   methods: {
-    logout() {
-      console.log('Logging out...')
-    },
     toggleOptions() {
       this.showOptions = !this.showOptions
     },
@@ -142,6 +205,12 @@ export default {
   top: 0;
   width: 100%;
   z-index: 1000;
+}
+.profile-image {
+  width: 40px; /* Adjust the size as needed */
+  height: 40px; /* Adjust the size as needed */
+  border-radius: 50%; /* Makes the image round */
+  object-fit: cover; /* Ensures the image fits within the bounds */
 }
 
 .options-container {
@@ -178,11 +247,13 @@ export default {
 }
 
 .dropdown-menu {
+  position: absolute; /* Ensure the dropdown is absolutely positioned */
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border: none;
   border-radius: 5px;
-  padding: 10px 0;
+  padding: 10px;
+  left: -50px; /* Adjust this value as needed to move it to the left */
 }
 
 .dropdown-menu .dropdown-item {

@@ -20,16 +20,16 @@
               </div>
               <div>
                 <label for="email" class="text-gray-700 font-medium text-sm">email</label>
-                <input id="email" type="text" email="email" value="{{ old('email', $user->email) }}" placeholder="Enter email" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
+                <input id="email" type="text" name="email" value="{{ old('email', $user->email) }}" placeholder="Enter email" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
               </div>
               <div class="grid grid-cols-3 gap-3">
               <div>
                 <label for="phone" class="text-gray-700 font-medium text-sm">phone</label>
-                <input id="phone" type="text" phone="phone" value="{{ old('phone', $user->phone) }}" placeholder="Enter phone" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
+                <input id="phone" type="text" name="phone" value="{{ old('phone', $user->phone) }}" placeholder="Enter phone" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
               </div>
               <div>
                 <label for="address" class="text-gray-700 font-medium text-sm">address</label>
-                <input id="address" type="text" address="address" value="{{ old('address', $user->address) }}" placeholder="Enter address" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
+                <input id="address" type="text" name="address" value="{{ old('address', $user->address) }}" placeholder="Enter address" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
               </div>
                 <div class="">
                   <label for="image" class="block text-gray-700 font-medium mb-1 text-sm">Image</label>

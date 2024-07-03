@@ -6,6 +6,7 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\Bookin_memediatelyController;
 use App\Http\Controllers\API\Bookin_deadlineController;
+use App\Http\Controllers\Api\PromotionService;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +37,12 @@ Route::resource('/booking',BookingController::class);
 Route::resource('/bookin_immediatly',Bookin_memediatelyController::class);
 Route::resource('/bookin_deadline',Bookin_deadlineController::class);
 
+Route::get('/service',[ServiceController::class, 'index'])->name('service');
+Route::get('/discount',[PromotionService::class, 'index'])->name('service');
+
+Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
+// Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
+Route::post('/promotion/create', [PromotionService::class, 'store'])->name('promotion.create');
+Route::get('/promotion/show/{id}', [PromotionService::class, 'show'])->name('promotion.show');
+Route::put('/promotion/update/{id}', [PromotionService::class, 'update'])->name('promotion.update');
+Route::delete('/promotion/delete/{id}', [PromotionService::class, 'destroy'])->name('promotion.delete');

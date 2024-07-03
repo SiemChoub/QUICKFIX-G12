@@ -37,7 +37,8 @@ class AuthController extends Controller
         return response()->json([
             'message'       => 'Login success',
             'access_token'  => $token,
-            'token_type'    => 'Bearer'
+            'token_type'    => 'Bearer',
+            'user'=>$user
         ]);
     }
     
@@ -79,13 +80,9 @@ class AuthController extends Controller
         'remember_token' => Str::random(20),
     ]);
 
-    // Assign 'User' role to the user
-    $user->assignRole('User');
-
-    // Example: Assigning permissions relevant to your API
+    $user->assignRole('user');
     $user->givePermissionTo(['Mail access']); // Adjust as per your application's needs
 
-    // Create a token for the user
     $tokenResult = $user->createToken('auth_token');
 
     return response()->json([

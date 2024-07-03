@@ -8,8 +8,8 @@
       <h1 class="text-xl text-warning shadow p-1 ">CREATE SERVICE</h1>
     </div>
     <div class="shadow-sm rounded-md p-3 pt-2">
-      <form method="POST" action="{{ route('admin.services.store') }}" class="space-y-3">
-        @csrf
+    <form method="POST" action="{{ route('admin.services.store') }}" enctype="multipart/form-data">
+    @csrf
         <div class='shadow bg-white p-8 border around mb-4' >
         <div class="mb-2">
           <label for="name" class="block text-gray-700 font-medium mb-1">Name</label>
@@ -26,7 +26,7 @@
           </div>
           <div>
             <label for="image" class="block text-gray-700 font-medium mb-1">Image</label>
-            <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent">
+            <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent">          
           </div>
         @if (count($categories) > 0)
         <div>
