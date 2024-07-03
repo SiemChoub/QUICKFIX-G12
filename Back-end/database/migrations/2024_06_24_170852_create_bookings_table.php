@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('booking_type_id');
             $table->integer('user_id');
+            $table->string('type');
             $table->timestamps();
         });
     }

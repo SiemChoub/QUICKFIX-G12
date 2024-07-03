@@ -3,6 +3,9 @@
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\Bookin_memediatelyController;
+use App\Http\Controllers\API\Bookin_deadlineController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,3 +32,7 @@ Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:san
 
 Route::get('/service/list', [ServiceController::class, 'index']);
 Route::get('/category/list', [CategoryController::class, 'index']);
+Route::resource('/booking',BookingController::class);
+Route::resource('/bookin_immediatly',Bookin_memediatelyController::class);
+Route::resource('/bookin_deadline',Bookin_deadlineController::class);
+

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('service_id');
             $table->string('image');
             $table->string('message');
-            $table->string('buy_new')->nullable();
             $table->timestamps();
         });
     }
