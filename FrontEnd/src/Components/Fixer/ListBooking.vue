@@ -1,5 +1,4 @@
 <template>
-  <Navbar />
   <div class="container">
     <div class="mb-3 p-2">
       <div class="list-btn d-flex gap-sm-4">
@@ -261,13 +260,9 @@
 </template>
 
 <script>
-import Navbar from "@/Components/Fixer/Navbar.vue";
 
 export default {
   name: "booking",
-  components: {
-    Navbar,
-  },
   // list of hidden bookings
   data() {
     return {

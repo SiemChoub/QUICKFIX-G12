@@ -88,8 +88,9 @@ export default {
           email: email.value,
           password: password.value
         })
-        const user = response.data.user
-        localStorage.setItem('user',user)
+        const { user, access_token } = response.data;
+        localStorage.setItem('user', user);
+        localStorage.setItem('access_token', access_token);
         setAuthUser(user)
         router.push('/')
       } catch (error) {

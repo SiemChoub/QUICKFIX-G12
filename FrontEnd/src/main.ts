@@ -3,17 +3,16 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css' // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.min.js' // Import Bootstrap JS
 
-import './assets/main.css'
+import './assets/main.css' // Custom CSS styles
 
 // Import necessary Vue and related libraries
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-export const GOOGLE_CLIENT_ID="1061846549456-ap7pb6q2sn155qvvtuikofc581jdsqte.apps.googleusercontent.com";
-
+export const GOOGLE_CLIENT_ID = "1061846549456-ap7pb6q2sn155qvvtuikofc581jdsqte.apps.googleusercontent.com";
 
 // Import root component and router configuration
 import App from './App.vue'
-import router from './router'
+import { router, simpleAcl } from './router'
 
 // Import UI library and its styles
 import ElementPlus from 'element-plus'
@@ -40,7 +39,10 @@ configure({
 app.use(createPinia())
 
 // Use Vue Router for navigation
-app.use(router.router)
+app.use(router)
+
+// Use ACL for role-based access control
+app.use(simpleAcl)
 
 // Use Element Plus UI library
 app.use(ElementPlus)

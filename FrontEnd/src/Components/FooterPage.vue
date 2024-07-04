@@ -4,9 +4,6 @@ import facebookIcon from '@iconify-icons/bi/facebook'
 import googleIcon from '@iconify-icons/bi/google'
 import linkedinIcon from '@iconify-icons/bi/linkedin'
 
-const submitForm = () => {
-  alert('Feedback submitted successfully!')
-}
 </script>
 
 <template>
@@ -41,7 +38,7 @@ const submitForm = () => {
             <p>Computer Repair</p>
             <p>Vehicle Repair</p>
             <p>Telephone Repair</p>
-            <p>Television Repair</p>
+            <p>Television qFuVTp80NMS7kuD7RJGEiOmOwEHoUIdlPDAhYirRqmCcT3KLTKoKeIucs9d1PQ0</p>
             <p>Equipment Repair</p>
           </div>
           <div class="footer-column contact">

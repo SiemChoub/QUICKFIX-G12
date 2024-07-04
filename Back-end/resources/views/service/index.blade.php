@@ -108,8 +108,13 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-5">
+<<<<<<< HEAD
+                        <div class="service-image-container" style="height: 300px;">
+                            <img src="" class="img-fluid rounded" style="object-fit: cover;"  alt="Base64 Image" id="service-image">
+=======
                         <div class="service-image-container" style="height: 230px;">
                             <img src="" class="img-fluid rounded" style="object-fit: cover;width:100%;height:100%"  alt="Base64 Image" id="service-image">
+>>>>>>> 6729aefd9b2e36fb73829d0f0dc6051ee753e4b0
                         </div>
                     </div>
                     <div class="col-md-7">

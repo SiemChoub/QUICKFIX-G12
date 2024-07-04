@@ -1,5 +1,4 @@
 <template>
-  <Navbar />
 
   <div class="container mt-4">
     <div class="row mb-3">
@@ -8,7 +7,7 @@
           type="button"
           class="btn text-16px btn-outline-primary"
           data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
+          data-bs-target="#update"
           data-bs-whatever="@mdo"
         >
           Add Skill
@@ -81,7 +80,7 @@
     <div class="mb-3 w-100">
       <div
         class="modal fade"
-        id="exampleModal"
+        id="createCard"
         tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -89,7 +88,7 @@
         <div class="modal-dialog">
           <div class="modal-content p-4">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Add Card</h5>
+              <h5 class="modal-title" id="createCard">Add Card</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -189,12 +188,11 @@
 </template>
 
 <script>
-import Navbar from "./Navbar.vue";
 
 export default {
-  components: {
-    Navbar,
-  },
+  // components: {
+  //   Navbar,
+  // },
 };
 </script>
 

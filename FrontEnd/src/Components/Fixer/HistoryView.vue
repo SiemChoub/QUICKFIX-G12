@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <!-- <Navbar /> -->
     <div class="container">
       <div class="mb-3">
         <div class="card border-0">
@@ -31,13 +31,13 @@
 </template>
 
 <script>
-import Navbar from "../Fixer/Navbar.vue";
+// import Navbar from "../Fixer/Navbar.vue";
 
 export default {
   name: "HistoryView",
-  components: {
-    Navbar,
-  },
+  // components: {
+  //   // Navbar,
+  // },
   data() {
     return {
       items: [
