@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookin_immediatelies', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
             $table->id();
+            $table->integer('discount_id');
             $table->integer('service_id');
-            $table->string('image');
-            $table->string('message');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookin_immediatelies');
+        Schema::dropIfExists('promotions');
     }
 };

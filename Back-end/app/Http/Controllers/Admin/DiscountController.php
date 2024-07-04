@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use Spatie\Permission\Models\Permission;
-
-
-
-class PermissionController extends Controller
+use App\Models\Category;
+use App\Models\Discount;
+use Auth;
+class DiscountController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -18,10 +15,10 @@ class PermissionController extends Controller
      */
     function __construct()
     {
-        $this->middleware('role_or_permission:Permission access|Permission create|Permission edit|Permission delete', ['only' => ['index','show']]);
-        $this->middleware('role_or_permission:Permission create', ['only' => ['create','store']]);
-        $this->middleware('role_or_permission:Permission edit', ['only' => ['edit','update']]);
-        $this->middleware('role_or_permission:Permission delete', ['only' => ['destroy']]);
+        $this->middleware('role_or_permission:Discount access|Discount create|Discount edit|Discount delete', ['only' => ['index','show']]);
+        $this->middleware('role_or_permission:Discount create', ['only' => ['create','store']]);
+        $this->middleware('role_or_permission:Discount edit', ['only' => ['edit','update']]);
+        $this->middleware('role_or_permission:Discount delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -31,8 +28,9 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permission= Permission::paginate(5);
-        return view('setting.permission.index',['permissions'=>$permission]);
+        $discount= Discount::paginate(5);
+
+        return view('discount.index',['discounts'=>$discount]);
     }
 
     /**
@@ -42,7 +40,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        return view('setting.permission.new');
+        return view('discount.new');
     }
 
     /**
@@ -53,14 +51,9 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        // validation 
-        $request->validate([
-            'name'=>'required',
-        ]);
-        $permission = Permission::create(['name'=>$request->name]);
-        return redirect('admin/permissions')->with('showAlertCreate', true);
-
-
+        $data = $request->all();
+        $discount= Discount::create($data);
+        return redirect('admin/discounts')->with('showAlertCreate', true);
     }
 
     /**
@@ -80,9 +73,9 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Permission $permission)
+    public function edit(Discount $discount)
     {
-       return view('setting.permission.edit',['permission' => $permission]);
+       return view('discount.edit',['discount' => $discount]);
     }
 
     /**
@@ -92,10 +85,11 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request, Discount $discount)
     {
-        $permission->update(['name'=>$request->name]);
-        return redirect('admin/permissions')->with('showAlertEdit', true);
+        $discount->update($request->all());
+        return redirect('admin/discounts')->with('showAlertEdit', true);
+
     }
 
     /**
@@ -104,9 +98,9 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Permission $permission)
+    public function destroy(Discount $discount)
     {
-        $permission->delete();
+        $discount->delete();
         return redirect()->back()->with('showAlertDelete', true);
     }
 }

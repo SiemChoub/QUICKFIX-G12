@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
             $table->string('discount');
-            $table->string('discription');
+            $table->string('description');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
+            // $table->string('service_id');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
