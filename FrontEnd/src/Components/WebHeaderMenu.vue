@@ -1,52 +1,12 @@
-<script setup>
-import { ref, computed } from 'vue'
-import { useAuthStore } from '@/stores/auth-store'
-import ChatModal from '@/Components/Messanger.vue'
-import BookingForm from '@/Components/BookingForm.vue'
-import axios from 'axios'
-
-const authStore = useAuthStore()
-const showChat = ref(false)
-const showBookingForm = ref(false)
-const showOptions = ref(false)
-const showNotifications = ref(false)
-const notifications = ref([
-  'New comment on your post',
-  'New like on your photo',
-  'Friend request received'
-  // Add more notifications as needed
-])
-
-const isLoggedIn = computed(() => !!authStore.user)
-
-const logout = async () => {
-  try {
-    authStore.logout()
-    alert('User registered successfully!')
-    location.reload();
-  } catch (error) {
-    console.error('Error logging out:')
-  }
-}
-
-const toggleOptions = () => {
-  showOptions.value = !showOptions.value
-}
-
-const viewServices = () => {
-  console.log('View Services clicked')
-}
-
-const toggleNotifications = () => {
-  showNotifications.value = !showNotifications.value
-}
-</script>
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top h-20">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-      <div class="navbar-brand d-flex align-items-center">
+      <!-- Brand logo -->
+      <router-link to="/" class="navbar-brand d-flex align-items-center">
         <img src="../assets/images/logo.png" alt="Logo" class="logo" />
-      </div>
+      </router-link>
+
+      <!-- Navbar Toggler -->
       <button
         class="navbar-toggler"
         type="button"
@@ -58,47 +18,43 @@ const toggleNotifications = () => {
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <ul class="navbar-nav mb-2 mb-lg-0">
-        <li class="nav-item d-flex align-items-center position-relative">
-          <router-link to="/">
-            <i class="bi bi-house-door icon"></i>
-            <span class="tooltip-text">Home</span>
-          </router-link>
-        </li>
-        <li class="nav-item d-flex align-items-center position-relative">
-          <router-link to="/fixer" class="nav-link p-0">
-            <i class="bi bi-person icon"></i>
-            <span class="tooltip-text">Fixer List</span>
-          </router-link>
-        </li>
-      </ul>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-        <form class="d-flex search-form">
-          <button class="form-control me-2" type="button" @click="toggleOptions">
-            {{ showOptions ? 'Close' : 'Fix Now' }}
-          </button>
-        </form>
-        <div class="options-container" v-if="showOptions">
-          <button type="button" @click="viewServices">View Services</button>
-          <button type="button" @click="showBookingForm = true">Book Service</button>
-        </div>
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item d-flex align-items-center position-relative">
-            <router-link to="/map">
-              <i class="bi bi-geo-alt icon"></i>
-              <span class="tooltip-text">Location</span>
-              <span class="badge bg-danger rounded-pill notification-badge">1</span>
+
+      <!-- Navbar Items -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav navbar-nav-left me-auto mb-2 mb-lg-0">
+          <!-- Home -->
+          <li class="nav-item">
+            <router-link to="/" class="nav-link">
+              <i class="bi bi-house-door icon"></i>
+              <span class="tooltip-text">Home</span>
             </router-link>
           </li>
-          <li class="nav-item d-flex align-items-center position-relative">
+
+          <!-- Fixer List -->
+          <li class="nav-item">
+            <router-link to="/fixer" class="nav-link">
+              <img src="https://media.istockphoto.com/id/1445981943/vector/repair-service-man-worker-logo-mechanic-workshop-vector-illustration.jpg?s=612x612&w=0&k=20&c=vizyPckB7zfeO0HYpJaj6uSm1jiZ9ozqlFWwWeFPCy4=" alt="Fixer Icon" style="width: 35px; border-radius: 50%;" />
+              <span class="tooltip-text">Fixer List</span>
+            </router-link>
+          </li>
+
+          <!-- Offer Button -->
+        </ul>
+        <div class="center">
+            <button class="btn offer-btn">OFFER</button>
+        </div>
+
+        <!-- Right-aligned Navbar Items -->
+        <div class="right navbar-nav-right">
+          <!-- Messages -->
+          <div class="nav-item position-relative">
             <i class="bi bi-chat-dots icon" @click="showChat = true"></i>
             <span class="tooltip-text">Messages</span>
             <span class="badge bg-danger rounded-pill notification-badge">1</span>
-          </li>
-          <li
-            class="nav-item d-flex align-items-center position-relative"
-            @click="toggleNotifications"
-          >
+          </div>
+
+          <!-- Notifications -->
+          <div class="nav-item position-relative" @click="toggleNotifications">
             <i class="bi bi-bell icon" title="Notifications"></i>
             <span class="tooltip-text">Notifications</span>
             <span class="badge bg-danger rounded-pill notification-badge">1</span>
@@ -109,10 +65,10 @@ const toggleNotifications = () => {
                 </li>
               </ul>
             </div>
-          </li>
+          </div>
 
-          <!-- Profile dropdown -->
-          <li class="nav-item dropdown d-flex align-items-center position-relative">
+          <!-- Profile Dropdown -->
+          <div class="nav-item dropdown position-relative">
             <a
               class="nav-link dropdown-toggle p-0"
               href="#"
@@ -123,15 +79,13 @@ const toggleNotifications = () => {
             >
               <img
                 :src="
-                  authStore.user && authStore.user.profile
-                    ? authStore.user.profile
-                    : 'https://st3.depositphotos.com/1767687/17621/v/450/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg'
+                  authStore.user?.profile ||
+                  'https://st3.depositphotos.com/1767687/17621/v/450/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg'
                 "
                 alt="Profile"
                 title="Profile"
                 class="profile-image"
               />
-
               <span class="tooltip-text">Profile</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -148,52 +102,41 @@ const toggleNotifications = () => {
                 <router-link to="/login" class="dropdown-item">Sign In</router-link>
               </li>
             </ul>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
   </nav>
 
-  <chat-modal v-if="showChat" @close="showChat = false"></chat-modal>
-  <booking-form v-if="showBookingForm" @close="showBookingForm = false"></booking-form>
+  <!-- Chat Modal and Booking Form Components -->
 </template>
 
-<script>
-import ChatModal from '@/Components/Messanger.vue'
-import BookingForm from '@/Components/BookingForm.vue'
-import axios from 'axios'
-// import { useAuthStore } from '@/store/auth'
+<script setup>
+import { ref, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
 
-export default {
-  components: {
-    ChatModal,
-    BookingForm
-  },
-  data() {
-    return {
-      showChat: false,
-      showBookingForm: false,
-      showOptions: false,
-      showNotifications: false,
-      notifications: [
-        'New comment on your post',
-        'New like on your photo',
-        'Friend request received'
-        // Add more notifications as needed
-      ]
-    }
-  },
-  methods: {
-    toggleOptions() {
-      this.showOptions = !this.showOptions
-    },
-    viewServices() {
-      console.log('View Services clicked')
-    },
-    toggleNotifications() {
-      this.showNotifications = !this.showNotifications
-    }
+const authStore = useAuthStore()
+const showNotifications = ref(false)
+const notifications = ref([
+  'New comment on your post',
+  'New like on your photo',
+  'Friend request received'
+])
+
+const isLoggedIn = computed(() => !!authStore.user)
+
+const logout = async () => {
+  try {
+    authStore.logout()
+    alert('User logged out successfully!')
+    location.reload()
+  } catch (error) {
+    console.error('Error logging out:', error)
   }
+}
+
+const toggleNotifications = () => {
+  showNotifications.value = !showNotifications.value
 }
 </script>
 
@@ -201,107 +144,51 @@ export default {
 /* Navbar Styles */
 .navbar {
   background-color: #fff;
-  padding: 1rem;
-  top: 0;
+  padding: 0 1rem;
   width: 100%;
   z-index: 1000;
-}
-.profile-image {
-  width: 40px; /* Adjust the size as needed */
-  height: 40px; /* Adjust the size as needed */
-  border-radius: 50%; /* Makes the image round */
-  object-fit: cover; /* Ensures the image fits within the bounds */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.options-container {
+/* Logo */
+.logo {
+  width: 150px;
+  height: auto;
+}
+.navbarSupportedContent{
   display: flex;
-  justify-content: center;
-  flex-direction: column;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-40%);
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-  width: 400px;
+  background: #000;
+  flex: 0.5;
 }
 
-.options-container button {
-  padding: 10px 20px;
+/* Offer Button */
+.offer-btn {
+  padding: 7px 20px;
   background-color: orange;
   color: white;
+  width: 100%;
   border: none;
   cursor: pointer;
-  width: 100%;
 }
 
-.options-container button:last-child {
-  margin: 10px 0 0 0;
+.offer-btn:hover {
+  background-color: #ff7f50; /* Lighter shade of orange on hover */
 }
 
-.options-container button:hover {
-  background-color: #218838;
+/* Profile Image */
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.dropdown-menu {
-  position: absolute; /* Ensure the dropdown is absolutely positioned */
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  left: -50px; /* Adjust this value as needed to move it to the left */
-}
-
-.dropdown-menu .dropdown-item {
-  padding: 8px 20px;
-  color: #343a40;
-}
-
-.dropdown-menu .dropdown-item i {
-  margin-right: 10px;
-}
-
-.dropdown-menu .dropdown-item:hover {
-  background-color: orange;
-  color: #fff;
-}
-
-.dropdown-toggle::after {
-  display: none;
-}
-
-.main-wrapper {
-  padding: 20px;
-  background-color: #f8f9fa;
-}
-
-.logo {
-  width: 200px;
-  height: auto;
-  padding: 7px 50px 10px 0;
-}
-
-.brand-text {
-  font-size: 20px;
-  color: #ff7f50;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-  text-decoration: none;
-}
-
+/* Navbar Toggler */
 .navbar-toggler {
   border-color: rgba(0, 0, 0, 0.1);
 }
 
-.search-form {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
+/* Notification Badge */
 .notification-badge {
   position: absolute;
   top: 0;
@@ -310,6 +197,7 @@ export default {
   font-size: 0.8rem;
 }
 
+/* Icon Styles */
 .icon {
   font-size: 24px;
   margin: 0 1.5rem;
@@ -320,9 +208,26 @@ export default {
 
 .icon:hover {
   transform: scale(1.3);
-  color: #ff7f50;
+  color: #ff7f50; 
 }
-
+.navbar-nav-right {
+  display: flex;
+  justify-content: end;
+  gap: 3rem;
+  flex: 0.5;
+}
+.center{
+  display: flex;
+  flex: 0.2;
+  justify-content: center;
+}
+.navbar-nav-left{
+  display: flex;
+  justify-content: center;
+  flex: 0.5;
+  gap: 2rem;
+}
+/* Tooltip Text */
 .tooltip-text {
   visibility: hidden;
   width: 120px;
@@ -335,7 +240,6 @@ export default {
   bottom: -55%;
   left: 50%;
   margin-left: -30px;
-  align-items: center;
   opacity: 0;
   transition: opacity 0.3s;
   font-size: 15px;
@@ -346,84 +250,76 @@ export default {
   opacity: 1;
 }
 
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  left: -50px; /* Adjust dropdown position */
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 8px 20px;
+  color: #343a40;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background-color: orange;
+  color: #fff;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+/* Notification Dropdown */
 .notification-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
   background-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  width: 200px;
-  z-index: 1000;
-  margin-top: 5px;
+  border-radius: 6px;
+  z-index: 10;
+  padding: 5px 0;
+  min-width: 200px;
+  text-align: left;
 }
 
 .notification-dropdown ul {
   list-style: none;
-  margin: 0;
   padding: 0;
 }
 
-.notification-dropdown li {
+.notification-dropdown ul li {
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
 
-.notification-dropdown li:last-child {
-  border-bottom: none;
+.notification-dropdown ul li:hover {
+  background-color: #f1f1f1;
 }
 
-/* Chat Modal Styles */
-.chat-modal-wrapper {
-  position: fixed;
-  top: 10%;
-  right: 2%;
-  width: 300px;
-  height: 400px;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  z-index: 1050;
-  display: flex;
-  flex-direction: column;
-}
-
+/* Responsive Styles */
 @media (max-width: 992px) {
-  .navbar-brand {
-    flex-direction: column;
-    align-items: center;
+  .navbar-toggler {
+    border-color: #ff7f50; /* Orange color for toggler on smaller screens */
   }
 
-  .brand-text {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 576px) {
-  .navbar-nav {
-    flex-direction: column;
+  .navbar-collapse {
+    background-color: #fff;
   }
 
-  .nav-item {
-    margin-bottom: 0.5rem;
-    gap: 2rem;
+  .dropdown-menu {
+    left: -60px; /* Adjust dropdown position */
   }
 
-  .search-form {
-    margin: 0;
-    width: 100%;
+  .notification-dropdown {
+    left: unset;
+    right: 10px; /* Adjust notification dropdown position */
   }
-}
-
-.search-form .form-control {
-  border: 2px solid orange;
-  border-radius: 20px;
-  width: 400px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-form .form-control:hover {
-  border-color: darkorange;
-  box-shadow: 0 0 5px rgba(255, 165, 0, 0.5);
 }
 </style>

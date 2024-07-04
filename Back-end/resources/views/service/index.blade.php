@@ -110,7 +110,7 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="service-image-container" style="height: 300px;">
-                            <img src="{{$service->image }}" class="img-fluid rounded" style="object-fit: cover;"  alt="Base64 Image" id="service-image">
+                            <img src="" class="img-fluid rounded" style="object-fit: cover;"  alt="Base64 Image" id="service-image">
                         </div>
                     </div>
                     <div class="col-md-7">

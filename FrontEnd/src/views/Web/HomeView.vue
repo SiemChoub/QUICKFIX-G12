@@ -1,9 +1,12 @@
 <template>
-  <transition name="fade">
-    <router-view />
+  
+<router-view v-slot="{ Component }">
+  <transition>
+    <component :is="Component" />
   </transition>
+</router-view>
   <WebLayout>
-    <div class="container-fluid p-0">
+    <div class="container-fluid p-0 mt-5">
       <!-- Carousel -->
       <div id="headerCarousel" class="carousel slide carousel-fade mx-auto" data-bs-ride="carousel" data-interval="3000">
         <!-- Indicators -->
@@ -22,20 +25,12 @@
             <div class="carousel-blur-background">
               <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 1" />
             </div>
-            <div class="carousel-caption d-none d-md-block">
-              <h2 class="carousel-title">THE BEST REPAIR AND MAINTENANCE SERVICES</h2>
-              <p class="carousel-subtitle">Providing top-notch solutions for your needs.</p>
-            </div>
           </div>
 
           <!-- Slide 2 -->
           <div class="carousel-item">
             <div class="carousel-blur-background">
               <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 2" />
-            </div>
-            <div class="carousel-caption d-none d-md-block">
-              <h2 class="carousel-title">FAST AND RELIABLE FIXES</h2>
-              <p class="carousel-subtitle">Quick solutions that you can trust.</p>
             </div>
           </div>
 
@@ -44,10 +39,6 @@
             <div class="carousel-blur-background">
               <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 3" />
             </div>
-            <div class="carousel-caption d-none d-md-block">
-              <h2 class="carousel-title">EXPERT SERVICE PROVIDERS</h2>
-              <p class="carousel-subtitle">Skilled professionals at your service.</p>
-            </div>
           </div>
 
           <!-- Slide 4 -->
@@ -55,20 +46,12 @@
             <div class="carousel-blur-background">
               <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 4" />
             </div>
-            <div class="carousel-caption d-none d-md-block">
-              <h2 class="carousel-title">CUSTOMER SATISFACTION GUARANTEED</h2>
-              <p class="carousel-subtitle">Your happiness is our priority.</p>
-            </div>
           </div>
 
           <!-- Slide 5 -->
           <div class="carousel-item">
             <div class="carousel-blur-background">
               <img src="@/assets/images/image.png" class="d-block w-100" alt="Slide 5" />
-            </div>
-            <div class="carousel-caption d-none d-md-block">
-              <h2 class="carousel-title">24/7 SUPPORT AVAILABLE</h2>
-              <p class="carousel-subtitle">Always here when you need us.</p>
             </div>
           </div>
         </div>
@@ -86,8 +69,11 @@
 
       <!-- Additional Content -->
       <div class="content">
+        <div class="row service">
           <WebService />
-        <div class="row mt-5 mapProvince">
+
+        </div>
+        <div class="row ">
           <ProvinceMap />
         </div>
         <div class="row mt-5 mb-5">
@@ -101,7 +87,7 @@
   </WebLayout>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { onMounted, onBeforeUnmount } from 'vue';
 import WebLayout from '@/Components/Layouts/WebLayout.vue';
 import ProvinceMap from '@/Components/ProvinceMap.vue';
@@ -119,8 +105,8 @@ const router = useRouter();
 }
 
 .carousel-item img {
-  height: 90vh; /* Adjust the height of the carousel */
-  object-fit: cover;
+  height: 75vh;
+  object-fit:cover;
 }
 
 
@@ -133,9 +119,8 @@ const router = useRouter();
   text-align: center;
   color: #fff;
   width: 100%;
-  z-index: 1; 
+  z-index: 5; 
   background: rgba(11, 11, 11, 0.142); /* Adjust the rgba values to get the desired gray color with opacity */
-  padding: 10px; /* Add padding to make text more readable */
 }
 
 
@@ -178,7 +163,7 @@ const router = useRouter();
   background-color: darkorange;
 }
 
-.content {
+/* .content {
   padding-top: 20px;
-}
+} */
 </style>

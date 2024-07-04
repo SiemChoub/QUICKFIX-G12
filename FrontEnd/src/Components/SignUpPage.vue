@@ -1,6 +1,6 @@
 <template>
   <div class="auth-page d-flex align-items-center justify-content-center">
-    <transition name="fade">
+    <div name="fade">
       <div
         v-if="showSpinner"
         class="spinner-container position-fixed w-100 d-flex align-items-center justify-content-center"
@@ -9,8 +9,8 @@
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
-    </transition>
-    <transition name="fade">
+    </div>
+    <div name="fade">
       <div class="auth-container shadow-lg d-flex flex-column flex-lg-row w-100">
         <div class="image-container">
           <img src="@/assets/images/image.png" alt="Auth Image" />
@@ -18,26 +18,41 @@
         <div class="form-container p-5">
           <h2 class="mb-4">Sign Up</h2>
           <form @submit.prevent="registerUser">
-            <div class="form-group mb-4">
-              <label for="name">Username:</label>
-              <input type="text" id="name" v-model="formData.name" class="form-control" required />
-            </div>
-            <div class="form-group mb-4">
-              <label for="email">Email:</label>
-              <input type="email" id="email" v-model="formData.email" class="form-control" required />
-            </div>
-            <div class="form-group mb-4">
-              <label for="password">Password:</label>
-              <input
-                type="password"
-                id="password"
-                v-model="formData.password"
-                class="form-control"
-                required
-              />
-            </div>
-            <button type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
-          </form>
+          <div class="form-group mb-4">
+            <label for="name">Username:</label>
+            <input
+              type="text"
+              id="name"
+              v-model="formData.name"
+              class="form-control"
+              required
+              autocomplete="username"
+            />
+          </div>
+          <div class="form-group mb-4">
+            <label for="email">Email:</label>
+            <input
+              type="email"
+              id="email"
+              v-model="formData.email"
+              class="form-control"
+              required
+              autocomplete="email"
+            />
+          </div>
+          <div class="form-group mb-4">
+            <label for="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              v-model="formData.password"
+              class="form-control"
+              required
+              autocomplete="new-password"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
+        </form>
           <div class="social-login">
             <h3 class="mb-3">Or Sign Up with:</h3>
             <!-- Example button for Google login -->
@@ -54,11 +69,12 @@
           <p v-if="errorMessage" class="text-danger">{{ errorMessage }}</p>
         </div>
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
 <script>
+
 import axios from 'axios';
 
 export default {
@@ -76,20 +92,21 @@ export default {
   methods: {
     async registerUser() {
       try {
+        this.showSpinner = true;
         const response = await axios.post('http://127.0.0.1:8000/api/register', this.formData);
         const { user, access_token } = response.data;
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('access_token', access_token);
-        alert('User registered successfully!');
-        this.$router.push('/');
-        location.reload();
+        this.$router.push('/'); 
       } catch (error) {
         if (error.response && error.response.status === 422) {
-          this.errorMessage = Object.values(error.response.data).flat().join(' ');
+          this.errorMessage = Object.values(error.response.data.errors).flat().join(' ');
         } else {
           console.error('Error registering user:', error.message);
           this.errorMessage = 'Registration failed. Please try again.';
         }
+      } finally {
+        this.showSpinner = false; // Hide spinner regardless of success or failure
       }
     },
     loginWithGoogle() {

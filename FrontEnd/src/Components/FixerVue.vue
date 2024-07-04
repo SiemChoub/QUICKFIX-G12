@@ -24,10 +24,10 @@
             <img :src="repairer.image" alt="Repairer Image" />
           </div>
           <div class="repairer-info">
-            <h3>{{ repairer.name }}</h3>
-            <p class="career">{{ repairer.career }}</p>
-            <p class="place">{{ repairer.place }}</p>
-            <p class="phone">111111111111</p>
+            <h3>Name: <span>{{ repairer.name }}</span> </h3>
+            <p class="career">Career: <span>{{ repairer.career }}</span> </p>
+            <p class="place">Place: <span> {{ repairer.place }}</span></p>
+            <p class="phone">Tel: <span>111111</span></p>
             <div class="repairer-icons">
               <i class="fas fa-phone"></i>
               <button class="btn btn-primary" @click="bookAppointment(repairer)">Book</button> 
@@ -146,7 +146,7 @@ hr{
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
   overflow: hidden;
@@ -192,6 +192,7 @@ hr{
 .repairer-info p {
   margin: 5px 0;
   color: #666;
+  font-weight: bold;
 }
 
 .repairer-icons {
