@@ -39,15 +39,27 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'address' => 'required',
             'password' => 'required|confirmed',
+            'profile' => 'required|file|max:2048',
         ]);
 
+        $data = $request->all();
+        if ($request->hasFile('profile')) {
+            $profile = $request->file('profile');
+            $profileContents = file_get_contents($profile->getRealPath());
+            $base64String = 'data:' . $profile->getMimeType() . ';base64,' . base64_encode($profileContents);
+            $data['profile'] = $base64String;
+        } else {
+            $data['profile'] = null;
+        }
+
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'address' => $request->address,
-            'phone' => $request->phone,
-            'role' => $request->role,
-            'password' => bcrypt($request->password),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'profile' => $data['profile'],
+            'phone' => $data['phone'],
+            'role' => $data['role'],
+            'password' => bcrypt($data['password']),
         ]);
         $user->save();
 

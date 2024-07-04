@@ -31,8 +31,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permission= Permission::latest()->get();
-
+        $permission= Permission::paginate(5);
         return view('setting.permission.index',['permissions'=>$permission]);
     }
 
@@ -59,7 +58,9 @@ class PermissionController extends Controller
             'name'=>'required',
         ]);
         $permission = Permission::create(['name'=>$request->name]);
-        return redirect()->back()->withSuccess('Permission created !!!');
+        return redirect('admin/permissions')->with('showAlertCreate', true);
+
+
     }
 
     /**
@@ -94,7 +95,7 @@ class PermissionController extends Controller
     public function update(Request $request, Permission $permission)
     {
         $permission->update(['name'=>$request->name]);
-        return redirect()->back()->withSuccess('Permission updated !!!');
+        return redirect('admin/permissions')->with('showAlertEdit', true);
     }
 
     /**
@@ -106,6 +107,6 @@ class PermissionController extends Controller
     public function destroy(Permission $permission)
     {
         $permission->delete();
-        return redirect()->back()->withSuccess('Permission deleted !!!');
+        return redirect()->back()->with('showAlertDelete', true);
     }
 }
