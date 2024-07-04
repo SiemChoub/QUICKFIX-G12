@@ -40,11 +40,6 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        $permissions = Permission::get();
-        return view('setting.role.new',['permissions'=>$permissions]);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -52,16 +47,6 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $request->validate(['name'=>'required']);
-
-        $role = Role::create(['name'=>$request->name]);
-
-        $role->syncPermissions($request->permissions);
-        
-        return redirect()->back()->withSuccess('Role created !!!');
-    }
 
     /**
      * Display the specified resource.
@@ -98,7 +83,7 @@ class RoleController extends Controller
     {
         $role->update(['name'=>$request->name]);
         $role->syncPermissions($request->permissions);
-        return redirect()->back()->withSuccess('Role updated !!!');
+        return redirect('admin/roles')->with('showAlertEdit', true);
     }
 
     /**
@@ -107,9 +92,4 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
-    {
-        $role->delete();
-        return redirect()->back()->withSuccess('Role deleted !!!');
-    }
 }

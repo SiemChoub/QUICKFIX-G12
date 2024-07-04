@@ -11,8 +11,8 @@
                 </a>
             @endcan
         </div>
-        <h4 class='shadow text-center p-2 border around-50'>CATEGORY MANAGEMENT</h4>
-        <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
+            <h4 class='shadow text-center p-2 border around-50'><i class='bx bx-category'></i> CATEGORY MANAGEMENT</h4> 
+            <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
             <div class="input-group h-100">
                 <input type="text" id="search-input" class="form-control border-0 shadow-none h-100" placeholder="Search" aria-label="Search">
                 <div class="input-group-append h-100">

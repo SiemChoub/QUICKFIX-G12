@@ -28,10 +28,6 @@
                <label for="end_date" class="block text-gray-700 font-medium mb-1">End Date</label>
                <input id="end_date" type="date" name="end_date" value="{{ old('end_date') }}" placeholder="Enter end date" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent">
              </div>
-             <div>
-               <label for="image" class="block text-gray-700 font-medium mb-1">Image</label>
-               <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent">
-             </div>
            {{-- @if (count($categories) > 0)
            <div>
              <label for="category_id" class="block text-gray-700 font-medium mb-1">Category</label>

@@ -1,7 +1,11 @@
 <x-app-layout>
    <div>
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-            <div class="container mx-auto px-6 py-1">
+          <div class="container mx-auto px-6 py-1">
+              <a href="{{ route('admin.permissions.index') }}" class="btn btn-warning shadow flex items-center border mt-2 mb-1 border-none hover:bg-warning-600 transition-colors">
+                <i class="bx bx-arrow-back mr-2 animate-pulse"></i>
+                Back
+              </a>
               <div class="bg-white shadow-md rounded my-6 p-5">
                 <form method="POST" action="{{ route('admin.permissions.update',$permission->id)}}">
                   @csrf
@@ -18,7 +22,7 @@
                   />
                 </div>
                 <div class="text-center mt-16">
-                  <button type="submit" class="bg-blue-500 text-white font-bold px-5 py-1 rounded focus:outline-none shadow hover:bg-blue-500 transition-colors ">Update</button>
+                  <button type="submit" class="bg-warning shadow hover:bg-warning-600 font-medium py-1 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-opacity-50 transition-colors">Update</button>
                 </div>
               </div>
 
