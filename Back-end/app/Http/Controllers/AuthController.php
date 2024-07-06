@@ -15,9 +15,9 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email'     => 'required|string|max:255',
-            'password'  => 'required|string'
-          ]);
+            'email' => 'required|string|max:255',
+            'password' => 'required|string'
+        ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors());
@@ -31,17 +31,17 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user   = User::where('email', $request->email)->firstOrFail();
-        $token  = $user->createToken('auth_token')->plainTextToken;
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message'       => 'Login success',
-            'access_token'  => $token,
-            'token_type'    => 'Bearer',
-            'user'=>$user
+            'message' => 'Login success',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => $user
         ]);
     }
-    
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -49,7 +49,7 @@ class AuthController extends Controller
         // $roles = $user->getRoleNames();
         return response()->json([
             'message' => 'Login success',
-            'data' =>$user,
+            'data' => $user,
         ]);
     }
 
@@ -61,35 +61,52 @@ class AuthController extends Controller
         ]);
     }
     public function register(Request $request): JsonResponse
-{
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|string',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(20),
+        ]);
+
+        $user->assignRole('user');
+        $user->givePermissionTo(['Mail access']); // Adjust as per your application's needs
+
+        $tokenResult = $user->createToken('auth_token');
+
+        return response()->json([
+            'message' => 'User registered successfully',
+            'user' => $user,
+            'access_token' => $tokenResult->plainTextToken,
+            'token_type' => 'Bearer',
+        ], 201);
     }
 
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'email_verified_at' => now(),
-        'remember_token' => Str::random(20),
-    ]);
+    public function update(Request $request)
+    {
+        // Validate the request data
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+        ]);
 
-    $user->assignRole('user');
-    $user->givePermissionTo(['Mail access']); // Adjust as per your application's needs
+        // Update the user data
+        $user = Auth::user();
+        $user->name = $request->input('name');
+        $user->phone = $request->input('phone');
+        $user->save();
 
-    $tokenResult = $user->createToken('auth_token');
-
-    return response()->json([
-        'message' => 'User registered successfully',
-        'user' => $user,
-        'access_token' => $tokenResult->plainTextToken,
-        'token_type' => 'Bearer',
-    ], 201);
-}
+        return response()->json(['message' => 'User updated successfully']);
+    }
 }

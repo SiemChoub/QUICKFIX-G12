@@ -30,6 +30,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])-> middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');
+Route::put('/profile/update/{id}', [AuthController::class, 'update'])->middleware('auth:sanctum');
 
 Route::get('/service/list', [ServiceController::class, 'index']);
 Route::get('/category/list', [CategoryController::class, 'index']);
