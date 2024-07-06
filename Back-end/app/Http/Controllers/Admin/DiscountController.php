@@ -67,7 +67,7 @@ class DiscountController extends Controller
     {
         $data = $request->all();
         $discount= Discount::create($data);
-        return redirect('admin/discounts')->with('showAlertCreate', true);
+        return redirect('admin/discounts')->with('showAlertCreate', true, );
     }
 
     /**

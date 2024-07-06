@@ -180,30 +180,33 @@
              showCloseButton: true,
          });
      </script>
-     @endif
+    @endif
+     <script>
 
+Pusher.logToConsole = true;
 
+var pusher = new Pusher('db19ca5825e49b2fcb42', {
+    cluster: 'ap1'
+});
 
-     {{-- Pusher.logToConsole = true;
+var channel = pusher.subscribe('my-channel');
+channel.bind('alert-notification', function(data) {
+    if (data && data.notification && data.notification.discount && data.notification.description && data.notification.start_date && data.notification.end_date) {
+        toastr.success(
+            'New Post Created',
+            'Discount: ' + data.notification.discount + '<br>Description: ' + data.notification.description + '<br>Start Date: ' + data.notification.start_date + '<br>End Date: ' + data.notification.end_date,
+            {
+                timeOut: 0,
+                extendedTimeOut: 0,
+            }
+        );
+    } else {
+        console.error('Invalid data structure received:', data);
+    }
+}
+     </script>
+ 
 
-     var pusher = new Pusher('db19ca5825e49b2fcb42', {
-         cluster: 'ap1'
-     });
-     
-     var channel = pusher.subscribe('my-channel');
-     channel.bind('alert-notification', function(data) {
-         if (data && data.notification && data.notification.discount && data.notification.description && data.notification.start_date && data.notification.end_date) {
-             toastr.success(
-                 'New Post Created',
-                 'Discount: ' + data.notification.discount + '<br>Description: ' + data.notification.description + '<br>Start Date: ' + data.notification.start_date + '<br>End Date: ' + data.notification.end_date,
-                 {
-                     timeOut: 0,
-                     extendedTimeOut: 0,
-                 }
-             );
-         } else {
-             console.error('Invalid data structure received:', data);
-         } --}}
      <style>
              .modal-content {
              animation: fadeIn 0.5s;
