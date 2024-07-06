@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\Mailsetting;
-
 use Config;
 
 class AppServiceProvider extends ServiceProvider
@@ -45,4 +44,6 @@ class AppServiceProvider extends ServiceProvider
             }
         }
     }
+
+
 }
