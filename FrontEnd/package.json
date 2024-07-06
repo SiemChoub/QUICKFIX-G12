@@ -29,6 +29,7 @@
     "firebase": "^10.12.2",
     "gapi-script": "^1.2.0",
     "jquery": "^3.7.1",
+    "leaflet": "^1.9.4",
     "mapbox-gl": "^3.4.0",
     "pinia": "^2.1.7",
     "vee-validate": "^4.12.8",

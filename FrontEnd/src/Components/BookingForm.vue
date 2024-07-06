@@ -1,139 +1,438 @@
 <template>
-  <transition name="fade">
-    <div v-if="showBookingForm" class="booking-form-modal position-fixed w-100 h-100 d-flex align-items-center justify-content-center">
-      <div class="booking-form-container p-4 bg-white shadow-lg rounded">
-        <button @click="closeBookingForm" class="close-btn">&times;</button>
-        <h2 class="mb-4 text-center">Book a Service</h2>
-        <form @submit.prevent="submitBooking">
-          <div class="form-group mb-4">
-            <label for="category">Category:</label>
-            <select id="category" v-model="category" class="form-control" required>
-              <option value="" disabled>Select Category</option>
-              <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
-            </select>
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>Book Service</h3>
+            <button class="close" @click="$emit('close')">&times;</button>
           </div>
-          <div class="form-group mb-4">
-            <label for="service">Service:</label>
-            <select id="service" v-model="service" class="form-control" required>
-              <option value="" disabled>Select Service</option>
-              <option v-for="ser in services" :key="ser" :value="ser">{{ ser }}</option>
-            </select>
-          </div>
-          <div class="form-group mb-4">
-            <label for="location">Location:</label>
-            <div id="map" class="map-container"></div>
-          </div>
-          <div class="form-group mb-4">
-            <label for="image">Upload Image:</label>
-            <input type="file" id="image" @change="handleImageUpload" class="form-control-file" required />
-          </div>
-          <div class="form-group mb-4">
-            <label>Buy Something New:</label>
-            <div>
-              <label class="radio-inline mr-3">
-                <input type="radio" v-model="buyNew" value="yes"> Yes
-              </label>
-              <label class="radio-inline">
-                <input type="radio" v-model="buyNew" value="no"> No
-              </label>
+          <div class="modal-body">
+            <div v-if="service">
+              <form @submit.prevent="submitBooking" class="booking-form">
+                <div class="form-group-map-container">
+                  <div class="form-group-map">
+                    <div class="input-group">
+                      <input type="hidden" v-model="location" />
+                      <input
+                        type="text"
+                        class="location"
+                        v-model="reverseGeocodeResult"
+                        @input="searchSimilarPlaces"
+                        placeholder="Enter location or use the map icon"
+                        required
+                      />
+                      <span class="input-group-append">
+                        <button type="button" class="btn btn-map" @click="getCurrentLocation">
+                          <i class="bi bi-geo-alt"></i>
+                        </button>
+                      </span>
+                    </div>
+                    <div v-if="similarPlaces.length" class="similar-places">
+                      <ul>
+                        <li
+                          v-for="place in similarPlaces"
+                          :key="place.id"
+                          @click="selectPlace(place)"
+                        >
+                          {{ place.place_name }}
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="form-group">
+                      <label for="bookingDate">Booking Date:</label>
+                      <div class="date">
+                        <input type="date" v-model="bookingDate" required class="date" />
+                        <button type="button" class="btn btn-map" @click="setTodayDate">
+                          Today
+                        </button>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="promotion">Promotion Code:</label>
+                      <input
+                        type="text"
+                        v-model="promotionCode"
+                        placeholder="Enter promotion code (if any)"
+                      />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Book</button>
+                  </div>
+                  <div class="map" ref="mapContainer"></div>
+                </div>
+              </form>
             </div>
-            <div v-if="buyNew === 'yes'" class="mt-3">
-              <label for="newItem">New Item Details:</label>
-              <input type="text" id="newItem" v-model="newItem" class="form-control" placeholder="Enter details...">
-            </div>
           </div>
-          <button type="submit" class="btn btn-primary w-100">Submit Booking</button>
-        </form>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
-const showBookingForm = ref(true)
-const category = ref('')
-const service = ref('')
-const image = ref(null)
-const categories = ref(['Plumbing', 'Electrical', 'Cleaning', 'Gardening'])
-const services = ref(['Installation', 'Repair', 'Maintenance'])
-const buyNew = ref('')
-const newItem = ref('')
+mapboxgl.accessToken =
+  'pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
 
-const closeBookingForm = () => {
-  showBookingForm.value = false
-}
-
-const handleImageUpload = (event) => {
-  image.value = event.target.files[0]
-}
-
-const submitBooking = () => {
-  console.log('Category:', category.value)
-  console.log('Service:', service.value)
-  console.log('Image:', image.value)
-  console.log('Buy New:', buyNew.value)
-  if (buyNew.value === 'yes') {
-    console.log('New Item:', newItem.value)
+const props = defineProps({
+  service: {
+    type: Object,
+    required: true
   }
-  // Handle booking submission logic here
+})
+
+const emit = defineEmits(['close'])
+
+const location = ref('')
+const reverseGeocodeResult = ref('')
+const selectedService = ref('')
+const bookingDate = ref('')
+const description = ref('')
+const promotionCode = ref('')
+
+const categories = ref([])
+const services = ref([])
+const similarPlaces = ref([])
+
+onMounted(async () => {
+  await fetchCategories()
+  await fetchServices()
+  initializeMap()
+})
+
+async function fetchCategories() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/category/list')
+    categories.value = response.data
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+  }
 }
 
+async function fetchServices() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/service/list')
+    services.value = response.data
+  } catch (error) {
+    console.error('Error fetching services:', error)
+  }
+}
+
+const submitBooking = async () => {
+  const bookingData = {
+    serviceId: props.service.id,
+    location: location.value,
+    service: selectedService.value,
+    bookingDate: bookingDate.value,
+    promotionCode: promotionCode.value
+  }
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/booking', bookingData)
+    console.log('Booking data:', bookingData)
+    emit('close')
+  } catch (error) {
+    console.error('Error submitting booking:', error)
+  }
+}
+
+const getCurrentLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latLng = [position.coords.longitude, position.coords.latitude]
+        location.value = `${latLng[1]}, ${latLng[0]}`
+        reverseGeocode(latLng)
+        map.flyTo({ center: latLng, zoom: 18 })
+        addMarker(latLng)
+        setTodayDate()
+      },
+      (error) => {
+        console.error('Error getting location:', error)
+      }
+    )
+  } else {
+    alert('Geolocation is not supported by this browser.')
+  }
+}
+
+const setTodayDate = () => {
+  const today = new Date().toISOString().split('T')[0]
+  bookingDate.value = today
+}
+
+let map
 const initializeMap = () => {
-  mapboxgl.accessToken = 'pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
-  const map = new mapboxgl.Map({
-    container: 'map',
+  const cambodiaBounds = [
+    [102.144, 10.486],
+    [107.625, 14.704]
+  ]
+
+  map = new mapboxgl.Map({
+    container: document.querySelector('.map'),
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [104.91, 12.5657], // Coordinates for Cambodia
-    zoom: 7
+    center: [104.917, 12.5657],
+    zoom: 6,
+    maxBounds: cambodiaBounds
   })
+
+  map.on('load', () => {
+    let rmFoot = document.querySelector('.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib')
+    let rmFoot1 = document.querySelector('.mapboxgl-ctrl-bottom-left')
+    if (rmFoot) {
+      rmFoot.style.display = 'none'
+      rmFoot1.style.display = 'none'
+    }
+  })
+}
+
+const addMarker = (latLng) => {
+  new mapboxgl.Marker().setLngLat(latLng).addTo(map)
+}
+
+async function reverseGeocode(latLng) {
+  try {
+    const response = await axios.get(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${latLng[0]},${latLng[1]}.json`,
+      {
+        params: {
+          access_token: mapboxgl.accessToken
+        }
+      }
+    )
+    if (response.data.features.length > 0) {
+      reverseGeocodeResult.value = response.data.features[0].place_name
+
+    } else {
+      console.error('No results found for reverse geocoding.')
+    }
+  } catch (error) {
+    console.error('Error in reverse geocoding:', error)
+  }
+}
+
+const searchSimilarPlaces = async () => {
+  try {
+    const response = await axios.get(
+      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+        encodeURIComponent(reverseGeocodeResult.value) +
+        '.json',
+      {
+        params: {
+          access_token: mapboxgl.accessToken,
+          autocomplete: true
+        }
+      }
+    )
+    similarPlaces.value = response.data.features
+  } catch (error) {
+    console.error('Error searching similar places:', error)
+  }
+}
+
+const selectPlace = (place) => {
+  location.value = `${place.center[1]}, ${place.center[0]}`
+  reverseGeocodeResult.value = place.place_name
+  similarPlaces.value = []
+  map.flyTo({ center: place.center, zoom: 18 })
+  addMarker(place.center)
 }
 </script>
 
 <style scoped>
-.booking-form-modal {
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1050;
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.booking-form-container {
-  width: 800px;
-  max-width: 90%;
-  max-height: 95%;
-  overflow-y: auto;
+.modal-wrapper {
+  width: 80%;
+  margin: 20px;
+  max-height: 90%;
+  padding: 30px;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  padding: 30px;
   position: relative;
-  padding: 2rem;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: transparent;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.close {
+  background: none;
   border: none;
-  font-size: 2rem;
+  font-size: 1.5rem;
   cursor: pointer;
 }
 
-.map-container {
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group-map-container {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group-map {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 50%;
+}
+
+.map {
+  width: 50%;
   height: 300px;
+  background-color: #f0f0f0;
+}
+
+.form-group-select {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.form-group-select select {
+  flex: 1;
+  padding: 10px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.date{
+  display: flex;
+  
+}
+.date input{
+    border-radius: 0 5px 5px 0;
+
+}
+
+.form-group input,
+.location,
+.form-group textarea,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 5px;
-  overflow: hidden;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-group input {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group-append {
+  margin-left: 10px;
+}
+
+.btn {
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 11.5px 20px;
+  text-align: center;
 }
 
 .btn-primary {
   background-color: orange;
+  color: white;
   border: none;
-  font-size: 1.2rem;
-  padding: 12px;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .btn-primary:hover {
-  background-color: darkorange;
+  background-color: #0056b3;
+}
+
+.btn-map {
+  background-color: orange;
+  color: white;
+  /* padding: 5px 0; */
+  border: none;
+}
+
+.btn-map:hover {
+  background-color: #0056b3;
+}
+
+.transition-enter-active,
+.transition-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.transition-enter-from,
+.transition-leave-to {
+  opacity: 0;
+}
+.similar-places {
+  position: absolute;
+  background-color: white;
+  width: calc(100% - 20px);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  margin-top: 50px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.similar-places ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.similar-places ul li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.similar-places ul li:hover {
+  background-color: #f0f0f0;
 }
 </style>
