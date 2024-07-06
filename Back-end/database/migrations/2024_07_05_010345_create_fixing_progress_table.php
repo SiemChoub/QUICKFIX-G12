@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('fixing_progress', function (Blueprint $table) {
             $table->id();
-            $table->integer('booking_type_id');
-            $table->integer('user_id');
+            $table->unsignedBigInteger('booking_type_id');
             $table->string('type');
+            $table->unsignedBigInteger('fixer_id');
             $table->string('action')->default('progress');
-            $table->unsignedBigInteger('fixer_id')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('fixing_progress');
     }
 };
