@@ -26,5 +26,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         //
-    }
+
+    //     Gate::define('Notification access', function ($user) {
+    //         return $user->hasPermission('Notification access');
+    // });
+   
+}
 }

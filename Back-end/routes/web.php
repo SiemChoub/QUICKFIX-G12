@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
+    DiscountController,
     ProfileController,
     MailSettingController,
+    NotificationController as AdminNotificationController,
     UserController,
 };
+use App\Http\Controllers\API\NotificationController;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Mail;
 
@@ -73,3 +76,9 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
 });
+
+// Route::get('/user', [UserController::class, 'index']);
+Route::get('/notifications', [AdminNotificationController::class, 'index']);
+
+Route::post('/notification',[DiscountController::class, 'index'])->name('notification');
+Route::post('/discount/notification',[DiscountController::class, 'create'])->name('notification.create');

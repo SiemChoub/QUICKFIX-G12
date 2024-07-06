@@ -13,4 +13,8 @@ class Role extends Model
         'name',
     ];
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

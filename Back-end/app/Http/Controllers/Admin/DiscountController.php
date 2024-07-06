@@ -43,6 +43,20 @@ class DiscountController extends Controller
         return view('discount.new');
     }
 
+    // Discount::create($request->all());
+
+    // $data = [
+    //     'discounts' => ['discounts'],
+    //     'description' => ['description'],
+    //     'start_date' =>['start_date'],
+    //     'end_date' => ['end_date'],
+    // ];
+
+    // event(new NotificationCreate($data));
+
+    // return redirect()->back();
+    // }
+
     /**
      * Store a newly created resource in storage.
      *

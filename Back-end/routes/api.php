@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DiscountController;
+use App\Http\Controllers\Admin\MailSettingController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\CategoryController;
@@ -46,3 +49,19 @@ Route::post('/promotion/create', [PromotionService::class, 'store'])->name('prom
 Route::get('/promotion/show/{id}', [PromotionService::class, 'show'])->name('promotion.show');
 Route::put('/promotion/update/{id}', [PromotionService::class, 'update'])->name('promotion.update');
 Route::delete('/promotion/delete/{id}', [PromotionService::class, 'destroy'])->name('promotion.delete');
+
+// Notifications
+
+Route::get('/notification',[NotificationController::class,'index'])->name('notification');
+Route::get('/notification/show/{id}',[NotificationController::class, 'show']);
+Route::post('/notification/create', [NotificationController::class,'store'])->name('notification.create');
+Route::put('/notification/update/{id}', [NotificationController::class,'update']);
+Route::delete('/notification/delete/{id}', [NotificationController::class,'destroy']);
+
+Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
+
+
+// Route::get('/notification', [NotificationController::class, 'index'])->name('admin.notification.index')->middleware('can:Notification access');
+
+
+// Route::get('/discounts', [DiscountController::class, 'showDiscounts'])->name('discounts');

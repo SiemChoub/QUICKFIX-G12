@@ -79,6 +79,12 @@ class AdminSeeder extends Seeder
         $permission = Permission::create(['name' => 'Mail edit']);
         $permission = Permission::create(['name' => 'view_users']);
 
+        $permission = Permission::create(['name' => 'Notification access']);
+        $permission = Permission::create(['name' => 'Notification edit']);
+        $permission = Permission::create(['name' => 'Notification create']);
+        $permission = Permission::create(['name' => 'Notification delete']);
+
+
 
 
         $admin->assignRole($admin_role);
