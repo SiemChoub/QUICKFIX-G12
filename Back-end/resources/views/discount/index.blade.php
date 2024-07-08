@@ -203,7 +203,7 @@ channel.bind('alert-notification', function(data) {
     } else {
         console.error('Invalid data structure received:', data);
     }
-}
+});
      </script>
  
 

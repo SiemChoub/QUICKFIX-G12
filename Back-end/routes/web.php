@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
+    CategoryController,
     DiscountController,
     ProfileController,
     MailSettingController,
@@ -82,3 +83,4 @@ Route::get('/notifications', [AdminNotificationController::class, 'index']);
 
 Route::post('/notification',[DiscountController::class, 'index'])->name('notification');
 Route::post('/discount/notification',[DiscountController::class, 'create'])->name('notification.create');
+

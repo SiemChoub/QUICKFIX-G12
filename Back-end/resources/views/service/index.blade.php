@@ -201,6 +201,33 @@
     });
   }
 </script>
+
+{{-- link for alert notification --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+
+// code for creating alert notifications
+       Pusher.logToConsole = true;
+  var pusher = new Pusher('75c8f260b22b0b15e3a3', {
+    cluster: 'ap1'
+  });
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('alert-notification', function(data) {
+    console.log('Received form data:', data);
+    if (data && data.post && data.post.name ) {
+      toastr.success('New notification Created', 'Category Name: ' + data.post.name , {
+        timeOut: 0,  
+        extendedTimeOut: 0,  
+      });
+    } else {
+      console.error('Invalid data structure received:', data);
+    }
+  });
+</script>
+
 <style>
         .modal-content {
         animation: fadeIn 0.5s;

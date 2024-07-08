@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
+use App\Events\NotificationCreate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
@@ -52,6 +54,14 @@ class CategoryController extends Controller
     {
         $data = $request->all();
         $category = Category::create($data);
+
+        // for alert notifications
+        Category::create($request->all());
+        $data = [
+            'name' => $request->name,
+            // 'author' =>  $request->author,
+        ];
+            event(new NotificationCreate($data));
         return redirect('admin/categories')->with('showAlertCreate', true);
     }
 
