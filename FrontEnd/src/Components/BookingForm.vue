@@ -123,21 +123,27 @@ async function fetchServices() {
 }
 
 const submitBooking = async () => {
-  const bookingData = {
-    serviceId: props.service.id,
-    location: location.value,
-    service: selectedService.value,
-    bookingDate: bookingDate.value,
-    promotionCode: promotionCode.value
-  }
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/booking', bookingData)
-    console.log('Booking data:', bookingData)
-    emit('close')
-  } catch (error) {
-    console.error('Error submitting booking:', error)
-  }
-}
+    const userString = localStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const user_id = user.id;
+    const bookingData = {
+        service_id: props.service.id, // Ensure this is correctly passed from props
+        user_id: user_id,
+        location: location.value, // Ensure this is correctly retrieved from your form or state
+        date: bookingDate.value, // Assuming bookingDate.value is correctly retrieved from your form
+        promotion_id: promotionCode.value || null, // Ensure promotionCode.value is correctly retrieved
+        // Add other fields as needed (e.g., fixer_id)
+    };
+      console.log('Booking data:',bookingData);
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+        emit('close'); // Assuming this emits an event to close the modal
+    } catch (error) {
+        console.error('Error submitting booking:', error);
+        // Handle error appropriately (e.g., show error message)
+    }
+};
+
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
@@ -146,7 +152,7 @@ const getCurrentLocation = () => {
         const latLng = [position.coords.longitude, position.coords.latitude]
         location.value = `${latLng[1]}, ${latLng[0]}`
         reverseGeocode(latLng)
-        map.flyTo({ center: latLng, zoom: 18 })
+        map.flyTo({ center: latLng, zoom: 16 })
         addMarker(latLng)
         setTodayDate()
       },
@@ -204,8 +210,11 @@ async function reverseGeocode(latLng) {
       }
     )
     if (response.data.features.length > 0) {
-      reverseGeocodeResult.value = response.data.features[0].place_name
+      const place = response.data.features[0]
+      reverseGeocodeResult.value = place.place_name
 
+      const street = place.text
+      const specificLocation = place.properties.address
     } else {
       console.error('No results found for reverse geocoding.')
     }
@@ -335,13 +344,11 @@ const selectPlace = (place) => {
   margin-bottom: 5px;
   font-weight: bold;
 }
-.date{
+.date {
   display: flex;
-  
 }
-.date input{
-    border-radius: 0 5px 5px 0;
-
+.date input {
+  border-radius: 0 5px 5px 0;
 }
 
 .form-group input,

@@ -83,20 +83,32 @@ export default {
     const buttonText = 'Login with Google'
 
     async function handleLogin() {
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/login', {
-          email: email.value,
-          password: password.value
-        })
-        const { user, access_token } = response.data;
-        localStorage.setItem('user', user);
-        localStorage.setItem('access_token', access_token);
-        setAuthUser(user)
-        router.push('/')
-      } catch (error) {
-        console.error('Login failed:', error)
-      }
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/login', {
+      email: email.value,
+      password: password.value
+    });
+    const { user, access_token } = response.data;
+
+    setAuthUser(user);
+
+    if (user['role'] === 'customer') {
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('access_token', access_token);
+      router.push('/');
+    } else if (user['role'] === 'fixer') {
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('access_token', access_token);
+      router.push('/HomeFixer');
+    } else {
+      alert('User not found');
+      router.push('/login');
     }
+  } catch (error) {
+    console.error('Login failed:', error);
+  }
+}
+
 
     async function handleGoogleLogin(googleUser) {
       try {
