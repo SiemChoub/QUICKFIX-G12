@@ -81,8 +81,7 @@ class AuthController extends Controller
         ]);
 
         $user->assignRole('user');
-        $user->givePermissionTo(['Mail access']); // Adjust as per your application's needs
-
+        $user->givePermissionTo(['Mail access']);
         $tokenResult = $user->createToken('auth_token');
 
         return response()->json([

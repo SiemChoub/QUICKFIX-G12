@@ -25,25 +25,46 @@ class Bookin_memediatelyController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-        $bookin_memediately = new Bookin_immediately();
-        $bookin_memediately->service_id = $request->service_id;
-        $bookin_memediately->image = $request->image;
-        $bookin_memediately->message = $request->message;
-        $bookin_memediately->save();
+{
+    // Validate the request
+    $validatedData = $request->validate([
+        'service_id' => 'required|integer',
+        'date' => 'required|string',
+        'user_id' => 'required|integer',
+        'promotion_id' => 'nullable|integer',
+        'fixer_id' => 'nullable|integer',
+        'location' => 'required|string', 
+    ]);
 
-        $bookig = new Booking();
-        $bookig->booking_type_id = $bookin_memediately->id;
-        $bookig->user_id = $request->user_id;
-        $bookig->type='immediately';
-        if($request->fixer_id){
-            $bookig->fixer_id = $request->fixer_id;
-        }
-        $bookig->save();
+    // Parse the location input
+    // $location = explode(',', $validatedData['location']);
+    // $latitude = $location[0];
+    // $longitude = $location[1];
 
-        return response()->json($bookin_memediately); 
+    // Create a new Bookin_immediately record
+    $bookin_immediately = new Bookin_immediately();
+    $bookin_immediately->service_id = $validatedData['service_id'];
+    $bookin_immediately->user_id = $validatedData['user_id'];
+    $bookin_immediately->location = $validatedData['location'];
+    $bookin_immediately->date = $validatedData['date'];
+    if(isset($validatedData['promotion_id'])) {
+        $bookin_immediately->promotion_id = $validatedData['promotion_id'];
     }
+    $bookin_immediately->save();
+
+    // Create a new Booking record
+    $booking = new Booking();
+    $booking->booking_type_id = $bookin_immediately->id;
+    $booking->user_id = $validatedData['user_id'];
+    $booking->type = 'immediately';
+    if (isset($validatedData['fixer_id'])) {
+        $booking->fixer_id = $validatedData['fixer_id'];
+    }
+    $booking->save();
+
+    return response()->json($bookin_immediately);
+}
+
 
     /**
      * Display the specified resource.

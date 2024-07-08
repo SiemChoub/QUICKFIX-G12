@@ -35,10 +35,15 @@ Route::put('/profile/update/{id}', [AuthController::class, 'update'])->middlewar
 
 Route::get('/service/list', [ServiceController::class, 'index']);
 Route::get('/category/list', [CategoryController::class, 'index']);
-Route::resource('/booking',BookingController::class);
-Route::resource('/bookin_immediatly',Bookin_memediatelyController::class);
-Route::resource('/bookin_deadline',Bookin_deadlineController::class);
-Route::resource('/fixing_progressing',FixingProgressController::class);
+Route::resource('/booking',BookingController::class)->middleware('auth:sanctum');
+
+Route::post('/bookin_immediatly', [Bookin_memediatelyController::class, 'store']);
+Route::get('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'show'])->middleware('auth:sanctum');
+Route::put('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'destroy'])->middleware('auth:sanctum');
+
+Route::resource('/bookin_deadline',Bookin_deadlineController::class)->middleware('auth:sanctum');
+Route::resource('/fixing_progressing',FixingProgressController::class)->middleware('auth:sanctum');
 
 Route::get('/service',[ServiceController::class, 'index'])->name('service');
 Route::get('/discount',[PromotionService::class, 'index'])->name('service');
@@ -49,3 +54,6 @@ Route::post('/promotion/create', [PromotionService::class, 'store'])->name('prom
 Route::get('/promotion/show/{id}', [PromotionService::class, 'show'])->name('promotion.show');
 Route::put('/promotion/update/{id}', [PromotionService::class, 'update'])->name('promotion.update');
 Route::delete('/promotion/delete/{id}', [PromotionService::class, 'destroy'])->name('promotion.delete');
+
+
+Route::get('/booking', [BookingController::class, 'index']);
