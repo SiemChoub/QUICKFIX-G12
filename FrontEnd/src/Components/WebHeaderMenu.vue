@@ -90,10 +90,22 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li v-if="isLoggedIn">
-                <router-link to="/profile" class="dropdown-item">View Profile</router-link>
+                <router-link to="/profile" class="dropdown-item">
+                  <i class="bi bi-eye-fill"></i>
+                  <p> view Profile</p>
+                </router-link>
               </li>
               <li v-if="isLoggedIn">
-                <a href="#" class="dropdown-item" @click="logout">Logout</a>
+                <router-link to="#" class="dropdown-item">
+                  <i class="bi bi-clock-history"></i>
+                  <p> History</p>
+                </router-link>
+              </li>
+              <li v-if="isLoggedIn">
+                <a href="#" class="dropdown-item" @click="logout">
+                  <i class="bi bi-box-arrow-right"></i>
+                  <p>Logout</p>
+                </a>
               </li>
               <li v-if="!isLoggedIn">
                 <router-link to="/signup" class="dropdown-item">Sign Up</router-link>
@@ -216,6 +228,10 @@ const toggleNotifications = () => {
   gap: 3rem;
   flex: 0.5;
 }
+.dropdown-item{
+  display: flex;
+  gap: 5px
+}
 .center{
   display: flex;
   flex: 0.2;
@@ -258,7 +274,7 @@ const toggleNotifications = () => {
   border: none;
   border-radius: 5px;
   padding: 10px;
-  left: -50px; /* Adjust dropdown position */
+  left: -90px; /* Adjust dropdown position */
 }
 
 .dropdown-menu .dropdown-item {
