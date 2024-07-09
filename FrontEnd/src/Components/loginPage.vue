@@ -88,16 +88,15 @@ export default {
           password: password.value
         })
         const { user, access_token } = response.data
-        console.log(response.data);
+
         setAuthUser(user)
-        console.log(setAuthUser(user));
 
         if (user['role'] === 'customer') {
           localStorage.setItem('user', JSON.stringify(user))
           localStorage.setItem('access_token', access_token)
           router.push('/')
         } else if (user['role'] === 'fixer') {
-          localStorage.setItem('fixer', JSON.stringify(user))
+          localStorage.setItem('user', JSON.stringify(user))
           localStorage.setItem('access_token', access_token)
           router.push('/HomeFixer')
         } else {

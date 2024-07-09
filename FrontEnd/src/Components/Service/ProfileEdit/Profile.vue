@@ -37,6 +37,67 @@
             </div>
           </div>
         </div>
+        <img
+          :src="
+            authStore.user.profile
+              ? authStore.user.profile
+              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGU75F10hHYzumh3r2HkDve9wTh2GLZ57ENYSMl4G5SC3lKc_3ZuZmnzC-RfYJoxThvMA&usqp=CAU'
+          "
+          alt="Profile Image"
+          class="center-image"
+        />
+        <i
+          class="camera bi bi-camera"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModals"
+          style="cursor: pointer"
+        ></i>
+      </div>
+      <div
+        class="modal fade"
+        id="exampleModals"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div
+                id="image-drop-box"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+                @click="triggerFileInput"
+                style="border: 2px dashed #ccc; padding: 50px; height: 50vh; text-align: center"
+              >
+                <label for="image-upload" style="cursor: pointer; font-size: 18px; margin-top: 25%">
+                  Drop an image or click here!
+                  <input
+                    type="file"
+                    accept="image/*"
+                    @change="handleFiles"
+                    ref="fileInput"
+                    style="display: none"
+                    multiple
+                  />
+                </label>
+                <img v-if="image" :src="image" alt="Uploaded Image" class="uploaded-image" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary">Reset</button>
+              <button type="button" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
         <img :src="authStore.user.profile" alt="Profile Image" class="center-image" />
         <i class="camera bi bi-camera" data-bs-toggle="modal" data-bs-target="#exampleModals" style="cursor: pointer"></i>
       </div>
@@ -287,7 +348,7 @@ function resetForm() {
 }
 
 .edit-profile .btn:hover {
-  background-color: #ff7f50; /* Lighter shade of orange */
+  background-color: #ff7f50;
 }
 
 .btn-back {
@@ -295,6 +356,7 @@ function resetForm() {
   color: white;
   border: 1px solid #6c757d;
   padding: 8px 16px;
+  transform: scale(-5, 0);
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.3s ease;
