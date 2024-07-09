@@ -127,20 +127,19 @@ const submitBooking = async () => {
     const user = JSON.parse(userString);
     const user_id = user.id;
     const bookingData = {
-        service_id: props.service.id, // Ensure this is correctly passed from props
+        service_id: props.service.id, 
         user_id: user_id,
-        location: location.value, // Ensure this is correctly retrieved from your form or state
-        date: bookingDate.value, // Assuming bookingDate.value is correctly retrieved from your form
-        promotion_id: promotionCode.value || null, // Ensure promotionCode.value is correctly retrieved
-        // Add other fields as needed (e.g., fixer_id)
+        location: location.value, 
+        date: bookingDate.value,
+        promotion_id: promotionCode.value || null, 
     };
       console.log('Booking data:',bookingData);
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
-        emit('close'); // Assuming this emits an event to close the modal
+        console.log(response);
+        emit('close'); 
     } catch (error) {
         console.error('Error submitting booking:', error);
-        // Handle error appropriately (e.g., show error message)
     }
 };
 

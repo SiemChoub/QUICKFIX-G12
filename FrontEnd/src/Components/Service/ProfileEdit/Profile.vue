@@ -9,7 +9,7 @@
       <div class="profile-image">
         <div class="edit-profile">
           <div class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="bi bi-camera-fill"></i> Edit Profile
+            Edit Profile
           </div>
           <!-- Modal -->
           <div
@@ -34,11 +34,21 @@
                   <form ref="form">
                     <div class="group-input">
                       <label for="username" class="form-label">User Name:</label>
-                      <input type="text" class="form-control" id="username" v-model="authStore.user.name"  />
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        v-model="authStore.user.name"
+                      />
                     </div>
                     <div class="group-input">
                       <label for="phone" class="form-label">Phone Number:</label>
-                      <input type="tel" class="form-control" id="phone" v-model="authStore.user.phone" />
+                      <input
+                        type="tel"
+                        class="form-control"
+                        id="phone"
+                        v-model="authStore.user.phone"
+                      />
                     </div>
                   </form>
                 </div>
@@ -49,7 +59,67 @@
             </div>
           </div>
         </div>
-        <img :src="authStore.user.profile" alt="Profile Image" class="center-image" />
+        <img
+          :src="
+            authStore.user.profile
+              ? authStore.user.profile
+              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGU75F10hHYzumh3r2HkDve9wTh2GLZ57ENYSMl4G5SC3lKc_3ZuZmnzC-RfYJoxThvMA&usqp=CAU'
+          "
+          alt="Profile Image"
+          class="center-image"
+        />
+        <i
+          class="camera bi bi-camera"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModals"
+          style="cursor: pointer"
+        ></i>
+      </div>
+      <div
+        class="modal fade"
+        id="exampleModals"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div
+                id="image-drop-box"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+                @click="triggerFileInput"
+                style="border: 2px dashed #ccc; padding: 50px; height: 50vh; text-align: center"
+              >
+                <label for="image-upload" style="cursor: pointer; font-size: 18px; margin-top: 25%">
+                  Drop an image or click here!
+                  <input
+                    type="file"
+                    accept="image/*"
+                    @change="handleFiles"
+                    ref="fileInput"
+                    style="display: none"
+                    multiple
+                  />
+                </label>
+                <img v-if="image" :src="image" alt="Uploaded Image" class="uploaded-image" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary">Reset</button>
+              <button type="button" class="btn btn-primary">Save</button>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="profile-info">
         <div class="info">
@@ -82,46 +152,77 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth-store';
-import axios from 'axios';
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth-store'
+import axios from 'axios'
+const image = ref(null)
+const fileInput = ref(null)
 
-const authStore = useAuthStore();
+function triggerFileInput() {
+  fileInput.value.click()
+}
 
-const form = ref(null);
+function handleFiles(event) {
+  const files = event.target.files || event.dataTransfer.files
+  if (files.length > 0) {
+    const file = files[files.length - 1]
+    previewImage(file)
+  }
+}
+
+function handleDrop(event) {
+  const files = event.dataTransfer.files
+  if (files.length > 0) {
+    const file = files[files.length - 1]
+    previewImage(file)
+  }
+}
+
+function previewImage(file) {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    image.value = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
+const authStore = useAuthStore()
+
+const form = ref(null)
 
 async function update() {
   try {
     const formValues = {
       name: authStore.user.name,
-      phone: authStore.user.phone,
-    };
+      phone: authStore.user.phone
+    }
 
-    console.log('Form Values:', formValues);
+    console.log('Form Values:', formValues)
 
-    const response = await axios.put(`http://127.0.0.1:8000/api/profile/update/${authStore.user.id}`, formValues);
+    const response = await axios.put(
+      `http://127.0.0.1:8000/api/profile/update/${authStore.user.id}`,
+      formValues
+    )
 
     if (response.status === 200) {
-      console.log('Update successful:', response.data);
-      
-      // Debug logs
-      console.log('Current localStorage user:', localStorage.getItem('user'));
-      
-      localStorage.removeItem('user');
-      console.log('localStorage user removed');
+      console.log('Update successful:', response.data)
 
-      localStorage.setItem('user', JSON.stringify(response.data));
-      console.log('Updated localStorage user:', localStorage.getItem('user'));
+      // Debug logs
+      console.log('Current localStorage user:', localStorage.getItem('user'))
+
+      localStorage.removeItem('user')
+      console.log('localStorage user removed')
+
+      localStorage.setItem('user', JSON.stringify(response.data))
+      console.log('Updated localStorage user:', localStorage.getItem('user'))
     } else {
-      console.log('Update failed with status:', response.status);
+      console.log('Update failed with status:', response.status)
     }
   } catch (error) {
     if (error.response) {
-      console.error('Backend error:', error.response.data);
+      console.error('Backend error:', error.response.data)
     }
   }
 }
-
 </script>
 
 <style scoped>
@@ -134,6 +235,19 @@ async function update() {
   background-color: #b6b3b3;
   border-radius: 5px;
   padding: 20px;
+}
+#image-drop-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.uploaded-image {
+  position: absolute;
+  right: 24px;
+  width: 90%;
+  bottom: 15px;
+  height: 90%;
+  object-fit: contain;
 }
 .profile-left {
   width: 70%;
@@ -154,6 +268,18 @@ async function update() {
   justify-content: center;
   margin-bottom: 20px;
 }
+
+.camera {
+  position: absolute;
+  left: 47%;
+  bottom: 8px;
+  display: flex;
+  justify-content: center;
+  color: #fff;
+  padding: 5px;
+  font-size: 40px;
+}
+
 .profile-right a {
   list-style: none;
   text-decoration: none;
@@ -171,7 +297,7 @@ async function update() {
   bottom: 10px; /* Adjust the positioning as needed */
   right: 10px; /* Adjust the positioning as needed */
 }
-.group-input{
+.group-input {
   /* margin-right: 60%; */
   text-align: start;
 }
@@ -188,7 +314,7 @@ async function update() {
 }
 
 .edit-profile .btn:hover {
-  background-color: #ff7f50; /* Lighter shade of orange */
+  background-color: #ff7f50;
 }
 
 .btn-back {
@@ -196,6 +322,7 @@ async function update() {
   color: white;
   border: 1px solid #6c757d;
   padding: 8px 16px;
+  transform: scale(-5, 0);
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.3s ease;

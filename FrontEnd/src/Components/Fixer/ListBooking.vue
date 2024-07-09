@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="mb-3 p-2">
-      <div class="list-btn d-flex gap-sm-4 text-align:center">
-        <h1 >Customer Booking</h1>
+          <div class="list-btn d-flex gap-sm-4 text-align:center" >
+        <h1>Customer Booking</h1>
       </div>
-      <ul id="list-booking" class="list-group w-100 gap-3 mt-2">
+      <ul id="list-booking" class="list-group w-100 gap-3 mt-2" v-for="book in bookings" :key="book.id">
         <li
           id="list_booking_item"
           class="list-group-item action rounded-2 d-flex w-100 flex-column flex-md-row align-items-center gap-3"
@@ -37,14 +37,31 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Booking',
-  data() {
-  
-  },
-  
+<script setup>
+import { ref ,onMounted } from 'vue'
+import axios from 'axios'
+
+const accessToken = localStorage.getItem('access_token');
+const bookings = ref(null);
+async function getBooking() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/booking', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+      
+    })
+    bookings.value = response.data
+  } catch (error) {
+    if (error.response) {
+      console.error('Backend error:', error.response.data)
+    }
+  }
 }
+onMounted(() => {
+  getBooking()
+})
 </script>
 
 
@@ -56,11 +73,12 @@ export default {
 #booked {
   background: #000;
 }
-#list-booking button{
+#list-booking button {
   background: #00000017;
 }
-#list-booking button:hover{
+#list-booking button:hover {
   background: orange;
   transition: all 0.3s ease-in-out;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);}
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+}
 </style>

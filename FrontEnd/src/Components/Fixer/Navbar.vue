@@ -193,6 +193,9 @@ export default {
   margin-bottom: 1rem;
   width: 100%;
 }
+.dropdown-item{
+  padding: 10px 0;
+}
 
 .sidebar-content {
   display: flex;
