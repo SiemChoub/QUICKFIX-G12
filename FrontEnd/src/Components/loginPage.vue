@@ -75,7 +75,6 @@ export default {
     const email = ref('')
     const password = ref('')
     const { setAuthUser } = useAuthStore()
-    const authStore = useAuthStore()
     const router = useRouter()
 
     const clientId = GOOGLE_CLIENT_ID
@@ -88,13 +87,25 @@ export default {
           email: email.value,
           password: password.value
         })
-        const { user, access_token } = response.data;
-        localStorage.setItem('user', user);
-        localStorage.setItem('access_token', access_token);
+        const { user, access_token } = response.data
+        console.log(response.data);
         setAuthUser(user)
-        router.push('/')
+        console.log(setAuthUser(user));
+
+        if (user['role'] === 'customer') {
+          localStorage.setItem('user', JSON.stringify(user))
+          localStorage.setItem('access_token', access_token)
+          router.push('/')
+        } else if (user['role'] === 'fixer') {
+          localStorage.setItem('fixer', JSON.stringify(user))
+          localStorage.setItem('access_token', access_token)
+          router.push('/HomeFixer')
+        } else {
+          alert('User not found')
+          router.push('/login')
+        }
       } catch (error) {
-        console.error('Login failed:', error)
+        console.error('Login failed:')
       }
     }
 
