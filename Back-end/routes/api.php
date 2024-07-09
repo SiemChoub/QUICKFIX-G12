@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\API\UserController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\CategoryController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ChatController;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,6 +35,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])-> middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
+Route::put('/update/{id}', [AuthController::class, 'updateInformation'])-> middleware('auth:sanctum');
+Route::post('/update/profile/{id}', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
+
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');
 
 Route::get('/service/list', [ServiceController::class, 'index']);
@@ -41,7 +47,7 @@ Route::resource('/bookin_immediatly',Bookin_memediatelyController::class);
 Route::resource('/bookin_deadline',Bookin_deadlineController::class);
 Route::resource('/fixing_progressing',FixingProgressController::class);
 
-Route::get('/service',[ServiceController::class, 'index'])->name('service');
+Route::get('/service',[AuthController::class, 'index'])->name('service');
 Route::get('/discount',[PromotionService::class, 'index'])->name('service');
 
 Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
