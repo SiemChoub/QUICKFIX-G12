@@ -75,7 +75,6 @@ export default {
     const email = ref('')
     const password = ref('')
     const { setAuthUser } = useAuthStore()
-    const authStore = useAuthStore()
     const router = useRouter()
 
     const clientId = GOOGLE_CLIENT_ID
@@ -105,7 +104,7 @@ export default {
           router.push('/login')
         }
       } catch (error) {
-        console.error('Login failed:', error)
+        console.error('Login failed:')
       }
     }
 

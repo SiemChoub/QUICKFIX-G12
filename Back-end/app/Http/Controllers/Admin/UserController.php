@@ -29,7 +29,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('setting.user.new',compact('roles'));
+        return view('setting.user.new', compact('roles'));
     }
 
     public function store(Request $request)
@@ -64,13 +64,13 @@ class UserController extends Controller
         $user->save();
 
         return redirect('admin/users')
-        ->with('showAlertCreate', true);
+            ->with('showAlertCreate', true);
     }
 
     public function edit(User $user)
     {
         $roles = Role::all();
-        return view('setting.user.edit', ['user' => $user],compact('roles'));
+        return view('setting.user.edit', ['user' => $user], compact('roles'));
     }
 
     // app/Http/Controllers/UserController.php
@@ -87,45 +87,45 @@ class UserController extends Controller
 
         $user->update($request->all());
         return redirect('admin/users')
-        ->with('showAlertEdit', true);
+            ->with('showAlertEdit', true);
     }
 
-    
+
     public function updateProfile(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'profile' => 'nullable|image|max:2048',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'profile' => 'nullable|image|max:2048',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 422);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user_id = Auth::id();
+        $user = User::find($user_id);
+
+        if ($request->hasFile('profile')) {
+            $image = $request->file('profile');
+            $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
+
+            $base64String = 'data:image/' . $image->getClientOriginalExtension() . ';base64,' . $imageBase64;
+            $user->profile = $base64String;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'User profile image updated successfully',
+            'user' => $user,
+        ], 200);
     }
-
-    $user_id = Auth::id();
-    $user = User::find($user_id);
-
-    if ($request->hasFile('profile')) {
-        $image = $request->file('profile');
-        $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
-
-        $base64String = 'data:image/' . $image->getClientOriginalExtension() . ';base64,' . $imageBase64;
-        $user->profile = $base64String;
-    }
-
-    $user->save();
-
-    return response()->json([
-        'message' => 'User profile image updated successfully',
-        'user' => $user,
-    ], 200);
-}
 
     public function destroy(User $user)
     {
         $user->delete();
 
         return redirect('admin/users')
-        ->with('showAlertDelete', true);
+            ->with('showAlertDelete', true);
     }
 
     public function updateInformation(Request $request)
@@ -145,4 +145,3 @@ class UserController extends Controller
         return response()->json(['message' => 'User updated successfully']);
     }
 }
-

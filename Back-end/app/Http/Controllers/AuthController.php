@@ -15,8 +15,9 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|max:255',
-            'password' => 'required|string'
+
+            'email'     => 'required|string|max:255',
+            'password'  => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -35,9 +36,10 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login success',
-            'access_token' => $token,
-            'token_type' => 'Bearer',
+
+            'message'       => 'Login success',
+            'access_token'  => $token,
+            'token_type'    => 'Bearer',
             'user' => $user
         ]);
     }
@@ -81,7 +83,9 @@ class AuthController extends Controller
         ]);
 
         $user->assignRole('user');
+
         $user->givePermissionTo(['Mail access']);
+
         $tokenResult = $user->createToken('auth_token');
 
         return response()->json([
@@ -91,21 +95,52 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
         ], 201);
     }
-
-    public function update(Request $request)
+    public function updateInformation(Request $request)
     {
-        // Validate the request data
         $request->validate([
-            'name' => 'required',
-            'phone' => 'required',
+            'name' => 'nullable',
+            'phone' => 'nullable'
         ]);
-
-        // Update the user data
         $user = Auth::user();
-        $user->name = $request->input('name');
-        $user->phone = $request->input('phone');
+        $user->name = $request->name;
+        $user->phone = $request->phone;
         $user->save();
 
-        return response()->json(['message' => 'User updated successfully']);
+        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
     }
+    public function updateProfile(Request $request, $id)
+    {
+        $user = Auth::user(); // Retrieve authenticated user
+    
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated.'], 401);
+        }
+    
+        // Check if the request contains a file
+        if ($request->hasFile('profile')) {
+            $image = $request->file('profile');
+    
+            // Read the file contents and encode it as base64
+            $imageBase64 = base64_encode(file_get_contents($image->getRealPath()));
+    
+            // Build the base64 data URI with the appropriate image extension
+            $base64String = 'data:image/' . $image->getClientOriginalExtension() . ';base64,' . $imageBase64;
+    
+            // Update the user's profile field with the base64 string
+            $user->profile = $base64String;
+    
+            // Save the user model
+            $user->save();
+    
+            // Return success response
+            return response()->json([
+                'message' => 'User profile updated successfully',
+                'user' => $user,
+            ], 200);
+        }
+    
+        return response()->json(['error' => 'No file uploaded.'], 400);
+            }
 }
+        
+    
