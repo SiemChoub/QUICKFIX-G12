@@ -1,127 +1,169 @@
-<template>
-  <div class="d-flex">
-    <!-- Sidebar -->
-    <aside class="sidebar bg-light border-end">
-      <h1 class="sidebar-title">QUICKFIX</h1>
-      <div class="sidebar-content">
-        <button
-          :class="{'btn-outline-secondary active': currentView === 'Dashboard', 'btn-outline-secondary': currentView !== 'Dashboard'}"
-          @click="setCurrentView('Dashboard')"
-          class="btn w-100 mb-2"
-        >Dashboard</button>
-        <div class="dropdown w-100" :class="{'active': isDropdownActive}">
-          <button
-            class="btn btn-outline-secondary w-100 mb-2 dropdown-toggle"
-            type="button"
-            id="dropdownBookingList"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-            @click="toggleDropdown"
-          >
-            Booking List
-          </button>
-          <ul class="dropdown-menu w-100" aria-labelledby="dropdownBookingList">
-            <li>
-              <a
-                class="dropdown-item"
-                href="#"
-                @click="setCurrentView('Booking')"
-              >Customer Booking</a>
-            </li>
-            <li>
-              <a
-                class="dropdown-item"
-                href="#"
-                @click="setCurrentView('Booking2')"
-              >Accept Booked</a>
-            </li>
-          </ul>
-        </div>
-        <button
-          :class="{'btn-outline-secondary active': currentView === 'Skill', 'btn-outline-secondary': currentView !== 'Skill'}"
-          @click="setCurrentView('Skill')"
-          class="btn w-100 mb-2"
-        >Skill</button>
-        <button
-          :class="{'btn-outline-secondary active': currentView === 'History', 'btn-outline-secondary': currentView !== 'History'}"
-          @click="setCurrentView('History')"
-          class="btn w-100 mb-2"
-        >History</button>
-      </div>
-    </aside>
+ <style>
+.logo-color {
+  background-color: orange;
+  color: #ffffff;
+  font-weight: bold;
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+  margin-left: 26px;
+}
+.quickfix {
+  display: flex;
+  position: absolute;
+  top: 30px;
+  left: 50px;
+}
+</style>
 
-    <!-- Main Content -->
-    <div class="main-content flex-grow-1">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <div class="d-flex w-100 align-items-center">
-            <!-- Profile section -->
-            <div class="profile d-flex align-items-center gap-2">
-              <!-- Profile image -->
-              <div class="cardPro border rounded-circle p-2">
-                <img
-                  src="/src/assets/img/cat.jpeg"
-                  alt="pro"
-                  class="w-100 bg-black shadow-lg rounded-circle"
-                />
+<template>
+  <div class="container  p-0">
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <aside class="sidebar border-0 m-0 shadow-md h-100 bg-light border-end">
+        <div class="logo">
+          <div class="logo-color"></div>
+          <h2 class="quickfix">QUICKFIX</h2>
+        </div>
+
+        <div class="sidebar-content ">
+          <button
+            :class="{
+              'btn-outline-secondary active': currentView === 'Dashboard',
+              'btn-outline-secondary': currentView !== 'Dashboard'
+            }"
+            @click="setCurrentView('Dashboard')"
+            class="btn w-100 mb-2"
+          >
+            Dashboard
+          </button>
+          <div class="dropdown w-100" :class="{ active: isDropdownActive }">
+            <button
+              class="btn btn-outline-secondary w-100 mb-2 dropdown-toggle"
+              type="button"
+              id="dropdownBookingList"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              @click="toggleDropdown"
+            >
+              Booking List
+            </button>
+            <ul class="dropdown-menu w-100" aria-labelledby="dropdownBookingList">
+              <li>
+                <a
+                  class="dropdown-item d-flex h-auto justify-center"
+                  href="#"
+                  @click="setCurrentView('Booking')"
+                  >Customer Booking</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item d-flex h-auto justify-center"
+                  href="#"
+                  @click="setCurrentView('Booking2')"
+                  >Accept Booked</a
+                >
+              </li>
+            </ul>
+          </div>
+          <button
+            :class="{
+              'btn-outline-secondary active': currentView === 'Skill',
+              'btn-outline-secondary': currentView !== 'Skill'
+            }"
+            @click="setCurrentView('Skill')"
+            class="btn w-100 mb-2"
+          >
+            Skill
+          </button>
+          <button
+            :class="{
+              'btn-outline-secondary active': currentView === 'History',
+              'btn-outline-secondary': currentView !== 'History'
+            }"
+            @click="setCurrentView('History')"
+            class="btn w-100 mb-2"
+          >
+            History
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="main-content flex-grow-1">
+        <!-- Navbar -->
+        <nav class="navbar buttom-shadow navbar-expand-lg navbar-light bg-light">
+          <div class="container-fluid">
+            <div class="d-flex w-100 align-items-center">
+              <!-- Profile section -->
+              <div class="profile d-flex align-items-center gap-2">
+                <!-- Profile image -->
+                <div class="cardPro border rounded-circle p-2">
+                  <img
+                    src="/src/assets/img/cat.jpeg"
+                    alt="pro"
+                    class="w-100 bg-black shadow-lg rounded-circle"
+                  />
+                </div>
+                <!-- User info -->
+                <div class="cardtext">
+                  <h6 class="m-0">{{ users.name }}</h6>
+                  <h6 class="m-0">{{ users.id }}</h6>
+                </div>
               </div>
-              <!-- User info -->
-              <div class="cardtext">
-                <h6 class="m-0">{{ users.name }}</h6>
-                <h6 class="m-0">{{ users.id }}</h6>
+              <!-- Dropdown menu -->
+              <div class="dropdown ms-auto">
+                <a
+                  class="bi bi-list text-25px dropdown-toggle"
+                  href="#"
+                  role="button"
+                  id="dropdownMenuLink"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></a>
+                <ul
+                  class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-2"
+                  aria-labelledby="dropdownMenuLink"
+                >
+                  <li><a href="#" class="dropdown-item">Details</a></li>
+                  <li>
+                    <a
+                      href="#"
+                      class="dropdown-item"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editProfileModal"
+                      >Change</a
+                    >
+                  </li>
+                  <li>
+                    <div @click="logout" class="dropdown-item">Log Out</div>
+                  </li>
+                </ul>
               </div>
-            </div>
-            <!-- Dropdown menu -->
-            <div class="dropdown ms-auto">
-              <a
-                class="bi bi-list text-25px dropdown-toggle"
-                href="#"
-                role="button"
-                id="dropdownMenuLink"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              ></a>
-              <ul
-                class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-2"
-                aria-labelledby="dropdownMenuLink"
-              >
-                <li><a href="#" class="dropdown-item">Details</a></li>
-                <li>
-                  <a
-                    href="#"
-                    class="dropdown-item"
-                    data-bs-toggle="modal"
-                    data-bs-target="#editProfileModal"
-                  >Change</a>
-                </li>
-                <li>
-                  <div @click="logout" class="dropdown-item">Log Out</div>
-                </li>
-              </ul>
             </div>
           </div>
+        </nav>
+
+        <!-- Dynamic Content -->
+        <div class="content p-3">
+          <component :is="currentView"></component>
         </div>
-      </nav>
-
-      <!-- Dynamic Content -->
-      <div class="content p-3">
-        <component :is="currentView"></component>
       </div>
-    </div>
 
-    <!-- Edit Profile Modal -->
-    <!-- Modal code remains unchanged -->
+      <!-- Edit Profile Modal -->
+      <!-- Modal code remains unchanged -->
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-import Dashboard from './DashBoard.vue';
-import Booking from './ListBooking.vue';
-import Skill from './CardSkill.vue';
-import ChatView from './ChatView.vue';
-import HistoryView from './HistoryView.vue';
+import axios from 'axios'
+import Dashboard from './DashBoard.vue'
+import Booking from './ListBooking.vue'
+import Skill from './CardSkill.vue'
+import ChatView from './ChatView.vue'
+import HistoryView from './HistoryView.vue'
 
 export default {
   name: 'NavBar',
@@ -130,50 +172,54 @@ export default {
     Booking,
     Skill,
     ChatView,
-    HistoryView,
+    HistoryView
   },
   data() {
     return {
       users: [],
       currentView: 'Dashboard',
-      isDropdownActive: false,
-    };
+      isDropdownActive: false
+    }
   },
   methods: {
     setCurrentView(view) {
-      this.currentView = view;
+      this.currentView = view
       if (view === 'Booking' || view === 'Booking2') {
-        this.isDropdownActive = true;
+        this.isDropdownActive = true
       } else {
-        this.isDropdownActive = false;
+        this.isDropdownActive = false
       }
     },
     toggleDropdown() {
-      this.isDropdownActive = !this.isDropdownActive;
+      this.isDropdownActive = !this.isDropdownActive
     },
     userData() {
-      this.users = JSON.parse(localStorage.getItem('user'));
+      this.users = JSON.parse(localStorage.getItem('user'))
     },
     async logout() {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.post('http://127.0.0.1:8000/api/logout', {}, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const token = localStorage.getItem('access_token')
+        await axios.post(
+          'http://127.0.0.1:8000/api/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        });
-        localStorage.removeItem('user');
-        localStorage.removeItem('access_token');
-        this.$router.push('/');
+        )
+        localStorage.removeItem('user')
+        localStorage.removeItem('access_token')
+        this.$router.push('/')
       } catch (error) {
-        console.error('Logout failed:', error);
+        console.error('Logout failed:', error)
       }
-    },
+    }
   },
   mounted() {
-    this.userData();
-  },
-};
+    this.userData()
+  }
+}
 </script>
 
 <style scoped>
@@ -193,7 +239,7 @@ export default {
   margin-bottom: 1rem;
   width: 100%;
 }
-.dropdown-item{
+.dropdown-item {
   padding: 10px 0;
 }
 

@@ -130,13 +130,12 @@ const submitBooking = async () => {
         service_id: props.service.id, 
         user_id: user_id,
         location: location.value, 
-        date: bookingDate.value,
-        promotion_id: promotionCode.value || null, 
+        date: bookingDate.value, 
+        promotion_id: promotionCode.value || null,
     };
       console.log('Booking data:',bookingData);
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
-        console.log(response);
         emit('close'); 
     } catch (error) {
         console.error('Error submitting booking:', error);
