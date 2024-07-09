@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('promotion_id')->nullable();
             $table->date('date');
             $table->string('location');
-            $table->string('action')->default('request');
             $table->timestamps();
         });
     }
