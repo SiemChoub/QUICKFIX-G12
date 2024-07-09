@@ -66,9 +66,12 @@ class DiscountController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $discount= Discount::create($data);
-        return redirect('admin/discounts')->with('showAlertCreate', true, );
+        $discount = Discount::create($data);
+    
+        // Redirect to a page where the popup/modal can be displayed
+        return redirect('admin/discounts')->with('discountId', $discount->id);
     }
+    
 
     /**
      * Display the specified resource.

@@ -28,7 +28,7 @@ class NotificationResource extends JsonResource
             'booking_type_id' => $this->booking->booking_type_id,
             'type' => $this->booking->type,
         ] : null,
-        // 'role_id' => $this->role_id,
+        'role_id' => $this->role_id->name,
         // 'role' => $this->role,
         'role' => $this->role ? ['name' => $this->role->name] : null,
         'updated_at' => $this->updated_at,

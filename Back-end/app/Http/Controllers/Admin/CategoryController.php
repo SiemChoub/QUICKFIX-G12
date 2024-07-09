@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Auth;
+use Illuminate\Console\View\Components\Alert;
+use Illuminate\Console\View\Components\Component;
+
 class CategoryController extends Controller
 {
     /**
@@ -61,10 +64,10 @@ class CategoryController extends Controller
             'name' => $request->name,
             // 'author' =>  $request->author,
         ];
-            event(new NotificationCreate($data));
-        return redirect('admin/categories')->with('showAlertCreate', true);
+        $alert = new Alert($data);
+        return redirect('admin/categories')->with('showAlertCreate', true)-> $alert;
     }
-
+    
     /**
      * Display the specified resource.
      *
