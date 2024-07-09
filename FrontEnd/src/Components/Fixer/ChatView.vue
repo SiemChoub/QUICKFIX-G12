@@ -1,5 +1,4 @@
 <template>
-  <Navbar />
   <div class="container w-auto ">
     <div class="mb-3 w-auto">
       <!-- <button class="btn" data-bs-toggle="modal" data-bs-target="#edit">
@@ -238,12 +237,12 @@
 </template>
 
 <script>
-import Navbar from "@/Components/Fixer/Navbar.vue";
+// import Navbar from "@/Components/Fixer/Navbar.vue";
 export default {
   name: "chatView",
-  components: {
-    Navbar,
-  },
+  // components: {
+  //   Navbar,
+  // },
 };
 
 // function scrollUp() {

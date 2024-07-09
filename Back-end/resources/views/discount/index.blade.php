@@ -11,8 +11,7 @@
                      </a>
                  @endcan
              </div>
-             <h4 class='shadow text-center p-2 border around-50'>DISCOUNT MANAGEMENT</h4>
-             <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
+             <h4 class='shadow text-center p-2 border around-50'><i class='bx bx-tag'></i> DISCOUNT MANAGEMENT</h4>             <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
                  <div class="input-group h-100">
                      <input type="text" id="search-input" class="form-control border-0 shadow-none h-100" placeholder="Search" aria-label="Search">
                      <div class="input-group-append h-100">
@@ -27,7 +26,7 @@
              <table class="table table-striped table-hover">
                  <thead class="bg-warning">
                      <tr>
-                         <th scope="col" class='text-center'>ID</th>
+                         <th scope="col" class='text-center'>#</th>
                          <th scope="col" class='text-center'>Discount</th>
                          <th scope="col" class='text-center'>Description</th>
                          {{-- <th scope="col" class='text-center'>Fixer</th> --}}
@@ -49,7 +48,6 @@
                          <td class='text-center'>{{ $discount->end_date }}</td>                    
                          <td class="table-actions d-flex justify-content-around text-center">
                              <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#discountDetailsModal"
-                                 data-discount-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
                                  data-discount-title="{{$discount->discount}}%"
                                  data-discount-description="{{$discount->description}}"
                                  {{-- data-service-category="{{ $discount->category->name }}" --}}
@@ -103,42 +101,37 @@
          @endcan
      </div>
      
-     <!-- -----------service detail------ -->
-     <div class="modal fade" id="discountDetailsModal" tabindex="-1" aria-labelledby="discountDetailsModal" aria-hidden="true">
-         <div class="modal-dialog modal-lg modal-dialog-centered">
-             <div class="modal-content">
-                 <div class="modal-header bg-warning text-white">
-                     <h5 class="modal-title" id="discountDetailsModalLabel">Discount Detail</h5>
-                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                 </div>
-                 <div class="modal-body">
-                     <div class="row">
-                         <div class="col-md-5">
-                             <div class="discount-image-container">
-                                 <img src="" class="img-fluid rounded" alt="Discount Image" id="discount-image">
-                             </div>
-                         </div>
-                         <div class="col-md-7">
-                             <h4 class="text-warning" id="discount-title"><i class='bx bxs-star'></i> Premium Service</h4>
-                             <p id="discount-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
-                             <div class="rating mb-3">
-                                 <p><i class='bx bxs-star'></i> Stars: <span id="discount-stars"></span></p>
-                             </div>
-                             <div class="discount-details">
-                                 <p><i class='bx bxs-category'></i> <strong>Start Date:</strong> <span id="discount-start_date"></span></p>
-                                 <p><i class='bx bxs-dollar-circle'></i> <strong>End Date:</strong> <span id="discount-end_date"></span></p>
-                             </div>
-                         </div>
-                     </div>
-                     <hr>
-                     <div class="additional-info mt-3">
-                         <h5><i class='bx bx-info-circle'></i> Additional Information</h5>
-                         <p id="discount-additional-info">This is where additional information about the service can be displayed.</p>
-                     </div>
-                 </div>
-             </div>
-         </div>
-     </div>
+<!-- -----------discount detail------ -->
+<div class="modal fade" id="discountDetailsModal" tabindex="-1" aria-labelledby="discountDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="discountDetailsModalLabel">Discount Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="text-warning" id="discount-title"><i class='bx bxs-star'></i> Premium Service</h4>
+                        <p id="discount-description">Get access to our premium service with exclusive features and benefits. But hurry, this offer is only available for a limited time!</p>
+                        <div class="rating mb-3">
+                            <p><i class='bx bxs-star'></i> Rating: <span id="discount-stars">4.8</span> (based on 1,234 reviews)</p>
+                        </div>
+                        <div class="discount-details">
+                            <p><i class='bx bxs-calendar'></i> <strong>Start Date:</strong> <span id="discount-start_date">2023-06-01</span></p>
+                            <p><i class='bx bxs-calendar'></i> <strong>End Date:</strong> <span id="discount-end_date">2023-12-31</span></p>
+                            <p><i class='bx bxs-dollar-circle'></i> <strong>Discount:</strong> <span id="discount-percentage">25%</span> off regular price</p>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="additional-info mt-3">
+                    <h5><i class='bx bx-info-circle'></i> Additional Information</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
      
      <!-- Include Bootstrap JS and Popper.js -->
      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -243,7 +236,6 @@
              var button = event.relatedTarget;
      
              // Update the modal content with the data attributes
-             document.getElementById('discount-image').src = button.dataset.discountImage;
              document.getElementById('discount-title').textContent = button.dataset.discountTitle;
              document.getElementById('discount-description').textContent = button.dataset.discountDescription;
              document.getElementById('discount-stars').textContent = button.dataset.discountStars;

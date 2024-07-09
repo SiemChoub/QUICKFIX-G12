@@ -4,9 +4,6 @@ import facebookIcon from '@iconify-icons/bi/facebook'
 import googleIcon from '@iconify-icons/bi/google'
 import linkedinIcon from '@iconify-icons/bi/linkedin'
 
-const submitForm = () => {
-  alert('Feedback submitted successfully!')
-}
 </script>
 
 <template>
@@ -31,8 +28,7 @@ const submitForm = () => {
             </a>
             <div class="footer-bottom">
               <div class="logo">
-                <img src="../assets/images/logo.png" alt="QuickFix Logo" />
-                <p class="logo-text display-6">QUICKFIX</p>
+                <img src="../assets/img/image.png" alt="QuickFix Logo" style="height: 100px;"/>
               </div>
             </div>
           </div>
@@ -41,7 +37,7 @@ const submitForm = () => {
             <p>Computer Repair</p>
             <p>Vehicle Repair</p>
             <p>Telephone Repair</p>
-            <p>Television Repair</p>
+            <p>Television </p>
             <p>Equipment Repair</p>
           </div>
           <div class="footer-column contact">
@@ -187,9 +183,9 @@ const submitForm = () => {
 }
 
 .logo img {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
+  width: 150px;
+  height: 90px;
+  /* border-radius: 50%; */
 }
 
 .logo p {
@@ -205,9 +201,9 @@ const submitForm = () => {
 
 .footer-bottom {
   display: flex;
-  width: 300px;
+  width: 270px;
   background: white;
-  padding: 5px 20px;
+  padding: 1px 10px;
   margin-top: 50px;
   border-radius: 4px;
 }

@@ -11,8 +11,7 @@
                 </a>
             @endcan
         </div>
-        <h4 class='shadow text-center p-2 border around-50'>SERVICE MANAGEMENT</h4>
-        <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
+            <h4 class='shadow text-center p-2 border around-50'><i class='bx bx-list-check'></i> SERVICE MANAGEMENT</h4>        <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
             <div class="input-group h-100">
                 <input type="text" id="search-input" class="form-control border-0 shadow-none h-100" placeholder="Search" aria-label="Search">
                 <div class="input-group-append h-100">
@@ -100,7 +99,7 @@
 
 <!-- -----------service detail------ -->
 <div class="modal fade" id="serviceDetailsModal" tabindex="-1" aria-labelledby="serviceDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title" id="serviceDetailsModalLabel">Service Detail</h5>
@@ -114,14 +113,16 @@
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <h4 class="text-warning" id="service-title"><i class='bx bxs-star'></i> Premium Service</h4>
-                        <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
-                        <div class="rating mb-3">
-                            <p><i class='bx bxs-star'></i> Stars: <span id="service-stars"></span></p>
-                        </div>
-                        <div class="service-details">
-                            <p><i class='bx bxs-category'></i> <strong>Category:</strong> <span id="service-category"></span></p>
-                            <p><i class='bx bxs-dollar-circle'></i> <strong>Price:</strong> <span id="service-price"></span>$</p>
+                        <div class="shadow p-2 text-center" style='background-color: #f8f9fa;'>
+                            <h4 class="text-warning" id="service-title"><i class='bx bxs-star'></i> Premium Service</h4>
+                            <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
+                            <div class="rating mb-3">
+                                <p><i class='bx bxs-star'></i> Stars: <span id="service-stars"></span></p>
+                            </div>
+                            <div class="service-details">
+                                <p><i class='bx bxs-category'></i> <strong>Category:</strong> <span id="service-category"></span></p>
+                                <p><i class='bx bxs-dollar-circle'></i> <strong>Price:</strong> <span id="service-price"></span>$</p>
+                            </div>
                         </div>
                     </div>
                 </div>

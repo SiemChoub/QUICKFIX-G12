@@ -32,7 +32,7 @@
           <i class="bi bi-bell text-34px"></i>
         </form>
         <form class="d-flex1">
-          <router-link :to="{ path: '/service/profile' }" tag="button">
+          <router-link :to="{ path: '/service/profile' }" tag ="button">
   <i class="bi bi-person-circle text-34px"></i>
 </router-link>        </form>
       </div>

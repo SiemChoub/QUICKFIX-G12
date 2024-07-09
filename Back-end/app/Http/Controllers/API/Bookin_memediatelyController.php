@@ -37,9 +37,12 @@ class Bookin_memediatelyController extends Controller
         $bookig->booking_type_id = $bookin_memediately->id;
         $bookig->user_id = $request->user_id;
         $bookig->type='immediately';
+        if($request->fixer_id){
+            $bookig->fixer_id = $request->fixer_id;
+        }
         $bookig->save();
 
-        return response()->json($bookig); 
+        return response()->json($bookin_memediately); 
     }
 
     /**

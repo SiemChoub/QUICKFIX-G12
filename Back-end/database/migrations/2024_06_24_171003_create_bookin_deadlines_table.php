@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('bookin_deadlines', function (Blueprint $table) {
             $table->id();
-            $table->integer('service_id');
-            $table->date('book_date_todo');
-            $table->string('image');
-            $table->string('message');
-            $table->string('buy_new')->nullable();
+            $table->integer('service_id')->nullable();
+            $table->string('date_todo');
+            $table->string('image')->nullable();
+            $table->string('message')->nullable();
+            $table->string('action')->default('request');
             $table->timestamps();
         });
     }

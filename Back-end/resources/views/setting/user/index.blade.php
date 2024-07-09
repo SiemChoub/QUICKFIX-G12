@@ -11,8 +11,7 @@
                 </a>
             @endcan
         </div>
-        <h4 class='shadow text-center p-2 border around-50'>USER MANAGEMENT</h4>
-        <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
+        <h4 class='shadow text-center p-2 border around-50'><i class='bx bx-user'></i> USER MANAGEMENT</h4>        <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
             <div class="input-group h-100">
                 <input type="text" id="search-input" class="form-control border-0 shadow-none h-100" placeholder="Search" aria-label="Search">
                 <div class="input-group-append h-100">
@@ -47,6 +46,9 @@
                         <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#userDetailsModal"
                             data-user-name="{{$user->name}}"
                             data-user-email="{{$user->email}}"
+                            data-user-phone="{{$user->phone}}"
+                            data-user-address="{{$user->address}}"
+                            data-user-profile="{{$user->profile}}"
                             data-user-role="{{ $user->role }}"
                             >
                             Details
@@ -98,25 +100,52 @@
 
 <!-- -----------user detail------ -->
 <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="userDetailsModalLabel">User Detail</h5>
+                <h5 class="modal-title" id="userDetailsModalLabel"><i class='bx bxs-user'></i> User Details</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-7">
-                        <h4 class="text-warning" id="user-name"><i class='bx bxs-user'></i> User Name</h4>
-                        <p><i class='bx bxs-envelope'></i> Email: <span id="user-email"></span></p>
-                        <div class="user-details">
-                            <p><i class='bx bxs-user-detail'></i> <strong>Role:</strong> <span id="user-role"></span></p>
+                        <div class="user-details-card">
+                            <div class="user-details-header d-flex align-items-center">
+                                <i class='bx bxs-user'></i>
+                                <h4 class="text-warning" id="user-name"></h4>
+                            </div>
+                            <div class="user-details-body">
+                                <p class="d-flex align-items-center">
+                                    <i class='bx bxs-envelope'></i>
+                                    <span class="ms-2">Email: <span id="user-email"></span></span>
+                                </p>
+                                <div class="user-details d-flex align-items-center">
+                                    <i class='bx bxs-user-detail'></i>
+                                    <span class="ms-2"><strong>Role:</strong> <span id="user-role"></span></span>
+                                </div>
+                                <div class="user-details d-flex align-items-center">
+                                    <i class='bx bxs-map'></i>
+                                    <span class="ms-2"><strong>Address:</strong> <span id="user-address"></span></span>
+                                </div>
+                                <div class="user-details d-flex align-i4tems-center">
+                                    <i class='bx bxs-phone'></i>
+                                    <span class="ms-2"><strong>Phone:</strong> <span id="user-phone"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 d-flex justify-content-center align-items-center">
+                        <div class="user-profile-container" style="height: 230px;width:400px">
+                            <img src="" class="img-fluid rounded" style="object-fit: cover;width:100%;height:100%"  alt="Base64 profile" id="user-profile">
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="additional-info mt-3">
-                    <h5><i class='bx bx-info-circle'></i> Additional Information</h5>
+                    <h5 class="d-flex align-items-center">
+                        <i class='bx bx-info-circle'></i>
+                        <span class="ms-2">Additional Information</span>
+                    </h5>
                     <p id="user-additional-info">This is where additional information about the user can be displayed.</p>
                 </div>
             </div>
@@ -166,34 +195,84 @@
 </script>
 @endif
 <style>
-    .modal-content {
-        animation: fadeIn 0.5s;
+.user-profile-container {
+        overflow: hidden;
+        border-radius: 10px;
     }
 
-    .modal-header {
-        position: relative;
+    .user-profile-container img {
+        transition: transform 0.3s ease;
     }
 
-    .modal-header .btn-close {
-        position: absolute;
-        right: 20px;
-        top: 20px;
+    .user-profile-container img:hover {
+        transform: scale(1.1);
     }
 
-    .modal-header .modal-title {
-        font-weight: bold;
-    }
+.user-details-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
 
-    .modal-body {
-        padding: 20px;
-    }
+.user-details-header {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
 
-    .user-details p,
-    .additional-info h5 {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.user-details-header i {
+    font-size: 24px;
+    color: #ffc107;
+    margin-right: 10px;
+}
+
+.user-details-body p,
+.user-details {
+    margin-bottom: 10px;
+}
+
+.user-details-body i {
+    font-size: 18px;
+    color: #6c757d;
+    margin-right: 8px;
+}
+
+.user-profile-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    max-width: 200px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-card img {
+    width: 100%;
+    height: auto;
+}
+
+.user-profile-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 193, 7, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.user-profile-overlay i {
+    font-size: 3rem;
+    color: #fff;
+}
+
+.user-profile-card:hover .user-profile-overlay {
+    opacity: 1;
+}
 
     @keyframes fadeIn {
         from {
@@ -216,6 +295,9 @@
         document.getElementById('user-name').textContent = button.dataset.userName;
         document.getElementById('user-email').textContent = button.dataset.userEmail;
         document.getElementById('user-role').textContent = button.dataset.userRole;
+        document.getElementById('user-address').textContent = button.dataset.userAddress;
+        document.getElementById('user-phone').textContent = button.dataset.userPhone;
+        document.getElementById('user-profile').src = button.dataset.userProfile;
         document.getElementById('user-additional-info').textContent = button.dataset.userAdditionalInfo;
     });
 

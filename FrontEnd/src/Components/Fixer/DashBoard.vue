@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <!-- <Navbar /> -->
     <div class="container">
       <div class="mb-3 d-flex">
         <div class="row w-full h-auto w-100  rounded-2 p-0 d-flex p-3">
@@ -81,13 +81,11 @@
 </template>
 
 <script>
-import Navbar from "../Fixer/Navbar.vue";
+// import Navbar from "../Fixer/Navbar.vue";
 import Chart from "chart.js/auto";
 export default {
   name: "HistoryView",
-  components: {
-    Navbar,
-  },
+  
   data() {
     return {
       items: [

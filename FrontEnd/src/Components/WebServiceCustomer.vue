@@ -1,50 +1,67 @@
 <template>
   <div>
-    <!-- Category Selection -->
-    <section id="categories">
-      <h2>Categories</h2>
-      <ul class="category-list">
-        <li @click="filterServices(null)" :class="{ active: selectedCategory === null }">All</li>
-        <li v-for="(category, index) in categories" :key="index" @click="filterServices(category.id)" :class="{ active: selectedCategory === category.id }">
-          {{ category.name }}
-        </li>
-      </ul>
+    <section id="categories" class="d-flex align-items-center">
+      <div class="category-list-container">
+        <div class="search-input">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            placeholder="Search Service..."
+            v-model="searchTerm"
+            @input="filterCategories"
+          />
+        </div>
+        <ul class="category-list d-flex">
+          <li @click="filterServices(null)" :class="{ active: selectedCategory === null }">All</li>
+          <li
+            v-for="(category, index) in categories"
+            :key="index"
+            @click="filterServices(category.id)"
+            :class="{ active: selectedCategory === category.id }"
+            class="category-item"
+          >
+            {{ category.name }}
+          </li>
+        </ul>
+      </div>
     </section>
 
-    <!-- Services -->
     <section id="services">
       <div class="card-containers">
         <div v-for="(service, index) in filteredServices" :key="index" class="card">
-          <img :src="service.image" class="card-img-top" :alt="service.name" />
+          <div class="image">
+            <img :src="service.image" class="card-img-top" :alt="service.name" />
+          </div>
           <div class="card-body">
             <h5 class="card-title">{{ service.name }}</h5>
             <p class="card-text">{{ service.description }}</p>
             <p class="card-text">Price: {{ service.price }}</p>
-            <!-- Adjusted router link to use service.id -->
-            <router-link :to="'/book/' + service.id" class="btn btn-primary">Book</router-link>
+            <button @click="openModal(service)" class="btn btn-primary">Book</button>
           </div>
         </div>
       </div>
     </section>
+    <ModalForm v-if="showModal" :service="selectedService" @close="closeModal" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import ModalForm from '@/Components/BookingForm.vue';
 
-// Define reactive variables
 const categories = ref([]);
 const services = ref([]);
 const selectedCategory = ref(null);
+const searchTerm = ref('');
+const showModal = ref(false);
+const selectedService = ref(null);
 
-// Fetch categories and services on component mount
 onMounted(async () => {
   await fetchCategories();
   await fetchServices();
 });
 
-// Function to fetch categories
 async function fetchCategories() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/category/list');
@@ -55,7 +72,6 @@ async function fetchCategories() {
   }
 }
 
-// Function to fetch services
 async function fetchServices() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/service/list');
@@ -66,16 +82,29 @@ async function fetchServices() {
   }
 }
 
-// Computed property for filtered services based on selected category
+const closeModal = () => {
+  showModal.value = false;
+  selectedService.value = null;
+};
+const openModal = (service) => {
+  selectedService.value = service;
+  showModal.value = true;
+};
+
 const filteredServices = computed(() => {
-  if (!selectedCategory.value) {
-    return services.value;
-  } else {
-    return services.value.filter(service => service.categoryId === selectedCategory.value);
+  let filtered = services.value;
+  if (selectedCategory.value !== null) {
+    filtered = filtered.filter((service) => service.categoryId === selectedCategory.value);
   }
+  if (searchTerm.value.trim() !== '') {
+    const regex = new RegExp(searchTerm.value.trim(), 'i');
+    filtered = filtered.filter(
+      (service) => regex.test(service.name) || regex.test(service.description)
+    );
+  }
+  return filtered;
 });
 
-// Function to filter services based on category
 function filterServices(categoryId) {
   selectedCategory.value = categoryId;
 }
@@ -93,26 +122,67 @@ body {
 
 #categories {
   background-color: #fff;
-  padding: 1rem;
+  padding: 1.1rem;
   margin-bottom: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-top: 50px;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  scroll-behavior: smooth; /* Smooth scrolling behavior */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative; /* Add relative positioning */
+}
+
+.category-list-container {
+  flex: 1; /* Take up remaining space */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .category-list {
   list-style-type: none;
   padding: 0;
   display: flex;
-  justify-content: center;
+  gap: 1rem;
+  margin-left: 25%;
+}
+
+.image img {
+  width: 100%;
+  height: 200px; /* Fixed height */
+  object-fit: cover; /* Cover the container, maintaining aspect ratio */
 }
 
 .category-list li {
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  margin-right: 10px;
-  color: #495057;
-  border-radius: 5px;
+  min-width: 200px;
+  padding: 10px 15px;
+  text-align: center;
   transition: background-color 0.3s ease;
+  display: inline-block;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  border: 1px solid orange;
+  border-radius: 5px;
+  padding: 2px 10px;
+  top: 15px;
+}
+
+.search-input i {
+  color: orange;
+  font-size: 20px;
+  margin-right: 10px;
 }
 
 .category-list li:hover {
@@ -120,8 +190,15 @@ body {
 }
 
 .category-list .active {
-  background-color:orange;
+  background-color: orange;
   color: #fff;
+}
+
+.search-input input {
+  border: none;
+  outline: none;
+  padding: 10px;
+  font-size: 14px;
 }
 
 /* Services Styles */
@@ -131,30 +208,30 @@ body {
 
 .card-containers {
   display: flex;
-  flex-wrap: nowrap; /* Prevent wrapping */
-  gap: 20px; /* Adjust gap between cards */
-  justify-content: flex-start; /* Align cards from the left */
-  overflow-x: auto; /* Enable horizontal scrolling */
-  padding-bottom: 20px; /* Add padding to accommodate scrollbar */
-  margin-bottom: -20px; /* Compensate for gap to prevent extra space */
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-  scroll-behavior: smooth; /* Smooth scrolling behavior */
+  flex-wrap: nowrap;
+  gap: 20px;
+  justify-content: flex-start;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  margin-bottom: -20px;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .card {
-  flex: 0 0 calc(33.33% - 20px); /* Adjust card width and gap as needed */
+  flex: 0 0 calc(33.33% - 20px);
   max-width: 300px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* Ensure content within card does not overflow */
+  overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card img {
   width: 100%;
-  height: auto;
-  object-fit: cover;
+  height: 200px; /* Fixed height for images */
+  object-fit: cover; /* Ensure images cover the container without distortion */
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
@@ -176,7 +253,7 @@ body {
 }
 
 .btn-primary {
-  background-color: orange; /* Your primary color */
+  background-color: orange;
   color: #fff;
   border: none;
   padding: 0.5rem 1rem;
@@ -184,14 +261,16 @@ body {
   text-decoration: none;
   display: inline-block;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 }
+
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: #ff7f50; /* Lighter shade on hover */
+  background-color: #ff7f50;
 }
 
 @media (max-width: 768px) {
@@ -208,5 +287,3 @@ body {
   }
 }
 </style>
-
-
