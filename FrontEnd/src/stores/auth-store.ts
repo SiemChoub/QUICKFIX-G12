@@ -1,4 +1,3 @@
-// store/auth-store.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -18,18 +17,17 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
-    user.value = null;               
-    isAuthenticated.value = false;  
-    permissions.value = [];          
-    roles.value = [];                
-    localStorage.removeItem('user'); 
-    localStorage.removeItem('access_token'); 
-    localStorage.removeItem('iconify-version'); 
-    localStorage.removeItem('__vue-devtools-theme__'); 
-    localStorage.removeItem('iconify-count'); 
-    localStorage.removeItem('__vue-devtools-frame-state__'); 
+    user.value = null;
+    isAuthenticated.value = false;
+    permissions.value = [];
+    roles.value = [];
+    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('iconify-version');
+    localStorage.removeItem('__vue-devtools-theme__');
+    localStorage.removeItem('iconify-count');
+    localStorage.removeItem('__vue-devtools-frame-state__');
   }
-  
 
   return { user, isAuthenticated, permissions, roles, setAuthUser, logout };
 });
