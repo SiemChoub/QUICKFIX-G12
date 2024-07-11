@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('fixing_progress', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('booking_type_id');
-            $table->string('type');
-            $table->unsignedBigInteger('fixer_id');
+            $table->integer('booking_id');
+            $table->integer('fixer_id');
             $table->string('action')->default('progress');
             $table->timestamps();
         });
