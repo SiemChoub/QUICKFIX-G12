@@ -104,6 +104,15 @@ const routes = [
     name: 'electronic',
     component: () => import('../views/Web/Service/ElectronicService.vue')
   },
+
+
+  {
+    path: '/fixerForm',
+    name: 'fixerForm',
+    component: () => import('../views/Web/Fixer/form.vue')
+  },
+
+
   {
     path: '/fixer',
     name: 'fixer',
