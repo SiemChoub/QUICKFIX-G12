@@ -187,7 +187,7 @@
           </div>
         </ul>
       </div>
-      <div class="dropdown ms-3">
+  <div class="dropdown ms-3">
   <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
   <img src="{{ auth()->user()->profile }}" class="rounded-circle me-2" alt="Profile Picture" style="width: 40px; height: 40px; object-fit: cover;">    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
   </a>

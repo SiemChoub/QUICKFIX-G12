@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('service_id')->nullable();
             $table->string('date_todo');
-            $table->string('image')->nullable();
+            $table->longText('image')->nullable();
             $table->string('message')->nullable();
             $table->string('action')->default('request');
             $table->timestamps();
