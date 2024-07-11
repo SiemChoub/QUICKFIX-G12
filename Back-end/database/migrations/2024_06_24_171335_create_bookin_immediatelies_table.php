@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('bookin_immediatelies', function (Blueprint $table) {
             $table->id();
             $table->integer('service_id')->nullable();
-            $table->string('image')->nullable();
+            $table->longText('image')->nullable();
             $table->string('message')->nullable();
             $table->string('action')->default('request');
             $table->timestamps();

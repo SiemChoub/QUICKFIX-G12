@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Mailsetting;
 use Config;
+use App\Models\Booking;
+use App\Models\FixingProgress;
+
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 Config::set('mail',$data);
             }
         }
+        view()->share(['bookings'=>Booking::all(),'FixingProgress'=>FixingProgress::all()]);
     }
 
 

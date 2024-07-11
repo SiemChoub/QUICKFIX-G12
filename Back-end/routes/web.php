@@ -66,6 +66,9 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('services','ServiceController');
         Route::resource('categories','CategoryController');
         Route::resource('discounts','DiscountController');
+        Route::resource('requests','RequestController');
+        Route::resource('progresss','ProgressController');
+        Route::resource('dones','DoneController');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
         Route::put('/update/{id}', [UserController::class, 'updateInformation']);
