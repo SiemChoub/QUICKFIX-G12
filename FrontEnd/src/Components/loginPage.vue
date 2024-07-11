@@ -21,10 +21,12 @@
           <div class="form-group mb-4">
             <label for="email">Email:</label>
             <input type="email" id="email" v-model="email" class="form-control" required />
+            <div v-if="emailError" class="text-danger"> {{ emailError }}</div>
           </div>
           <div class="form-group mb-4">
             <label for="password">Password:</label>
             <input type="password" id="password" v-model="password" class="form-control" required />
+            <div v-if="passwordError" class="text-danger">{{ passwordError }}</div>
           </div>
           <button
             type="submit"
@@ -76,12 +78,22 @@ export default {
     const password = ref('')
     const { setAuthUser } = useAuthStore()
     const router = useRouter()
+// 
+    const emailError = ref("");
+    const passwordError = ref("");
+    const generalError = ref("");
+// 
 
     const clientId = GOOGLE_CLIENT_ID
     const scope = 'profile email'
     const buttonText = 'Login with Google'
 
     async function handleLogin() {
+// 
+      // emailError.value = "Email is incorrect!!";
+      // passwordError.value = "Password is incorrect!!";
+      // generalError.value = "";
+// 
       try {
         const response = await axios.post('http://127.0.0.1:8000/api/login', {
           email: email.value,
@@ -101,10 +113,21 @@ export default {
           router.push('/HomeFixer')
         } else {
           alert('User not found')
+
           router.push('/login')
         }
       } catch (error) {
-        console.error('Login failed:')
+        console.error('Login falses:')
+// 
+        emailError.value = "Email is incorrect!!";
+        if (error.response && error.response.status === 401) {
+          passwordError.value = "Password is incorrect!!";
+        }
+        // else {
+        //   generalError.value = "An error occurred while trying to login"
+        //   // console.error(error.response.data.message)
+        // }
+// 
       }
     }
 
@@ -135,7 +158,11 @@ export default {
       buttonText,
       handleLogin,
       handleGoogleLogin,
-      handleGoogleLoginError
+      handleGoogleLoginError,
+// 
+      emailError,
+      passwordError,
+// 
     }
   }
 }
