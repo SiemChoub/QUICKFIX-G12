@@ -53,6 +53,8 @@ class BookingController extends Controller
         $fixingProgress = new FixingProgress();
         $fixingProgress->booking_type_id = $booking['booking_type_id'];
         $fixingProgress->type = $booking['type'];
+        $fixingProgress->user_id = $booking['user_id'];
+        $fixingProgress->booking_id = $id;
         if ($booking->fixer_id != null) {
             $fixingProgress->fixer_id = $booking->fixer_id;  
         }else{

@@ -1,16 +1,17 @@
 <template>
   <div class="auth-page d-flex align-items-center justify-content-center">
-    <div name="fade">
+    <transition name="fade">
       <div
         v-if="showSpinner"
-        class="spinner-container position-fixed w-100 d-flex align-items-center justify-content-center"
+        class="spinner-container position-fixed w-100 h-100 d-flex align-items-center justify-content-center"
       >
         <div class="spinner-border text-warning" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
-    </div>
-    <div name="fade">
+    </transition>
+
+    <transition name="fade">
       <div class="auth-container shadow-lg d-flex flex-column flex-lg-row w-100">
         <div class="image-container">
           <img src="@/assets/images/image.png" alt="Auth Image" />
@@ -18,115 +19,219 @@
         <div class="form-container p-5">
           <h2 class="mb-4">Sign Up</h2>
           <form @submit.prevent="registerUser">
-          <div class="form-group mb-4">
-            <label for="name">Username:</label>
-            <input
-              type="text"
-              id="name"
-              v-model="formData.name"
-              class="form-control"
-              required
-              autocomplete="username"
-            />
-          </div>
-          <div class="form-group mb-4">
-            <label for="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              v-model="formData.email"
-              class="form-control"
-              required
-              autocomplete="email"
-            />
-          </div>
-          <div class="form-group mb-4">
-            <label for="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              v-model="formData.password"
-              class="form-control"
-              required
-              autocomplete="new-password"
-            />
-          </div>
-          <button type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
-        </form>
+            <!--  -->
+            <div class="form-group mb-4">
+              <label for="name">Username:</label>
+              <input
+                type="text"
+                id="name"
+                v-model="formData.name"
+                class="form-control"
+                :class="{ 'is-invalid': formSubmitted && nameError }"
+                required
+                autocomplete="username"
+              />
+              <!--  -->
+              <p v-if="formSubmitted && nameError" class="text-danger">{{ nameError }}</p>
+            </div>
+            <!--  -->
+            <div class="form-group mb-4">
+              <label for="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                v-model="formData.email"
+                class="form-control"
+                required
+                autocomplete="email"
+                :class="{ 'is-invalid': formSubmitted && emailError }"
+              />
+              <!--  -->
+              <p v-if="formSubmitted && emailError" class="text-danger">
+                {{ emailError }}
+              </p>
+            </div>
+            <!--  -->
+            <div class="input-box mb-4">
+              <label for="password">Password:</label>
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                id="password"
+                v-model="formData.password"
+                class="form-control"
+                :class="{ 'is-invalid': formSubmitted && passwordError }"
+                @input="passwordError = ''"
+                @blur="validatePassword"
+                required
+                autocomplete="new-password"
+              />
+              <span class="eye" @click="togglePasswordVisibility">
+                <i :class="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+              </span>
+            </div>
+            <p v-if="formSubmitted && passwordError" class="text-danger">
+              {{ passwordError }}
+            </p>
+            <!--  -->
+            <button type="submit" class="btn btn-primary w-100 mb-4">Sign Up</button>
+            <!--  -->
+            <p v-if="generalError" class="text-danger">{{ generalError }}</p>
+            <p v-if="accountExists" class="text-danger">{{ accountExists }}</p>
+            <!--  -->
+          </form>
           <div class="social-login">
             <h3 class="mb-3">Or Sign Up with:</h3>
-            <!-- Example button for Google login -->
             <button class="btn btn-google w-100" @click="loginWithGoogle">
               <i class="fab fa-google"></i> Google
             </button>
           </div>
           <div class="toggle-auth mt-4">
             <p>
-              Already Have Account?
+              Already Have an Account?
               <router-link to="/login">Login</router-link>
             </p>
           </div>
-          <p v-if="errorMessage" class="text-danger">{{ errorMessage }}</p>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
 <script>
-
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       formData: {
-        name: '',
-        email: '',
-        password: ''
+        name: "",
+        email: "",
+        password: "",
       },
-      errorMessage: '',
-      showSpinner: false // Ensure this is properly handled in your setup
+      showSpinner: false,
+      // 
+      showPassword: false,
+      formSubmitted: false,
+      generalError: "",
+      accountExists: "",
+      // 
     };
   },
+// 
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
     async registerUser() {
+      this.formSubmitted = true;
+
+      if (this.emailError || this.passwordError || this.nameError) {
+        return;
+      }
+// 
       try {
         this.showSpinner = true;
-        const response = await axios.post('http://127.0.0.1:8000/api/register', this.formData);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/register",
+          this.formData
+        );
         const { user, access_token } = response.data;
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('access_token', access_token);
-        this.$router.push('/'); 
+        this.$router.push("/login");
       } catch (error) {
+        this.showSpinner = false;
         if (error.response && error.response.status === 422) {
-          this.errorMessage = Object.values(error.response.data.errors).flat().join(' ');
+          this.generalError = Object.values(error.response.data.errors).flat().join(" ");
+        } else if (error.response && error.response.status === 409) {
+          this.accountExists = "Account already exists with this email.";
         } else {
-          console.error('Error registering user:', error.message);
-          this.errorMessage = 'Registration failed. Please try again.';
+          console.error("Error registering user:", error.message);
+          this.generalError = "Registration failed. Please try again.";
         }
-      } finally {
-        this.showSpinner = false; // Hide spinner regardless of success or failure
       }
     },
     loginWithGoogle() {
       // Implement Google login functionality if needed
-    }
-  }
+    },
+    // 
+    checkIfUserExists() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        this.accountExists = "You already have an account.";
+        this.$router.push("/");
+        return true;
+      }
+    },
+    // 
+  },
+  // 
+  computed: {
+    emailError() {
+      if (!this.formData.email) return "";
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return !emailRegex.test(this.formData.email)
+        ? "Email is not valid! Please use the correct format."
+        : "";
+    },
+    passwordError() {
+      if (this.formData.password.length < 8) {
+        return "Password must be at least 8 characters!";
+      }
+      return "";
+    },
+    nameError() {
+      return !this.formData.name ? "Username is required." : "";
+    },
+  },
+  mounted() {
+    this.checkIfUserExists();
+  },
+  // 
 };
 </script>
 
-
-
-
 <style scoped>
-@import '@fortawesome/fontawesome-free/css/all.css';
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+/* style form validate */
+
+.input-box {
+  position: relative;
+}
+.input-box .eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.input-box {
+  position: relative;
+}
+.input-box .eye {
+  position: absolute;
+  right: 10px;
+  top: 70%;
+  right: 7%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+#hiddenShow {
+  display: none;
+}
+.is-invalid {
+  border-color: red;
+}
+input {
+  padding: 12px;
+}
+/* style form validate */
 
 .auth-page {
   background-color: #f0f2f5;
   display: flex;
 }
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
@@ -280,7 +385,7 @@ label {
 }
 
 .spinner-container {
-  background-color:white; /* Semi-transparent background */
+  background-color: white; /* Semi-transparent background */
   z-index: 999; /* Ensure it's above other content */
   position: fixed;
   top: 0;
@@ -298,10 +403,13 @@ label {
   color: #ffc107; /* Yellow color */
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0;
 }
 </style>
+
+please correct transition

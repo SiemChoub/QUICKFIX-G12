@@ -64,6 +64,7 @@ Route::put('/promotion/update/{id}', [PromotionService::class, 'update'])->name(
 Route::delete('/promotion/delete/{id}', [PromotionService::class, 'destroy'])->name('promotion.delete');
 
 
+// --------------------- chat --------------------
 Route::get('/booking', [BookingController::class, 'index']);
 
 // Chat routes
@@ -77,3 +78,4 @@ Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
 // --------------- fixer in progress -------------//
 Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
 Route::delete('/fixer/cancel-accept/{id}', [FixingProgressController::class, 'cancelAccept']);
+Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);

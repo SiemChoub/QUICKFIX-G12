@@ -79,12 +79,17 @@ class AdminSeeder extends Seeder
         $permission = Permission::create(['name' => 'Mail edit']);
         $permission = Permission::create(['name' => 'view_users']);
 
+        $permission = Permission::create(['name' => 'Request access']);
+        $permission = Permission::create(['name' => 'Request delete']);
 
+        $permission = Permission::create(['name' => 'Progress access']);
+        $permission = Permission::create(['name' => 'Progress delete']);
+
+        $permission = Permission::create(['name' => 'Done access']);
 
         $admin->assignRole($admin_role);
         $writer->assignRole($writer_role);
         $fixer->assignRole($fixer_role );
-
 
         $admin_role->givePermissionTo(Permission::all());
     }
