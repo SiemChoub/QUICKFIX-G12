@@ -33,7 +33,11 @@
           <!-- Fixer List -->
           <li class="nav-item">
             <router-link to="/fixer" class="nav-link">
-              <img src="https://media.istockphoto.com/id/1445981943/vector/repair-service-man-worker-logo-mechanic-workshop-vector-illustration.jpg?s=612x612&w=0&k=20&c=vizyPckB7zfeO0HYpJaj6uSm1jiZ9ozqlFWwWeFPCy4=" alt="Fixer Icon" style="width: 35px; border-radius: 50%;" />
+              <img
+                src="https://media.istockphoto.com/id/1445981943/vector/repair-service-man-worker-logo-mechanic-workshop-vector-illustration.jpg?s=612x612&w=0&k=20&c=vizyPckB7zfeO0HYpJaj6uSm1jiZ9ozqlFWwWeFPCy4="
+                alt="Fixer Icon"
+                style="width: 35px; border-radius: 50%"
+              />
               <span class="tooltip-text">Fixer List</span>
             </router-link>
           </li>
@@ -41,7 +45,59 @@
           <!-- Offer Button -->
         </ul>
         <div class="center">
-            <button class="btn offer-btn">OFFER</button>
+          <button class="btn offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            OFFER
+          </button>
+        </div>
+
+        <div
+          class="modal fade custom-slide-modal"
+          id="staticBackdrop"
+          tabindex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+          data-bs-backdrop="false"
+          style="top: 15px"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Promotion</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3 hello d-flex align-items-center">
+                    <input
+                      type="email"
+                      class="form-control me-2"
+                      id="exampleFormControlInput1"
+                      placeholder="Search"
+                    />
+                  </div>
+                  <div
+                    class="mb-3 card d-flex align-items-center"
+                    v-for="promotion in promotions"
+                    :key="promotion.id"
+                  >
+                    <div class="discount">Promotion {{ promotion.discount }}%</div>
+                    <div class="text-truncate" style="max-width: 200px">
+                      <!-- Adjust max-width as needed -->
+                      🎉{{ promotion.description }}💛
+                    </div>
+                    <div class="date">Promotion {{ promotion.start_date }}</div>
+                    <div class="date">Promotion {{ promotion.end_date }}</div>
+                    
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Right-aligned Navbar Items -->
@@ -92,13 +148,13 @@
               <li v-if="isLoggedIn">
                 <router-link to="/profile" class="dropdown-item">
                   <i class="bi bi-eye-fill"></i>
-                  <p> view Profile</p>
+                  <p>view Profile</p>
                 </router-link>
               </li>
               <li v-if="isLoggedIn">
                 <router-link to="#" class="dropdown-item">
                   <i class="bi bi-clock-history"></i>
-                  <p> History</p>
+                  <p>History</p>
                 </router-link>
               </li>
               <li v-if="isLoggedIn">
@@ -124,9 +180,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
+import axios from 'axios'
 
+const promotions = ref(null)
 const authStore = useAuthStore()
 const showNotifications = ref(false)
 const notifications = ref([
@@ -137,6 +195,9 @@ const notifications = ref([
 
 const isLoggedIn = computed(() => !!authStore.user)
 
+onMounted(async () => {
+  await listPromotion()
+})
 const logout = async () => {
   try {
     authStore.logout()
@@ -147,6 +208,15 @@ const logout = async () => {
   }
 }
 
+async function listPromotion() {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/promotion/list')
+    promotions.value = response.data
+  } catch (error) {
+    console.log('error getting promotion')
+  }
+}
+
 const toggleNotifications = () => {
   showNotifications.value = !showNotifications.value
 }
@@ -154,20 +224,59 @@ const toggleNotifications = () => {
 
 <style scoped>
 /* Navbar Styles */
-.navbar {
-  background-color: #fff;
-  padding: 0 1rem;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.custom-slide-modal .modal-dialog {
+  margin: 0;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+  z-index: 1050; /* Ensure modal appears above modal backdrop */
+}
+.modal-body {
+  overflow-y: scroll;
+  height: 450px;
 }
 
+.hoverable::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #007bff; /* Color of the border */
+  transition: width 0.3s ease; /* Smooth transition for width change */
+}
+
+.hoverable:hover::after {
+  width: 100%; /* Expand the width to show the border on hover */
+}
+.card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  max-width: 350px;
+  text-align: center;
+  margin-left: 6%;
+}
+.card .title {
+  font-size: 1em;
+  color: #ffa000;
+}
+.card .discount {
+  font-size: 1.8em;
+  margin: 10px 0;
+  color: #000;
+  font-weight: bold;
+}
+.card .date {
+  font-size: 15px;
+}
 /* Logo */
 .logo {
   width: 150px;
   height: auto;
 }
-.navbarSupportedContent{
+.navbarSupportedContent {
   display: flex;
   background: #000;
   flex: 0.5;
@@ -220,7 +329,7 @@ const toggleNotifications = () => {
 
 .icon:hover {
   transform: scale(1.3);
-  color: #ff7f50; 
+  color: #ff7f50;
 }
 .navbar-nav-right {
   display: flex;
@@ -228,16 +337,16 @@ const toggleNotifications = () => {
   gap: 3rem;
   flex: 0.5;
 }
-.dropdown-item{
+.dropdown-item {
   display: flex;
-  gap: 5px
+  gap: 5px;
 }
-.center{
+.center {
   display: flex;
   flex: 0.2;
   justify-content: center;
 }
-.navbar-nav-left{
+.navbar-nav-left {
   display: flex;
   justify-content: center;
   flex: 0.5;
