@@ -75,36 +75,6 @@ const routes = [
     component: () => import('../Components/Service/ProfileEdit/ProfileEdit.vue')
   },
   {
-    path: '/motorcycle',
-    name: 'motorcycle',
-    component: () => import('../views/Web/Service/MotorcyclePage.vue')
-  },
-  {
-    path: '/cars',
-    name: 'cars',
-    component: () => import('../views/Web/Service/CarService.vue')
-  },
-  {
-    path: '/tuktuk',
-    name: 'tuktuk',
-    component: () => import('../views/Web/Service/TukTukService.vue')
-  },
-  {
-    path: '/mobile',
-    name: 'mobile',
-    component: () => import('../views/Web/Service/MobileService.vue')
-  },
-  {
-    path: '/computer',
-    name: 'computer',
-    component: () => import('../views/Web/Service/ComputerService.vue')
-  },
-  {
-    path: '/electronic',
-    name: 'electronic',
-    component: () => import('../views/Web/Service/ElectronicService.vue')
-  },
-  {
     path: '/fixer',
     name: 'fixer',
     component: () => import('../Components/FixerVue.vue')
@@ -118,6 +88,7 @@ const routes = [
     path: '/HomeFixer',
     name: 'HomeFixer',
     component: () => import('../views/Fixer/HomeFixer.vue'),
+    meta: { requiresAuth: true, role: 'fixer' },
     children: [
       {
         path: '/dashboard',
@@ -189,15 +160,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
+  const authStore = useAuthStore();
 
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'login' })
-  } else if (to.meta.role && !authStore.hasRole(to.meta.role)) {
-    next({ name: 'home' })
+    next({ name: 'Login' });
+  } else if (to.meta.role && authStore.user?.role !== to.meta.role) {
+    next({ name: 'Home' }); 
   } else {
-    next()
+    next();
   }
-})
+});
 
 export { router, simpleAcl }

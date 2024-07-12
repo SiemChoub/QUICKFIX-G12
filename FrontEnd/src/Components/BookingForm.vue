@@ -123,21 +123,25 @@ async function fetchServices() {
 }
 
 const submitBooking = async () => {
-  const bookingData = {
-    serviceId: props.service.id,
-    location: location.value,
-    service: selectedService.value,
-    bookingDate: bookingDate.value,
-    promotionCode: promotionCode.value
-  }
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/booking', bookingData)
-    console.log('Booking data:', bookingData)
-    emit('close')
-  } catch (error) {
-    console.error('Error submitting booking:', error)
-  }
-}
+    const userString = localStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const user_id = user.id;
+    const bookingData = {
+        service_id: props.service.id, 
+        user_id: user_id,
+        location: location.value, 
+        date: bookingDate.value, 
+        promotion_id: promotionCode.value || null,
+    };
+      console.log('Booking data:',bookingData);
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+        emit('close'); 
+    } catch (error) {
+        console.error('Error submitting booking:', error);
+    }
+};
+
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
@@ -146,7 +150,7 @@ const getCurrentLocation = () => {
         const latLng = [position.coords.longitude, position.coords.latitude]
         location.value = `${latLng[1]}, ${latLng[0]}`
         reverseGeocode(latLng)
-        map.flyTo({ center: latLng, zoom: 18 })
+        map.flyTo({ center: latLng, zoom: 16 })
         addMarker(latLng)
         setTodayDate()
       },
@@ -204,8 +208,11 @@ async function reverseGeocode(latLng) {
       }
     )
     if (response.data.features.length > 0) {
-      reverseGeocodeResult.value = response.data.features[0].place_name
+      const place = response.data.features[0]
+      reverseGeocodeResult.value = place.place_name
 
+      const street = place.text
+      const specificLocation = place.properties.address
     } else {
       console.error('No results found for reverse geocoding.')
     }
@@ -335,13 +342,11 @@ const selectPlace = (place) => {
   margin-bottom: 5px;
   font-weight: bold;
 }
-.date{
+.date {
   display: flex;
-  
 }
-.date input{
-    border-radius: 0 5px 5px 0;
-
+.date input {
+  border-radius: 0 5px 5px 0;
 }
 
 .form-group input,

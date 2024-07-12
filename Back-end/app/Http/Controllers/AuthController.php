@@ -103,7 +103,6 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->save();
-
         return response()->json(['message' => 'User updated successfully', 'user' => $user]);
     }
     public function updateProfile(Request $request, $id)
@@ -140,5 +139,3 @@ class AuthController extends Controller
         return response()->json(['error' => 'No file uploaded.'], 400);
     }
 }
-        
-    

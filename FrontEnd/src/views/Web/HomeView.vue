@@ -1,5 +1,5 @@
 <template>
-  <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component }">
   <transition>
     <component :is="Component" />
   </transition>
@@ -118,7 +118,6 @@ const router = useRouter();
 const slide = ref(null);
 const nextButton = ref(null);
 const prevButton = ref(null);
-
 const moveSlide = (direction: string) => {
   const items = slide.value?.querySelectorAll('.item');
   if (items && items.length > 0) {

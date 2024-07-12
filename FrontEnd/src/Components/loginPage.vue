@@ -17,20 +17,41 @@
       </div>
       <div class="form-container p-5">
         <h2 class="mb-4">Login</h2>
+        <div class="alert alert-warning text-center text-danger" role="alert" v-if="loginError !== ''" >{{ loginError }}</div>
+
         <form @submit.prevent="handleLogin">
           <div class="form-group mb-4">
             <label for="email">Email:</label>
-            <input type="email" id="email" v-model="email" class="form-control" required />
+            <input
+              type="email"
+              id="email"
+              v-model="email"
+              :class="{'is-invalid': emailError}"
+              class="form-control"
+              @input="emailError = ''"
+              @blur="validateEmail"
+              required
+            />
           </div>
-          <div class="form-group mb-4">
+          <!--  -->
+          <div class="input-box">
             <label for="password">Password:</label>
-            <input type="password" id="password" v-model="password" class="form-control" required />
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              id="password"
+              v-model="password"
+              :class="{ 'is-invalid': passwordError }"
+              class="form-control"
+              @input="passwordError = ''"
+              @blur="validatePassword"
+              required
+            />
+            <span class="eye" @click="togglePasswordVisibility">
+              <i :class="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"></i>
+            </span>
           </div>
-          <button
-            type="submit"
-            class="btn btn-primary w-100 mb-4"
-            style="background: orange; border: none"
-          >
+          <!--  -->
+          <button type="submit" class="btn btn-primary w-100 mb-4" style="background: orange; border: none">
             Login
           </button>
         </form>
@@ -41,10 +62,14 @@
             :scope="scope"
             :buttonText="buttonText"
             class="btn btn-google w-100"
+            @success="handleGoogleLogin"
+            @error="handleGoogleLoginError"
           >
             <i class="fab fa-google"></i> Login with Google
           </google-login>
-          <p class="mt-3">Don't have an account? <router-link to="/signup">Sign Up</router-link></p>
+          <p class="mt-3">
+            Don't have an account? <router-link to="/signup">Sign Up</router-link>
+          </p>
           <p>
             <router-link to="/">Back to Home</router-link>
           </p>
@@ -55,95 +80,172 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { GoogleLogin } from 'vue3-google-login'
-import { GOOGLE_CLIENT_ID } from '@/main'
-import axios from 'axios'
-import { useAuthStore } from '@/stores/auth-store'
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { GoogleLogin } from "vue3-google-login";
+import { GOOGLE_CLIENT_ID } from "@/main";
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth-store";
+import { useRouter } from "vue-router";
 
 export default {
   components: {
-    GoogleLogin
+    GoogleLogin,
   },
   setup() {
-    const loading = ref(true)
+    const loading = ref(true);
     setTimeout(() => {
-      loading.value = false
-    }, 300)
-
-    const email = ref('')
-    const password = ref('')
-    const { setAuthUser } = useAuthStore()
-    const router = useRouter()
-
-    const clientId = GOOGLE_CLIENT_ID
-    const scope = 'profile email'
-    const buttonText = 'Login with Google'
+      loading.value = false;
+    }, 300);
+// 
+    const email = ref("");
+    const password = ref("");
+    const showPassword = ref(false);
+    const { setAuthUser } = useAuthStore();
+    const router = useRouter();
+// 
+    const emailError = ref("");
+    const passwordError = ref("");
+    const loginError = ref("");
+// 
+    const clientId = GOOGLE_CLIENT_ID;
+    const scope = "profile email";
+    const buttonText = "Login with Google";
+// validation email format default email 
+    function validateEmail() {
+      if (email.value === "") {
+        emailError.value = "Email is required.";
+      } else {
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
+        emailError.value = re.test(String(email.value).toLowerCase())
+          ? ""
+          : "Please enter a valid email address.";
+      }
+    }
+// 
+    function validatePassword() {
+      passwordError.value = password.value === "" ? "Password is required." : "";
+    }
 
     async function handleLogin() {
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/login', {
-          email: email.value,
-          password: password.value
-        })
-        const { user, access_token } = response.data
-        console.log(response.data);
-        setAuthUser(user)
-        console.log(setAuthUser(user));
+      validateEmail();
+      validatePassword();
 
-        if (user['role'] === 'customer') {
-          localStorage.setItem('user', JSON.stringify(user))
-          localStorage.setItem('access_token', access_token)
-          router.push('/')
-        } else if (user['role'] === 'fixer') {
-          localStorage.setItem('fixer', JSON.stringify(user))
-          localStorage.setItem('access_token', access_token)
-          router.push('/HomeFixer')
+      if (emailError.value !== "" || passwordError.value !== "") {
+        return;
+      }
+
+      try {
+        const response = await axios.post("http://127.0.0.1:8000/api/login", {
+          email: email.value,
+          password: password.value,
+        });
+        const { user, access_token } = response.data;
+
+        setAuthUser(user);
+
+        if (user["role"] === "user") {
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("access_token", access_token);
+          router.push("/");
+        } else if (user["role"] === "fixer") {
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("access_token", access_token);
+          router.push("/HomeFixer");
         } else {
-          alert('User not found')
-          router.push('/login')
+          alert("User not successfully");
+          router.push("/login");
         }
       } catch (error) {
-        console.error('Login failed:')
+        if (error.response && error.response.status === 401) {
+          emailError.value = "Email is incorrect!";
+          passwordError.value = "Password is incorrect!";
+          loginError.value = "Wrong your password or Wrong your Email!";
+        } else { 
+          console.error("Login failed:", error);
+        }
       }
     }
 
     async function handleGoogleLogin(googleUser) {
       try {
-        const idToken = googleUser.tokenId
-        const response = await axios.post('http://127.0.0.1:8000/api/google-login', {
-          id_token: idToken
-        })
-        console.log(response.data)
-        await setAuthUser(response.data)
-        router.push('/')
+        const idToken = googleUser.tokenId;
+        const response = await axios.post("http://127.0.0.1:8000/api/google-login", {
+          id_token: idToken,
+        });
+        console.log(response.data);
+        await setAuthUser(response.data);
+        router.push("/");
       } catch (error) {
-        console.error('Google login failed:', error)
+        console.error("Google login failed:", error);
       }
     }
 
     function handleGoogleLoginError(error) {
-      console.error('Google login error:', error)
+      console.error("Google login error:", error);
     }
-
+// 
+    function togglePasswordVisibility() {
+      showPassword.value = !showPassword.value;
+    }
+// 
     return {
       loading,
       email,
       password,
+      showPassword,
       clientId,
       scope,
       buttonText,
       handleLogin,
       handleGoogleLogin,
-      handleGoogleLoginError
-    }
-  }
-}
+      // add more options
+      handleGoogleLoginError,
+      emailError,
+      passwordError,
+      validateEmail,
+      validatePassword,
+      loginError,
+      togglePasswordVisibility,
+      // 
+    };
+  },
+};
 </script>
 
 <style scoped>
-@import '@fortawesome/fontawesome-free/css/all.css';
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+/* styel for validate */
+
+.input-box {
+  position: relative;
+}
+.input-box .eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.input-box {
+  position: relative;
+}
+.input-box .eye {
+  position: absolute;
+  right: 10px;
+  top: 70%;
+  right: 7%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+#hiddenShow {
+  display: none;
+}
+.is-invalid {
+  border-color: red;
+}
+
+/* styel for validate */
 
 .login-page {
   background-color: #f0f2f5;

@@ -17,6 +17,7 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5">
       <div class="col">
+        
         <div class="card border-0 h-auto">
           <img src="/src/assets/img/images.jpeg" class="card-img-top h-50" alt="Card image" />
           <div class="card-body">
@@ -32,6 +33,15 @@
                 >Update</a
               >
             </div>
+             <button
+          type="button"
+          class="btn text-16px btn-outline-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#update"
+          data-bs-whatever="@mdo"
+        >
+          Add Skill
+        </button>
           </div>
         </div>
       </div>

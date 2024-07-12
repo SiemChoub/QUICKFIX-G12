@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('booking_type_id');
             $table->integer('user_id');
             $table->string('type');
-            $table->string('action')->default('progress');
+            $table->string('action')->default('request');
             $table->unsignedBigInteger('fixer_id')->nullable();
             $table->timestamps();
         });
