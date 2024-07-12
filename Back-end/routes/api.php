@@ -77,5 +77,8 @@ Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
 
 // --------------- fixer in progress -------------//
 Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
-Route::delete('/fixer/cancel-accept/{id}', [FixingProgressController::class, 'cancelAccept']);
+Route::get('/fixer/accepted/{id}', [FixingProgressController::class, 'show']);
+Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAccept']);
+Route::post('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
+
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);

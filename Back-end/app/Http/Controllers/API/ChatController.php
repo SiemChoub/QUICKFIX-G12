@@ -51,7 +51,6 @@ class ChatController extends Controller
 
         return "Chat created successfully";
 
-        return "Image upload failed";
     }
 
     /**
