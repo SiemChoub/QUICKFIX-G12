@@ -133,10 +133,10 @@ const submitBooking = async () => {
         date: bookingDate.value, 
         promotion_id: promotionCode.value || null,
     };
-      console.log('Booking data:',bookingData);
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+      const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
         emit('close'); 
+      console.log('Booking data:',response.data);
     } catch (error) {
         console.error('Error submitting booking:', error);
     }
