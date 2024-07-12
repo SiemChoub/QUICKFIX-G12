@@ -4,7 +4,6 @@
     <div class="container">
       <div class="mb-3 d-flex">
         <div class="row w-full h-auto w-100  rounded-2 p-0 d-flex p-3">
-          <!-- <div class="col-sm-12"> -->
             <div class="card border-0 w-100">
               <div class="card-body row d-flex g-3 justify-content-between">
                 <div
@@ -39,7 +38,6 @@
                 </div>
               </div>
             </div>
-          <!-- </div> -->
         </div>
       </div>
       

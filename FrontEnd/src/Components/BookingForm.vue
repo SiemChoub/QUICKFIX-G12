@@ -56,6 +56,14 @@
                         placeholder="Enter promotion code (if any)"
                       />
                     </div>
+                    <div class="form-group">
+                      <textarea
+                        type="text"
+                        v-model="information"
+                        placeholder="More information....."
+                      />
+                    </div>
+                    
                     <button type="submit" class="btn btn-primary">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
@@ -93,6 +101,7 @@ const selectedService = ref('')
 const bookingDate = ref('')
 const description = ref('')
 const promotionCode = ref('')
+const information = ref('')
 
 const categories = ref([])
 const services = ref([])
@@ -126,22 +135,25 @@ const submitBooking = async () => {
     const userString = localStorage.getItem('user');
     const user = JSON.parse(userString);
     const user_id = user.id;
+    const [latitude, longitude] = location.value.split(', ');
     const bookingData = {
         service_id: props.service.id, 
         user_id: user_id,
-        location: location.value, 
+        latitude: latitude.trim(), 
+        longitude: longitude.trim(), 
         date: bookingDate.value, 
+        message: information.value || null,
         promotion_id: promotionCode.value || null,
     };
-      console.log('Booking data:',bookingData);
+    console.log('Booking data:', bookingData);
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+        console.log(response);
         emit('close'); 
     } catch (error) {
         console.error('Error submitting booking:', error);
     }
 };
-
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
@@ -217,24 +229,26 @@ async function reverseGeocode(latLng) {
       console.error('No results found for reverse geocoding.')
     }
   } catch (error) {
-    console.error('Error in reverse geocoding:', error)
+    console.error('Error during reverse geocoding:', error)
   }
 }
 
 const searchSimilarPlaces = async () => {
   try {
     const response = await axios.get(
-      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
-        encodeURIComponent(reverseGeocodeResult.value) +
-        '.json',
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${reverseGeocodeResult.value}.json`,
       {
         params: {
-          access_token: mapboxgl.accessToken,
-          autocomplete: true
+          access_token: mapboxgl.accessToken
         }
       }
     )
-    similarPlaces.value = response.data.features
+    similarPlaces.value = response.data.features.filter(
+      (place) => place.context.some((context) => context.id.startsWith('country.')) &&
+      place.context.some((context) => context.id.startsWith('region.')) &&
+      place.context.some((context) => context.id.startsWith('place.')) &&
+      place.context.some((context) => context.id.startsWith('postcode.'))
+    )
   } catch (error) {
     console.error('Error searching similar places:', error)
   }
@@ -243,8 +257,7 @@ const searchSimilarPlaces = async () => {
 const selectPlace = (place) => {
   location.value = `${place.center[1]}, ${place.center[0]}`
   reverseGeocodeResult.value = place.place_name
-  similarPlaces.value = []
-  map.flyTo({ center: place.center, zoom: 18 })
+  map.flyTo({ center: place.center, zoom: 16 })
   addMarker(place.center)
 }
 </script>
@@ -417,7 +430,7 @@ const selectPlace = (place) => {
 .similar-places {
   position: absolute;
   background-color: white;
-  width: calc(100% - 20px);
+  width: calc(50% - 20px);
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
