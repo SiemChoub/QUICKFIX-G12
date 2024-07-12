@@ -13,20 +13,13 @@ return new class extends Migration
     {
         Schema::create('bookin_immediatelies', function (Blueprint $table) {
             $table->id();
-<<<<<<< HEAD
-            $table->integer('service_id');
-=======
->>>>>>> 7c09a17f7df97da27557df39e9753ad55305433c
             $table->integer('user_id');
+            $table->integer('service_id')->nullable();
             $table->string('promotion_id')->nullable();
             $table->date('date');
-            $table->string('location');
-<<<<<<< HEAD
-=======
-            $table->integer('service_id')->nullable();
+            $table->string('latitude');
+            $table->string('longitude');    
             $table->string('message')->nullable();
-            $table->string('action')->default('request');
->>>>>>> 7c09a17f7df97da27557df39e9753ad55305433c
             $table->timestamps();
         });
     }

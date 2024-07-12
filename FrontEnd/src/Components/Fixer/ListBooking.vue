@@ -4,10 +4,11 @@
       <div class="list-btn d-flex gap-sm-4 text-align:center">
         <h1>Customer Booking</h1>
       </div>
-      <ul id="list-booking" class="list-group w-100 gap-3 mt-2">
+      <ul id="list-booking" class="list-group w-100 gap-3">
         <li
           v-for="book in bookings"
           :key="book.id"
+          id="list_booking_item"
           class="list-group-item action rounded-2 d-flex w-100 flex-column flex-md-row align-items-center gap-3"
           @click="handleBookingClick(book.id)"
         >
@@ -24,11 +25,11 @@
             <p class="mb-0">Date: {{ book.date }}</p>
           </div>
           <div class="btn-groups d-flex flex-wrap flex-md-nowrap justify-content-end mt-2 mt-md-0 gap-5">
-            <button class="btn" @click.stop="fixerAccept(fixer_id, book.id)">
-              <i class="bi text-secondary text-25px bi-check2-circle"></i>
-            </button>
-            <button class="btn">
+            <button class="btn" @click="rejectBooking(book.id)">
               <i class="bi text-danger text-25px bi-x-circle-fill"></i>
+            </button>
+            <button class="btn" @click="acceptBooking(book.id)">
+              <i class="bi text-secondary text-25px bi-check2-circle"></i>
             </button>
           </div>
         </li>
@@ -37,76 +38,83 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const accessToken = localStorage.getItem('access_token')
-const bookings = ref(null)
-const fixer = JSON.parse(localStorage.getItem('user'))
-const fixer_id = fixer.id
+const accessToken = localStorage.getItem('access_token');
+const bookings = ref([]);
 
-async function getBookings() {
+async function getBooking() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/booking', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       }
-    })
-    bookings.value = response.data
+    });
+    bookings.value = response.data;
   } catch (error) {
     if (error.response) {
-      console.error('Backend error:', error.response.data)
+      console.error('Backend error:', error.response.data);
     }
   }
 }
 
-async function fixerAccept(fixerId, bookingId) {
+async function acceptBooking(bookingId) {
   try {
-    const response = await axios.post(
-      'http://127.0.0.1:8000/api/fixer/accept',
-      {
-        fixer_id: fixerId,
-        booking_id: bookingId
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
+    const fixer = JSON.parse(localStorage.getItem('user'));
+    const fixer_id = fixer.id;
+
+    const response = await axios.post('http://127.0.0.1:8000/api/fixer/accept', {
+      fixer_id: fixer_id,
+      booking_id: bookingId
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
       }
-    )
-    console.log('Booking accepted:', response.data)
+    });
+    console.log('Booking accepted:', response.data);
+    getBooking(); // Refresh the bookings list after accepting
   } catch (error) {
-    console.error('Error accepting booking:')
+    if (error.response) {
+      console.error('Backend error:', error.response.data);
+    }
   }
 }
 
-async function handleBookingClick(bookingId) {
+async function rejectBooking(bookingId) {
   try {
-    const index = bookings.value.findIndex((b) => b.id === bookingId)
-    if (index !== -1) {
-      const clickedBooking = bookings.value[index]
-      console.log('Clicked booking:', clickedBooking.id)
-      console.log(fixer_id)
-      await fixerAccept(fixer_id, clickedBooking.id)
-    } else {
-      console.error('Booking not found')
-    }
+    const response = await axios.post('http://127.0.0.1:8000/api/fixer/reject', {
+      booking_id: bookingId
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log('Booking rejected:', response.data);
+    getBooking(); // Refresh the bookings list after rejecting
   } catch (error) {
-    console.error('Error handling booking click:', error)
+    if (error.response) {
+      console.error('Backend error:', error.response.data);
+    }
   }
 }
 
 onMounted(() => {
-  getBookings()
-})
+  getBooking();
+});
 </script>
 
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9957d41cac24e2d46eb084da4483159773181df9
 <style scoped>
 #booking,
 #booked {

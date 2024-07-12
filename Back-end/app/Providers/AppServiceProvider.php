@@ -7,10 +7,10 @@ use App\Models\Mailsetting;
 use Config;
 use App\Models\Booking;
 use App\Models\FixingProgress;
-
+use Schema;
 class AppServiceProvider extends ServiceProvider
 {
-    /**
+    /*
      * Register any application services.
      *
      * @return void
@@ -20,13 +20,14 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
+    /*
      * Bootstrap any application services.
      *
      * @return void
      */
     public function boot()
     {
+
         if (!$this->app->runningInConsole()) {
             if (\Schema::hasTable('mailsettings')) {
                 $mailsetting = Mailsetting::first();
