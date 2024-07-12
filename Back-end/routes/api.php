@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\API\UserController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\CategoryController;
@@ -10,8 +12,10 @@ use App\Http\Controllers\Api\PromotionService;
 use App\Http\Controllers\Api\FixingProgressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ChatController;
-
+use App\Http\Controllers\API\FixerController;
+use App\Http\Controllers\API\PromotionController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,25 +36,42 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])-> middleware('auth:sanctum');
 Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
+Route::put('/update/{id}', [AuthController::class, 'updateInformation'])-> middleware('auth:sanctum');
+Route::post('/update/profile/{id}', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
+
+Route::get('/fixer/list', [FixerController::class, 'index']);
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');
+Route::put('/profile/update/{id}', [AuthController::class, 'update'])->middleware('auth:sanctum');
 
 Route::get('/service/list', [ServiceController::class, 'index']);
 Route::get('/category/list', [CategoryController::class, 'index']);
-Route::resource('/booking',BookingController::class);
-Route::resource('/bookin_immediatly',Bookin_memediatelyController::class);
-Route::resource('/bookin_deadline',Bookin_deadlineController::class);
-Route::resource('/fixing_progressing',FixingProgressController::class);
+Route::resource('/booking',BookingController::class)->middleware('auth:sanctum');
 
-Route::get('/service',[ServiceController::class, 'index'])->name('service');
-Route::get('/discount',[PromotionService::class, 'index'])->name('service');
+Route::post('/bookin_immediatly', [Bookin_memediatelyController::class, 'store']);
+Route::get('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'show'])->middleware('auth:sanctum');
+Route::put('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'destroy'])->middleware('auth:sanctum');
 
-Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
-// Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
-Route::post('/promotion/create', [PromotionService::class, 'store'])->name('promotion.create');
-Route::get('/promotion/show/{id}', [PromotionService::class, 'show'])->name('promotion.show');
-Route::put('/promotion/update/{id}', [PromotionService::class, 'update'])->name('promotion.update');
-Route::delete('/promotion/delete/{id}', [PromotionService::class, 'destroy'])->name('promotion.delete');
+Route::resource('/bookin_deadline',Bookin_deadlineController::class)->middleware('auth:sanctum');
+Route::resource('/fixing_progressing',FixingProgressController::class)->middleware('auth:sanctum');
 
+Route::get('/service',[AuthController::class, 'index'])->name('service');
+Route::get('/discount',[PromotionController::class, 'index'])->name('service');
+
+Route::get('/promotion',[PromotionController::class, 'index'])->name('promotion');
+// Route::get('/promotion',[PromotionController::class, 'index'])->name('promotion');
+Route::post('/promotion/create', [PromotionController::class, 'store'])->name('promotion.create');
+Route::get('/promotion/show/{id}', [PromotionController::class, 'show'])->name('promotion.show');
+Route::put('/promotion/update/{id}', [PromotionController::class, 'update'])->name('promotion.update');
+Route::delete('/promotion/delete/{id}', [PromotionController::class, 'destroy'])->name('promotion.delete');
+
+// --------------------------------- promotion API --------------------------------
+
+Route::get('/promotion/list', [PromotionController::class, 'index']);
+
+
+// --------------------- chat --------------------
+Route::get('/booking', [BookingController::class, 'index']);
 
 // Chat routes
 Route::get('/chat/list', [ChatController::class, 'index']);
@@ -58,3 +79,9 @@ Route::post('/chat/create', [ChatController::class, 'store']);
 Route::get('/chat/show/{id}', [ChatController::class, "show"]);
 Route::put('/chat/update/{id}', [ChatController::class, "update"]);
 Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
+
+
+// --------------- fixer in progress -------------//
+Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
+Route::delete('/fixer/cancel-accept/{id}', [FixingProgressController::class, 'cancelAccept']);
+Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);

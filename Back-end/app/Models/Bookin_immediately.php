@@ -9,6 +9,7 @@ class Bookin_immediately extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'service_id', 'image', 'message'
+        'service_id', 'image', 'message','latitude',
+        'longitude','promotion_id'
     ];
 }
