@@ -39,11 +39,11 @@
         >
           <div class="message-bubble rounded p-3 mb-3">
             <p class="message-text mb-0">{{ message.message }}</p>
+            <small class="text-muted text-10px">{{ formatTime(message.timestamp || message.created_at) }}</small>
           </div>
         </div>
       </div>
 
-      <!-- Chat Input -->
       <div class="chat-input d-flex align-items-center bg-light p-3">
         <input
           type="text"
@@ -81,58 +81,61 @@ export default {
       messages: [],
       image: null,
       newMessage: '',
-      user: JSON.parse(localStorage.getItem('user')) // Store user object
+      user: JSON.parse(localStorage.getItem('user'))
     }
   },
   mounted() {
-    this.fetchMessages()
+    this.fetchMessages();
   },
   methods: {
     async fetchMessages() {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/chat/show/${this.user.id}`)
-        this.messages = response.data.data
+        const response = await axios.get(`http://127.0.0.1:8000/api/chat/show/${this.user.id}`);
+        this.messages = response.data.data; 
+        console.log('Fetched messages:', this.messages);
       } catch (error) {
-        console.error('Error fetching messages:', error)
+        console.error('Error fetching messages:', error);
       }
     },
-
     async sendMessage() {
       if (this.newMessage.trim() !== '') {
-        this.sendStatus = 'Sending...'
         try {
+          const timestamp = new Date().toISOString();
           await axios.post('http://127.0.0.1:8000/api/chat/create', {
             sender_id: this.user.id,
-            receiver_id: 3, // Update as needed
+            receiver_id: 3,
             message: this.newMessage,
-            image: this.image,
-          })
+            image: this.image, 
+            timestamp: timestamp 
+          });
           this.messages.push({
             sender_id: this.user.id,
-            receiver_id: 3, // Update as needed
+            receiver_id: 3,
             message: this.newMessage,
-            timestamp: new Date().toISOString() // Add timestamp if needed
-          })
-          this.newMessage = ''
+            timestamp: timestamp
+          });
+          this.newMessage = '';
         } catch (error) {
-          console.error('Error sending message:', error)
+          console.error('Error sending message:', error);
         }
       }
     },
-
     handleFileUpload(event) {
       this.uploadedFile = event.target.files[0];
-      // You can now use this.uploadedFile to handle the file upload
       console.log('Uploaded file:', this.uploadedFile);
     },
-
     closeChat(event) {
-      event.preventDefault()
-      window.location.href = '/'
+      event.preventDefault();
+      window.location.href = '/';
+    },
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   }
 }
 </script>
+
 
 <style scoped>
 .messenger {

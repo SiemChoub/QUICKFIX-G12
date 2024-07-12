@@ -29,24 +29,22 @@ class ChatController extends Controller
         //     'receiver_id' => 'required|integer',
         //     'message' => 'required|string',
         // ]);
-        $image = null;
 
         // if ($validator->fails()) {
         //     return response()->json(['error' => $validator->errors()], 400);
         // }
 
         // Process the image file
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $base64Image = base64_encode(file_get_contents($image->path()));
-            $image = $base64Image;
-            // Store in database
-        }
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image');
+        //     $base64Image = base64_encode(file_get_contents($image->path()));
+
+        //     // Store in database
+        // }
         Chat::create([
             'sender_id' => $request->sender_id,
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
-            'image' => $image
         ]);
 
         return "Chat created successfully";

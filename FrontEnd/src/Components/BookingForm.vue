@@ -64,7 +64,7 @@
                       />
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Book</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
                 </div>
@@ -135,26 +135,24 @@ const submitBooking = async () => {
     const userString = localStorage.getItem('user');
     const user = JSON.parse(userString);
     const user_id = user.id;
-    const [latitude, longitude] = location.value.split(', ');
     const bookingData = {
-        service_id: props.service.id, 
+        service_id: props.service.id,
         user_id: user_id,
-        latitude: latitude.trim(), 
-        longitude: longitude.trim(), 
-        date: bookingDate.value, 
+        latitude: location.value.split(',')[0].trim(), // Corrected latitude extraction
+        longitude: location.value.split(',')[1].trim(), // Corrected longitude extraction
+        date: bookingDate.value,
         message: information.value || null,
         promotion_id: promotionCode.value || null,
     };
     console.log('Booking data:', bookingData);
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
-        console.log(response);
-        emit('close'); 
+        console.log('Booking response:', response.data);
+        emit('close');
     } catch (error) {
         console.error('Error submitting booking:', error);
     }
 };
-
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(

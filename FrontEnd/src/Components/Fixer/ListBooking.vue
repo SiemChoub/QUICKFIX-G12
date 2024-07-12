@@ -10,6 +10,7 @@
           :key="book.id"
           id="list_booking_item"
           class="list-group-item action rounded-2 d-flex w-100 flex-column flex-md-row align-items-center gap-3"
+          @click="handleBookingClick(book.id)"
         >
           <div class="right d-flex align-items-center gap-3">
             <img
@@ -110,6 +111,10 @@ onMounted(() => {
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9957d41cac24e2d46eb084da4483159773181df9
 <style scoped>
 #booking,
 #booked {
