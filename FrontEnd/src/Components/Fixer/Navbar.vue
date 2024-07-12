@@ -126,18 +126,18 @@
                   class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-2"
                   aria-labelledby="dropdownMenuLink"
                 >
-                  <li><a href="#" class="dropdown-item">Details</a></li>
+                  <li><router-link to="/profile"  class="dropdown-item text-center">View Profile</router-link></li>
                   <li>
                     <a
                       href="#"
-                      class="dropdown-item"
+                      class="dropdown-item text-center"
                       data-bs-toggle="modal"
                       data-bs-target="#editProfileModal"
                       >Change</a
                     >
                   </li>
                   <li>
-                    <div @click="logout" class="dropdown-item">Log Out</div>
+                    <div @click="logout" class="dropdown-item text-center">Log Out</div>
                   </li>
                 </ul>
               </div>
