@@ -12,7 +12,8 @@ use App\Http\Controllers\Api\PromotionService;
 use App\Http\Controllers\Api\FixingProgressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ChatController;
-
+use App\Http\Controllers\API\FixerController;
+use App\Http\Controllers\API\PromotionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,7 @@ Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 Route::put('/update/{id}', [AuthController::class, 'updateInformation'])-> middleware('auth:sanctum');
 Route::post('/update/profile/{id}', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
 
+Route::get('/fixer/list', [FixerController::class, 'index']);
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');
 Route::put('/profile/update/{id}', [AuthController::class, 'update'])->middleware('auth:sanctum');
 
@@ -54,14 +56,18 @@ Route::resource('/bookin_deadline',Bookin_deadlineController::class)->middleware
 Route::resource('/fixing_progressing',FixingProgressController::class)->middleware('auth:sanctum');
 
 Route::get('/service',[AuthController::class, 'index'])->name('service');
-Route::get('/discount',[PromotionService::class, 'index'])->name('service');
+Route::get('/discount',[PromotionController::class, 'index'])->name('service');
 
-Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
-// Route::get('/promotion',[PromotionService::class, 'index'])->name('promotion');
-Route::post('/promotion/create', [PromotionService::class, 'store'])->name('promotion.create');
-Route::get('/promotion/show/{id}', [PromotionService::class, 'show'])->name('promotion.show');
-Route::put('/promotion/update/{id}', [PromotionService::class, 'update'])->name('promotion.update');
-Route::delete('/promotion/delete/{id}', [PromotionService::class, 'destroy'])->name('promotion.delete');
+Route::get('/promotion',[PromotionController::class, 'index'])->name('promotion');
+// Route::get('/promotion',[PromotionController::class, 'index'])->name('promotion');
+Route::post('/promotion/create', [PromotionController::class, 'store'])->name('promotion.create');
+Route::get('/promotion/show/{id}', [PromotionController::class, 'show'])->name('promotion.show');
+Route::put('/promotion/update/{id}', [PromotionController::class, 'update'])->name('promotion.update');
+Route::delete('/promotion/delete/{id}', [PromotionController::class, 'destroy'])->name('promotion.delete');
+
+// --------------------------------- promotion API --------------------------------
+
+Route::get('/promotion/list', [PromotionController::class, 'index']);
 
 
 // --------------------- chat --------------------
@@ -74,4 +80,8 @@ Route::get('/chat/show/{id}', [ChatController::class, "show"]);
 Route::put('/chat/update/{id}', [ChatController::class, "update"]);
 Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
 
+
+// --------------- fixer in progress -------------//
+Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
+Route::delete('/fixer/cancel-accept/{id}', [FixingProgressController::class, 'cancelAccept']);
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
