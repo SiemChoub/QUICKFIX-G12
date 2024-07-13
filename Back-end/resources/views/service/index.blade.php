@@ -34,61 +34,59 @@
                 </tr>
             </thead>
             <tbody id="service-table-body">
-                <!-- Example row, replace with dynamic content -->
                 @can('Service access')
-                @foreach ($services as $service)
-                <tr>
-                    <td class='text-center'>{{ $service->name }}</td>
-                    <td class='text-center' style="width:5px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 150px;">{{ strlen($service->description) > 15 ? substr($service->description, 0, 15) . '...' : $service->description }}</td>                    
-                    <td class='text-center'>{{ $service->price }}$</td>
-                    <td class='text-center'>{{ $service->category->name }}</td>                    
-                    <td class="table-actions d-flex justify-content-around text-center">
-                        <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#serviceDetailsModal" 
-                            data-service-image="{{$service->image }}"
-                            data-service-title="{{$service->name}}"
-                            data-service-description="{{$service->description}}"
-                            data-service-category="{{ $service->category->name }}"
-                            data-service-price="{{ $service->price }}"
-                            data-service-stars="999">
-                            Details
-                        </a>
-                        @can('Service edit')
-                            <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        @endcan
-                        @can('Service delete')
-                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $service->id }})">Delete</button>
-
-                        <script>
-                        function confirmDelete(id) {
-                            Swal.fire({
-                                title: 'Are you sure?',
-                                text: "You won't be able to revert this!",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#d33',
-                                cancelButtonColor: '#3085d6',
-                                confirmButtonText: 'Yes, delete it!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Perform the delete action
-                                    document.getElementById(`delete-form-${id}`).submit();
-                                }
-                            });
-                        }
-                        </script>
-
-                        <form id="delete-form-{{ $service->id }}" action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-none">
-                            @csrf
-                            @method('delete')
-                        </form>
-                        @endcan
-                    </td>
-                </tr>
-                @endforeach
+                    @foreach ($services as $service)
+                        <tr>
+                            <td class='text-center'>{{ $service->name }}</td>
+                            <td class='text-center' style="width:5px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; max-width: 150px;">
+                                {{ strlen($service->description) > 15 ? substr($service->description, 0, 15) . '...' : $service->description }}
+                            </td>
+                            <td class='text-center'>{{ $service->price }}$</td>
+                            <td class='text-center'>{{ $service->category->name }}</td>
+                            <td class="table-actions d-flex justify-content-around text-center">
+                                <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#serviceDetailsModal" 
+                                    data-service-image="{{ $service->image }}"
+                                    data-service-title="{{ $service->name }}"
+                                    data-service-description="{{ $service->description }}"
+                                    data-service-category="{{ $service->category->name }}"
+                                    data-service-price="{{ $service->price }}"
+                                    data-service-stars="999">
+                                    Details
+                                </a>
+                                @can('Service edit')
+                                    <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                @endcan
+                                @can('Service delete')
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $service->id }})">Delete</button>
+                                    <script>
+                                    function confirmDelete(id) {
+                                        Swal.fire({
+                                            title: 'Are you sure?',
+                                            text: "You won't be able to revert this!",
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#d33',
+                                            cancelButtonColor: '#3085d6',
+                                            confirmButtonText: 'Yes, delete it!'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // Perform the delete action
+                                                document.getElementById(`delete-form-${id}`).submit();
+                                            }
+                                        });
+                                    }
+                                    </script>
+                                    <form id="delete-form-{{ $service->id }}" action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-none">
+                                        @csrf
+                                        @method('delete')
+                                    </form>
+                                @endcan
+                            </td>
+                        </tr>
+                    @endforeach
                 @endcan
-                <!-- Add more rows here -->
             </tbody>
-        </table>
+            
     </div>
     @can('Service access')
     <div class="text-right mt-6">

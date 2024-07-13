@@ -24,15 +24,15 @@ class Bookin_deadlineController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    $validatedData = $request->validate([
-        'service_id' => 'required|integer',
-        'date' => 'required|string',
-        'user_id' => 'required|integer',
-        'promotion_id' => 'nullable|integer',
-        'fixer_id' => 'nullable|integer',
-        'latitude' => 'required|string', 
-        'longitude' => 'required|string', 
-    ]);
+    // $validatedData = $request->validate([
+    //     'service_id' => 'required|integer',
+    //     'date' => 'required|string',
+    //     'user_id' => 'required|integer',
+    //     'promotion_id' => 'nullable|integer',
+    //     'fixer_id' => 'nullable|integer',
+    //     'latitude' => 'required|string', 
+    //     'longitude' => 'required|string', 
+    // ]);
 
     // Parse the location input
     // $location = explode(',', $validatedData['location']);
@@ -40,29 +40,29 @@ class Bookin_deadlineController extends Controller
     // $longitude = $location[1];
 
     // Create a new Bookin_immediately record
-    $bookin_immediately = new Bookin_deadline();
-    $bookin_immediately->service_id = $validatedData['service_id'];
-    $bookin_immediately->user_id = $validatedData['user_id'];
-    $bookin_immediately->latitude = $validatedData['latitude'];
-    $bookin_immediately->longitude = $validatedData['longitude'];
-    $bookin_immediately->date = $validatedData['date'];
-    $bookin_immediately->message = $validatedData['message'];
-    if(isset($validatedData['promotion_id'])) {
-        $bookin_immediately->promotion_id = $validatedData['promotion_id'];
+    $booking_deadline = new Bookin_deadline();
+    $booking_deadline->service_id = $request->service_id;
+    $booking_deadline->user_id = $request->user_id;
+    $booking_deadline->latitude = $request->latitude;
+    $booking_deadline->longitude = $request->longitude;
+    $booking_deadline->date = $request->date;
+    $booking_deadline->message = $request->message;
+    if(isset($request->promotion_id)) {
+        $booking_deadline->promotion_id = $request->promotion_id;
     }
-    $bookin_immediately->save();
+    $booking_deadline->save();
 
     // Create a new Booking record
     $booking = new Booking();
-    $booking->booking_type_id = $bookin_immediately->id;
-    $booking->user_id = $validatedData['user_id'];
+    $booking->booking_type_id = $booking_deadline->id;
+    $booking->user_id = $request->user_id;
     $booking->type = 'deadline';
-    if (isset($validatedData['fixer_id'])) {
-        $booking->fixer_id = $validatedData['fixer_id'];
+    if (isset($request->fixer_id)) {
+        $booking->fixer_id = $request->fixer_id;
     }
     $booking->save();
 
-    return response()->json($bookin_immediately);
+    return response()->json($booking_deadline);
 }
 
     /**

@@ -1,8 +1,8 @@
 <template>
-    <router-view v-slot="{ Component }">
-  <transition>
-    <component :is="Component" />
-  </transition>
+<router-view>
+   <router-view v-slot="{ Component }">
+      <component :is="Component" />
+    </router-view>
 </router-view>
   <WebLayout>
     <div class="container-fluid p-0">

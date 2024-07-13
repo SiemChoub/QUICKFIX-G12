@@ -48,12 +48,24 @@ Route::get('/service/list', [ServiceController::class, 'index']);
 Route::get('/category/list', [CategoryController::class, 'index']);
 Route::resource('/booking',BookingController::class)->middleware('auth:sanctum');
 
+
+// ---------------- booking immedetely -------------
 Route::post('/bookin_immediatly', [Bookin_memediatelyController::class, 'store']);
 Route::get('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'show'])->middleware('auth:sanctum');
 Route::put('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'destroy'])->middleware('auth:sanctum');
 
-Route::resource('/bookin_deadline',Bookin_deadlineController::class)->middleware('auth:sanctum');
+// ---------------- booking deadline -------------
+    Route::get('/bookin_deadline', [Bookin_deadlineController::class, 'index'])->name('bookin_deadline.index');
+    Route::post('/bookin_deadline/create', [Bookin_deadlineController::class, 'store'])->name('bookin_deadline.create');
+    Route::post('/bookin_deadline', [Bookin_deadlineController::class, 'store'])->name('bookin_deadline.store');
+    Route::get('/bookin_deadline/{bookin_deadline}', [Bookin_deadlineController::class, 'show'])->name('bookin_deadline.show');
+    Route::get('/bookin_deadline/{bookin_deadline}/edit', [Bookin_deadlineController::class, 'edit'])->name('bookin_deadline.edit');
+    Route::put('/bookin_deadline/{bookin_deadline}', [Bookin_deadlineController::class, 'update'])->name('bookin_deadline.update');
+    Route::delete('/bookin_deadline/{bookin_deadline}', [Bookin_deadlineController::class, 'destroy'])->name('bookin_deadline.destroy');
+
+
+
 Route::resource('/fixing_progressing',FixingProgressController::class)->middleware('auth:sanctum');
 
 Route::get('/service',[AuthController::class, 'index'])->name('service');
@@ -86,6 +98,6 @@ Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
 Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
 Route::get('/fixer/accepted/{id}', [FixingProgressController::class, 'show']);
 Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAccept']);
-Route::post('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
+Route::put('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
 
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);

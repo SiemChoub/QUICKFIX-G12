@@ -77,7 +77,7 @@ async function acceptBooking(bookingId) {
       }
     });
     console.log('Booking accepted:', response.data);
-    getBooking(); // Refresh the bookings list after accepting
+    getBooking(); 
   } catch (error) {
     if (error.response) {
       console.error('Backend error:', error.response.data);
@@ -96,7 +96,7 @@ async function rejectBooking(bookingId) {
       }
     });
     console.log('Booking rejected:', response.data);
-    getBooking(); // Refresh the bookings list after rejecting
+    getBooking(); 
   } catch (error) {
     if (error.response) {
       console.error('Backend error:', error.response.data);
@@ -111,10 +111,6 @@ onMounted(() => {
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 9957d41cac24e2d46eb084da4483159773181df9
 <style scoped>
 #booking,
 #booked {
