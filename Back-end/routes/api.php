@@ -39,6 +39,7 @@ Route::get('/me', [AuthController::class, 'index'])->middleware('auth:sanctum');
 Route::put('/update/{id}', [AuthController::class, 'updateInformation'])-> middleware('auth:sanctum');
 Route::post('/update/profile/{id}', [AuthController::class, 'updateProfile'])->middleware('auth:sanctum');
 
+Route::get('/fixer/list', [FixerController::class, 'index']);
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');
 Route::put('/profile/update/{id}', [AuthController::class, 'update'])->middleware('auth:sanctum');
 Route::get('/fixer/list', [FixerController::class, 'index']);
@@ -83,5 +84,8 @@ Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
 
 // --------------- fixer in progress -------------//
 Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
-Route::delete('/fixer/cancel-accept/{id}', [FixingProgressController::class, 'cancelAccept']);
+Route::get('/fixer/accepted/{id}', [FixingProgressController::class, 'show']);
+Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAccept']);
+Route::post('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
+
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);

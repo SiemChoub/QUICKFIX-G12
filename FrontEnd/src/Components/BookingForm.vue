@@ -56,7 +56,15 @@
                         placeholder="Enter promotion code (if any)"
                       />
                     </div>
-                    <button type="submit" class="btn btn-primary">Book</button>
+                    <div class="form-group">
+                      <textarea
+                        type="text"
+                        v-model="information"
+                        placeholder="More information....."
+                      />
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
                 </div>
@@ -93,6 +101,7 @@ const selectedService = ref('')
 const bookingDate = ref('')
 const description = ref('')
 const promotionCode = ref('')
+const information = ref('')
 
 const categories = ref([])
 const services = ref([])
@@ -127,22 +136,23 @@ const submitBooking = async () => {
     const user = JSON.parse(userString);
     const user_id = user.id;
     const bookingData = {
-        service_id: props.service.id, 
+        service_id: props.service.id,
         user_id: user_id,
-        location: location.value, 
-        date: bookingDate.value, 
+        latitude: location.value.split(',')[0].trim(), // Corrected latitude extraction
+        longitude: location.value.split(',')[1].trim(), // Corrected longitude extraction
+        date: bookingDate.value,
+        message: information.value || null,
         promotion_id: promotionCode.value || null,
     };
-      console.log('Booking data:',bookingData);
+    console.log('Booking data:', bookingData);
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
-        emit('close'); 
+        console.log('Booking response:', response.data);
+        emit('close');
     } catch (error) {
         console.error('Error submitting booking:', error);
     }
 };
-
-
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -217,24 +227,26 @@ async function reverseGeocode(latLng) {
       console.error('No results found for reverse geocoding.')
     }
   } catch (error) {
-    console.error('Error in reverse geocoding:', error)
+    console.error('Error during reverse geocoding:', error)
   }
 }
 
 const searchSimilarPlaces = async () => {
   try {
     const response = await axios.get(
-      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
-        encodeURIComponent(reverseGeocodeResult.value) +
-        '.json',
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${reverseGeocodeResult.value}.json`,
       {
         params: {
-          access_token: mapboxgl.accessToken,
-          autocomplete: true
+          access_token: mapboxgl.accessToken
         }
       }
     )
-    similarPlaces.value = response.data.features
+    similarPlaces.value = response.data.features.filter(
+      (place) => place.context.some((context) => context.id.startsWith('country.')) &&
+      place.context.some((context) => context.id.startsWith('region.')) &&
+      place.context.some((context) => context.id.startsWith('place.')) &&
+      place.context.some((context) => context.id.startsWith('postcode.'))
+    )
   } catch (error) {
     console.error('Error searching similar places:', error)
   }
@@ -243,8 +255,7 @@ const searchSimilarPlaces = async () => {
 const selectPlace = (place) => {
   location.value = `${place.center[1]}, ${place.center[0]}`
   reverseGeocodeResult.value = place.place_name
-  similarPlaces.value = []
-  map.flyTo({ center: place.center, zoom: 18 })
+  map.flyTo({ center: place.center, zoom: 16 })
   addMarker(place.center)
 }
 </script>
@@ -417,7 +428,7 @@ const selectPlace = (place) => {
 .similar-places {
   position: absolute;
   background-color: white;
-  width: calc(100% - 20px);
+  width: calc(50% - 20px);
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;

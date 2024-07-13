@@ -12,6 +12,21 @@
     </button>
   </div>
 
+  <!-- <div class="container mt-4"> -->
+    <!-- <div class="row mb-3"> -->
+      <div class="card w-6rem m-3 text-start">
+        <button
+          type="button"
+          id="btn"
+          class="btn text-16px btn-outline-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#update"
+          data-bs-whatever="@mdo"
+        >
+          Add Skill
+        </button>
+      </div>
+    <!-- </div> -->
   <!-- ----------------------------------------- -->
   <div class="container mt-lg-5 gap-3 d-flex row-cols-3">
     <!------------------------- Card ----------------- -->
@@ -51,10 +66,32 @@
               data-bs-target="#update"
               class="btn btn-outline-primary"
               >Update</a
-            > -->
+            >
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="col">
+      <div class="card border-0 h-auto">
+        <img src="/src/assets/img/images.jpeg" class="card-img-top" alt="image" />
+        <div class="card-body">
+          <h5 class="card-title d-flex justify-content-start">Card title</h5>
+          <p class="card-text">I'm skill</p>
+          <div class="d-flex gap-1 justify-content-end">
+            <a href="#" id="btn-delete" class="btn btn-outline-danger">Delete</a>
+            <!-- <a
+              href="#"
+              id="btn"
+              data-bs-toggle="modal"
+              data-bs-target="#update"
+              class="btn btn-outline-primary"
+              >Update</a
+            > 
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
 
     <div class="col">
@@ -131,10 +168,10 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <button id="btn-delete" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             Cancel
           </button>
-          <button type="button" class="btn btn-primary">Create</button>
+          <button id="btn" type="button" class="btn btn-primary">Create</button>
         </div>
       </div>
     </div>

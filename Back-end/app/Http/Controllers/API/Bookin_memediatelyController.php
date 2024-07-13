@@ -27,14 +27,15 @@ class Bookin_memediatelyController extends Controller
     public function store(Request $request)
 {
     // Validate the request
-    $validatedData = $request->validate([
-        'service_id' => 'required|integer',
-        'date' => 'required|string',
-        'user_id' => 'required|integer',
-        'promotion_id' => 'nullable|integer',
-        'fixer_id' => 'nullable|integer',
-        'location' => 'required|string', 
-    ]);
+    // $validatedData = $request->validate([
+    //     'service_id' => 'required|integer',
+    //     'date' => 'required|string',
+    //     'user_id' => 'required|integer',
+    //     'promotion_id' => 'nullable|integer',
+    //     'fixer_id' => 'nullable|integer',
+    //     'latitude' => 'required|string', 
+    //     'longitude' => 'required|string', 
+    // ]);
 
     // Parse the location input
     // $location = explode(',', $validatedData['location']);
@@ -43,22 +44,24 @@ class Bookin_memediatelyController extends Controller
 
     // Create a new Bookin_immediately record
     $bookin_immediately = new Bookin_immediately();
-    $bookin_immediately->service_id = $validatedData['service_id'];
-    $bookin_immediately->user_id = $validatedData['user_id'];
-    $bookin_immediately->location = $validatedData['location'];
-    $bookin_immediately->date = $validatedData['date'];
-    if(isset($validatedData['promotion_id'])) {
-        $bookin_immediately->promotion_id = $validatedData['promotion_id'];
+    $bookin_immediately->service_id = $request->service_id;
+    $bookin_immediately->user_id = $request->user_id;
+    $bookin_immediately->latitude = $request->latitude;
+    $bookin_immediately->longitude = $request->longitude;
+    $bookin_immediately->date = $request->date;
+    $bookin_immediately->message = $request->message;
+    if(isset($requestpromotion_id)) {
+        $bookin_immediately->promotion_id = $requestpromotion_id;
     }
     $bookin_immediately->save();
 
     // Create a new Booking record
     $booking = new Booking();
     $booking->booking_type_id = $bookin_immediately->id;
-    $booking->user_id = $validatedData['user_id'];
+    $booking->user_id = $request->user_id;
     $booking->type = 'immediately';
-    if (isset($validatedData['fixer_id'])) {
-        $booking->fixer_id = $validatedData['fixer_id'];
+    if (isset($request->fixer_id)) {
+        $booking->fixer_id = $request->fixer_id;
     }
     $booking->save();
 

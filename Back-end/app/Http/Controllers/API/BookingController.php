@@ -17,11 +17,21 @@ class BookingController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-        $booking = Booking::all();
-        return response()->json($booking);
+{
+    try {
+        $action = 'request'; // Define the action you want to filter by
+
+        $bookings = Booking::where('action', $action)->get();
+
+        return response()->json($bookings);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to fetch bookings.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
 
     /**
      * Store a newly created resource in storage.
