@@ -105,14 +105,13 @@ class FixingProgressController extends Controller
     public function startFixer(string $id)
     {
         $fixingProgress = FixingProgress::find($id);
-        
         if (!$fixingProgress) {
             return response()->json(['error' => 'Fixing progress not found'], 404);
         }
 
         $booking = Booking::findOrFail($fixingProgress->booking_id);
-
-        $bookImmediately = Bookin_immediately::where('booking_id', $booking->id)->first();
+        // return $booking;
+        $bookImmediately = Bookin_immediately::where('id', $booking->booking_type_id)->first();
         if (!$bookImmediately) {
             return response()->json(['error' => 'BookImmediately record not found'], 404);
         }
@@ -123,7 +122,7 @@ class FixingProgressController extends Controller
         $fixingProgress->action = 'started';
         $fixingProgress->save();
 
-        $booking->status = 'in_progress';
+        $booking->action = 'in_progress';
         $booking->save();
 
         return response()->json([
