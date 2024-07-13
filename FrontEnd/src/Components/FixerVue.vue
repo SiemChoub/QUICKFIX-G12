@@ -18,11 +18,10 @@
     <hr />
     <div class="repairers-list container m-4 d-flex gap-5">
       <div v-if="filteredRepairers.length === 0" class="no-results">No repairers found.</div>
-      <div v-for="repairer in fixers" :key="repairer.id" class="repairer-card">
+      <div v-for="repairer in filteredRepairers" :key="repairer.id" class="repairer-card">
         <div class="repairer-content">
           <div class="repairer-image">
             <img v-if="repairer.image" :src="repairer.image" alt="Repairer Image" />
-            <!-- Otherwise, display a default image -->
             <img
               v-else
               src="https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg="
@@ -34,47 +33,60 @@
               Name: <span>{{ repairer.name }}</span>
             </h3>
             <p class="career">
-              Career: <span> Repair car{{ repairer.career }}</span>
+              Career: <span>{{ repairer.career }}</span>
             </p>
             <p class="place">
-              Place: <span> {{ repairer.place }}</span>
+              Place: <span>{{ repairer.place }}</span>
             </p>
-            <p class="phone">Tel: <span>111111</span></p>
+            <p class="phone">Tel: <span>{{ repairer.phone }}</span></p>
           </div>
           <div class="repairer-icons">
             <i class="fas fa-phone"></i>
-            <button class="btn btn-primary" @click="bookAppointment(repairer)">Book</button>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Book</button>
           </div>
         </div>
       </div>
     </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import { ref, computed } from 'vue'
-import NavbarView from '@/Components/WebHeaderMenu.vue' // Adjust path based on your structure
+import NavbarView from '@/Components/WebHeaderMenu.vue' 
+import ModalForm from '@/Components/BookingForm.vue'
 
 export default {
   components: {
-    NavbarView
+    NavbarView,
+    ModalForm
   },
   data() {
     return {
       fixers: [],
       careers: [{ name: '' }],
       places: [{ name: '' }],
-      repairers: [
-        {
-          name: '',
-          career: '',
-          place: '',
-          image: '' // Adjust path based on your structure
-        }
-      ],
       selectedCareer: '',
-      selectedPlace: ''
+      selectedPlace: '',
+      showModal: false,
+      selectedRepairer: null
     }
   },
   mounted() {
@@ -83,46 +95,39 @@ export default {
   methods: {
     async getFixer() {
       try {
-        this.showSpinner = true
         const response = await axios.get('http://127.0.0.1:8000/api/fixer/list')
         console.log(response.data)
         this.fixers = response.data
+        this.careers = [...new Set(this.fixers.map(fixer => ({ name: fixer.career })))]
+        this.places = [...new Set(this.fixers.map(fixer => ({ name: fixer.place })))]
       } catch (error) {
-        if (error.response && error.response.status === 422) {
-          this.errorMessage = Object.values(error.response.data.errors).flat().join(' ')
-        } else {
-          console.error('Error registering user:', error.message)
-          this.errorMessage = 'Registration failed. Please try again.'
-        }
-      } finally {
-        this.showSpinner = false // Hide spinner regardless of success or failure
+        console.error('Error fetching fixers:', error.message)
       }
     },
-    loginWithGoogle() {
-      // Implement Google login functionality if needed
+    openBookingForm(repairer) {
+      this.selectedRepairer = repairer
+      this.showModal = true
+    },
+    closeModal() {
+      this.showModal = false
+      this.selectedRepairer = null
     }
   },
   computed: {
     filteredRepairers() {
-      let filtered = this.repairers
+      let filtered = this.fixers
 
       if (this.selectedCareer) {
-        filtered = filtered.filter((repairer) => repairer.career === this.selectedCareer)
+        filtered = filtered.filter(repairer => repairer.career === this.selectedCareer)
       }
 
       if (this.selectedPlace) {
-        filtered = filtered.filter((repairer) => repairer.place === this.selectedPlace)
+        filtered = filtered.filter(repairer => repairer.place === this.selectedPlace)
       }
 
       return filtered
     }
   }
-  // methods: {
-  //   bookAppointment(repairer) {
-  //     // Implement your booking logic here
-  //     console.log(Booking appointment with ${repairer.name});
-  //   },
-  // },
 }
 </script>
 
