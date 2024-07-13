@@ -64,6 +64,35 @@
                   <h6 class="m-0">{{ users.id }}</h6>
                 </div>
               </div>
+              <!-- Dropdown menu -->
+              <div class="dropdown ms-auto">
+                <a
+                  class="bi bi-list text-25px dropdown-toggle"
+                  href="#"
+                  role="button"
+                  id="dropdownMenuLink"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></a>
+                <ul
+                  class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-2"
+                  aria-labelledby="dropdownMenuLink"
+                >
+                  <li><router-link to="/profile"  class="dropdown-item text-center">View Profile</router-link></li>
+                  <li>
+                    <a
+                      href="#"
+                      class="dropdown-item text-center"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editProfileModal"
+                      >Change</a
+                    >
+                  </li>
+                  <li>
+                    <div @click="logout" class="dropdown-item text-center">Log Out</div>
+                  </li>
+                </ul>
+              </div>
               <button @click="logout" class="btn btn-outline-secondary ms-auto">Log Out</button>
             </div>
           </div>

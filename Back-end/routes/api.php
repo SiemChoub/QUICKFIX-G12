@@ -42,6 +42,7 @@ Route::post('/update/profile/{id}', [AuthController::class, 'updateProfile'])->m
 Route::get('/fixer/list', [FixerController::class, 'index']);
 Route::get('/post/list', [PostController::class, 'index'])->middleware('auth:sanctum');
 Route::put('/profile/update/{id}', [AuthController::class, 'update'])->middleware('auth:sanctum');
+Route::get('/fixer/list', [FixerController::class, 'index']);
 
 Route::get('/service/list', [ServiceController::class, 'index']);
 Route::get('/category/list', [CategoryController::class, 'index']);

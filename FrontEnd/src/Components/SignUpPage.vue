@@ -131,11 +131,12 @@ export default {
 // 
       try {
         this.showSpinner = true;
+        console.log(this.formData);
         const response = await axios.post(
           "http://127.0.0.1:8000/api/register",
           this.formData
         );
-        const { user, access_token } = response.data;
+        // const { user, access_token } = response.data;
         this.$router.push("/login");
       } catch (error) {
         this.showSpinner = false;

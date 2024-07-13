@@ -7,8 +7,7 @@ use App\Models\Mailsetting;
 use Config;
 use App\Models\Booking;
 use App\Models\FixingProgress;
-
-
+use Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (\Schema::hasTable('mailsettings')) {
+        if (Schema::hasTable('mailsettings')) {
             $mailsetting = Mailsetting::first();
             if($mailsetting){
                 $data = [
@@ -40,15 +39,16 @@ class AppServiceProvider extends ServiceProvider
                     'username'          => $mailsetting->mail_username,
                     'password'          => $mailsetting->mail_password,
                     'from'              => [
-                        'address'=>$mailsetting->mail_from,
-                        'name'   => 'LaravelStarter'
+                        'address' => $mailsetting->mail_from,
+                        'name'    => 'LaravelStarter'
                     ]
                 ];
-                Config::set('mail',$data);
+                Config::set('mail', $data);
             }
         }
-        view()->share(['bookings'=>Booking::all(),'FixingProgress'=>FixingProgress::all()]);
+
+        if (Schema::hasTable('bookings') && Schema::hasTable('fixing_progress')) {
+            view()->share(['bookings' => Booking::all(), 'FixingProgress' => FixingProgress::all()]);
+        }
     }
-
-
 }

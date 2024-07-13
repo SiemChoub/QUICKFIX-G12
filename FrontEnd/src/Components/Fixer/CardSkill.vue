@@ -1,4 +1,16 @@
 <template>
+  <div class="card w-6rem  mt-5 mb-5 color-none m-3 border-0 h-auto">
+    <button
+      type="button"
+      id="btn"
+      class="btn text-16px w-6rem btn-outline-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#update"
+      data-bs-whatever="@mdo"
+    >
+      Add Skill
+    </button>
+  </div>
 
   <!-- <div class="container mt-4"> -->
     <!-- <div class="row mb-3"> -->
@@ -15,7 +27,6 @@
         </button>
       </div>
     <!-- </div> -->
-
   <!-- ----------------------------------------- -->
   <div class="container mt-lg-5 gap-3 d-flex row-cols-3">
     <!------------------------- Card ----------------- -->
@@ -55,10 +66,32 @@
               data-bs-target="#update"
               class="btn btn-outline-primary"
               >Update</a
-            > -->
+            >
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="col">
+      <div class="card border-0 h-auto">
+        <img src="/src/assets/img/images.jpeg" class="card-img-top" alt="image" />
+        <div class="card-body">
+          <h5 class="card-title d-flex justify-content-start">Card title</h5>
+          <p class="card-text">I'm skill</p>
+          <div class="d-flex gap-1 justify-content-end">
+            <a href="#" id="btn-delete" class="btn btn-outline-danger">Delete</a>
+            <!-- <a
+              href="#"
+              id="btn"
+              data-bs-toggle="modal"
+              data-bs-target="#update"
+              class="btn btn-outline-primary"
+              >Update</a
+            > 
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
 
     <div class="col">
@@ -81,67 +114,12 @@
         </div>
       </div>
     </div>
-    </div>
-
-  <div class="container">
-    <div class="mb-3 w-100">
-      <div
-        class="modal fade"
-        id="createCard"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content p-4">
-            <div class="modal-header">
-              <h5 class="modal-title" id="createCard">Add Card</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="mb-3">
-                  <input class="form-control" type="file" id="formFile" />
-                </div>
-                <div class="mb-3">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="recipient-name"
-                    placeholder="Card title"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="message-text" class="col-form-label">Description:</label>
-                  <textarea
-                    class="form-control"
-                    id="message-text"
-                    placeholder="Card description"
-                  ></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                data-bs-dismiss="modal"
-              >
-                Cancel
-              </button>
-              <button type="button" class="btn btn-outline-primary">Create</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
+  <!------------------------- Card ----------------- -->
+
+
+<!-- ----------------select box ---------------- -->
   <div
     class="modal fade"
     id="update"
