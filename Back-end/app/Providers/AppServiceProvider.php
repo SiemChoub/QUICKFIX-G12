@@ -7,7 +7,9 @@ use App\Models\Mailsetting;
 use Config;
 use App\Models\Booking;
 use App\Models\FixingProgress;
-use Schema;
+
+
+
 class AppServiceProvider extends ServiceProvider
 {
     /*
@@ -27,33 +29,26 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-        if (!$this->app->runningInConsole()) {
-            if (\Schema::hasTable('mailsettings')) {
-                $mailsetting = Mailsetting::first();
-                if ($mailsetting) {
-                    $data = [
-                        'driver' => $mailsetting->mail_transport,
-                        'host' => $mailsetting->mail_host,
-                        'port' => $mailsetting->mail_port,
-                        'encryption' => $mailsetting->mail_encryption,
-                        'username' => $mailsetting->mail_username,
-                        'password' => $mailsetting->mail_password,
-                        'from' => [
-                            'address' => $mailsetting->mail_from,
-                            'name' => 'LaravelStarter'
-                        ]
-                    ];
-                    Config::set('mail', $data);
-                }
-            }
-
-            if (\Schema::hasTable('bookings')) {
-                view()->share([
-                    'bookings' => Booking::all(), 
-                    'FixingProgress' => FixingProgress::all()
-                ]);
+        if (\Schema::hasTable('mailsettings')) {
+            $mailsetting = Mailsetting::first();
+            if($mailsetting){
+                $data = [
+                    'driver'            => $mailsetting->mail_transport,
+                    'host'              => $mailsetting->mail_host,
+                    'port'              => $mailsetting->mail_port,
+                    'encryption'        => $mailsetting->mail_encryption,
+                    'username'          => $mailsetting->mail_username,
+                    'password'          => $mailsetting->mail_password,
+                    'from'              => [
+                        'address'=>$mailsetting->mail_from,
+                        'name'   => 'LaravelStarter'
+                    ]
+                ];
+                Config::set('mail',$data);
             }
         }
+        view()->share(['bookings'=>Booking::all(),'FixingProgress'=>FixingProgress::all()]);
     }
+
+
 }
