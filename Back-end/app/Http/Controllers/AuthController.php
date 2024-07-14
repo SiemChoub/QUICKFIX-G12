@@ -15,7 +15,6 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-
             'email'     => 'required|string|max:255',
             'password'  => 'required|string'
         ]);
@@ -32,11 +31,10 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $user = User::where('email', $request->email)->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user   = User::where('email', $request->email)->firstOrFail();
+        $token  = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-
             'message'       => 'Login success',
             'access_token'  => $token,
             'token_type'    => 'Bearer',
@@ -83,8 +81,7 @@ class AuthController extends Controller
         ]);
 
         $user->assignRole('user');
-
-        $user->givePermissionTo(['Mail access']);
+        $user->givePermissionTo(['Mail access']); // Adjust as per your application's needs
 
         $tokenResult = $user->createToken('auth_token');
 
@@ -101,11 +98,11 @@ class AuthController extends Controller
             'name' => 'nullable',
             'phone' => 'nullable'
         ]);
+
         $user = Auth::user();
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->save();
-
         return response()->json(['message' => 'User updated successfully', 'user' => $user]);
     }
     public function updateProfile(Request $request, $id)
@@ -140,7 +137,5 @@ class AuthController extends Controller
         }
     
         return response()->json(['error' => 'No file uploaded.'], 400);
-            }
+    }
 }
-        
-    

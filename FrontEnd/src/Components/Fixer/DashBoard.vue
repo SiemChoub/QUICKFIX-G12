@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- <Navbar /> -->
-    <div class="container">
-      <div class="mb-3 d-flex">
+    <div class="container w-full">
+<!----------------------------- The  card top -------------------------- -->
+      <div class="mb-3 d-flex w-full">
         <div class="row w-full h-auto w-100  rounded-2 p-0 d-flex p-3">
-          <!-- <div class="col-sm-12"> -->
             <div class="card border-0 w-100">
               <div class="card-body row d-flex g-3 justify-content-between">
                 <div
@@ -39,17 +39,11 @@
                 </div>
               </div>
             </div>
-          <!-- </div> -->
         </div>
       </div>
-      
-      <div class="row w-full">
-        <div class="col-sm-8">
-          <div class="card w-100 ml-2 border-0 p-4">
-            <canvas id="myChart"></canvas>
-          </div>
-        </div>
-        <div class="col-sm-4 h-100">
+<!----------------------------- The end card top -------------------------- -->
+<!----------------------------- Calendar  -------------------------- -->
+        <div class="col-sm-4 w-100 h-100">
           <div class="card w-100 ml-2 border-0 p-4">
             <div class="d-flex align-items-center justify-content-between">
               <h6 class="mb-0">Calendar</h6>
@@ -60,82 +54,23 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-sm-4">
-          <div class="card border-0">
-            <div class="card-body">
-              <div class="p-3">
-                <div class="d-flex align-items-center justify-content-between">
-                  <h6 class="mb-0">Calendar</h6>
-                  <a href="">Show All</a>
-                </div>
-                <div id="calendar" class="w-100">
-                  <input type="date" class="form-control w-100" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-      </div>
+<!-----------------------------The end Calendar  -------------------------- -->
+
     </div>
   </div>
 </template>
 
 <script>
 // import Navbar from "../Fixer/Navbar.vue";
-import Chart from "chart.js/auto";
 export default {
   name: "HistoryView",
   
   data() {
     return {
-      items: [
-        { id: 1, date: "12, May 2024 12:23 PM" },
-        { id: 2, date: "13, May 2024 01:30 PM" },
-        { id: 3, date: "14, May 2024 02:45 PM" },
-      ],
+
     };
   },
-  mounted() {
-    const ctx = document.getElementById("myChart");
-    // const ctx = Utils.months({count: 7});
-    const myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [
-          {
-            label: "# of Votes",
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(255, 206, 86, 0.2)",
-              "rgba(75, 192, 192, 0.2)",
-              "rgba(153, 102, 255, 0.2)",
-              "rgba(255, 159, 64, 0.2)",
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(153, 102, 255, 1)",
-              "rgba(255, 159, 64, 1)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-    });
-    myChart;
-  },
+  
 };
 </script>
 

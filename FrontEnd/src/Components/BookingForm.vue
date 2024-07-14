@@ -56,6 +56,13 @@
                         placeholder="Enter promotion code (if any)"
                       />
                     </div>
+                    <div class="form-group">
+                      <textarea
+                        type="text"
+                        v-model="information"
+                        placeholder="More information....."
+                      />
+                    </div>
                     <button type="submit" class="btn btn-primary">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
@@ -122,25 +129,55 @@ async function fetchServices() {
   }
 }
 
-const submitBooking = async () => {
-    const userString = localStorage.getItem('user');
-    const user = JSON.parse(userString);
-    const user_id = user.id;
-    const bookingData = {
-        service_id: props.service.id, 
-        user_id: user_id,
-        location: location.value, 
-        date: bookingDate.value, 
-        promotion_id: promotionCode.value || null,
-    };
-      console.log('Booking data:',bookingData);
-    try {
-        const response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
-        emit('close'); 
-    } catch (error) {
-        console.error('Error submitting booking:', error);
+const submitBooking = async (event) => {
+  event.preventDefault();
+  console.log('submitBooking called');
+
+  const userString = localStorage.getItem('user');
+  if (!userString) {
+    console.error('No user found in localStorage');
+    return;
+  }
+
+  const user = JSON.parse(userString);
+  const user_id = user.id;
+  const today = new Date().toISOString().split('T')[0];
+  const isImmediateBooking = bookingDate.value == today;
+  const information = ref('');
+
+  const [latitude, longitude] = location.value.split(',').map(coord => parseFloat(coord.trim()));
+
+  const bookingData = {
+    service_id: props.service.id,
+    user_id: user_id,
+    date: bookingDate.value,
+    promotion_id: promotionCode.value || null,
+    message: information.value || null,
+    latitude: latitude,
+    longitude: longitude
+
+  };
+
+  console.log('Booking Data:', bookingData);
+  console.log(isImmediateBooking);
+
+  try {
+    console.log('Submitting booking:', bookingData);
+    let response;
+    if (isImmediateBooking) {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+      console.log(response.data);
+    } else {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline/create', bookingData);
+      console.log(response.data);
     }
+    emit('close');
+  } catch (error) {
+    console.error('Error submitting booking:', error);
+  }
 };
+
+
 
 
 const getCurrentLocation = () => {
