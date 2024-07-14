@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
                 ];
                 Config::set('mail',$data);
             }
-        }
+        }    
         view()->share(['bookings'=>Booking::all(),'FixingProgress'=>FixingProgress::all()]);
     }
 

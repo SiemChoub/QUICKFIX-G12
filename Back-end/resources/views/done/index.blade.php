@@ -16,8 +16,8 @@
             
             @php
                 $count = 0;
-                foreach ($bookings as $booking) {
-                    if ($booking['action'] == 'progress' || $booking['action'] == 'request' || $booking['action'] == 'done') {
+                foreach ($FixingProgress as $booking) {
+                    if ($booking['action'] == 'done') {
                         $count++;
                     }
                 }
