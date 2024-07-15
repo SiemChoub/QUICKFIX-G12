@@ -32,20 +32,12 @@
     <!------------------------- Card ----------------- -->
     <div class="col">
       <div class="card border-0 h-auto">
-        <img src="/src/assets/img/images.jpeg" class="card-img-top" alt="image" />
+        <img src="/src/assets/img/images.jpeg" class="card-img-top hover-img" alt="image" />
         <div class="card-body">
           <h5 class="card-title d-flex justify-content-start">Card title</h5>
           <p class="card-text">I'm skill</p>
           <div class="d-flex gap-1 justify-content-end">
             <a href="#" id="btn-delete" class="btn btn-outline-danger">Delete</a>
-            <!-- <a
-              href="#"
-              id="btn"
-              data-bs-toggle="modal"
-              data-bs-target="#update"
-              class="btn btn-outline-primary"
-              >Update</a
-            > -->
           </div>
         </div>
       </div>
@@ -53,7 +45,7 @@
 
     <div class="col">
       <div class="card border-0 h-auto">
-        <img src="/src/assets/img/images.jpeg" class="card-img-top" alt="image" />
+        <img src="/src/assets/img/images.jpeg" class="card-img-top hover-img" alt="image" />
         <div class="card-body">
           <h5 class="card-title d-flex justify-content-start">Card title</h5>
           <p class="card-text">I'm skill</p>
@@ -74,13 +66,13 @@
 
     <div class="col">
       <div class="card border-0 h-auto">
-        <img src="/src/assets/img/images.jpeg" class="card-img-top" alt="image" />
+        <img src="/src/assets/img/images.jpeg" class="card-img-top hover-img" alt="image" />
         <div class="card-body">
           <h5 class="card-title d-flex justify-content-start">Card title</h5>
           <p class="card-text">I'm skill</p>
           <div class="d-flex gap-1 justify-content-end">
             <a href="#" id="btn-delete" class="btn btn-outline-danger">Delete</a>
-            <!-- <a
+            <a
               href="#"
               id="btn"
               data-bs-toggle="modal"
@@ -102,7 +94,7 @@
           <p class="card-text">I'm skill</p>
           <div class="d-flex gap-1 justify-content-end">
             <a href="#" id="btn-delete" class="btn btn-outline-danger">Delete</a>
-            <!-- <a
+            <a
               href="#"
               id="btn"
               data-bs-toggle="modal"
@@ -114,7 +106,7 @@
         </div>
       </div>
     </div>
-  </div>
+    </div>
 
   <!------------------------- Card ----------------- -->
 
@@ -249,4 +241,17 @@ export default {
   box-shadow: 0px 4px 8px 4px rgba(0, 0, 0, 0.2);
 }
 /* ----------------- style color card ------------------- */
+
+.card {
+      overflow: hidden; /* Ensure the zoom effect stays within the card */
+    }
+
+    .hover-img {
+      transition: transform 0.3s ease; /* Smooth transition for the zoom effect */
+    }
+
+    .card:hover .hover-img {
+      transform: scale(1.05); /* Zoom effect */
+    }
+
 </style>
