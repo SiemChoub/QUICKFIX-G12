@@ -9,12 +9,15 @@ use Illuminate\Http\Request;
 class ServiceController extends Controller
 {
     public function index()
-    {
-        // dd(1);
-        // Retrieve all services
-        $services = Service::all();
+{
+    $services = Service::all();
+    $serviceCount = $services->count();
+    $topService = $services->sortByDesc('rating')->take(3);
 
-        // Return services as a JSON response
-        return response()->json($services);
-    }
+    return response()->json([
+        'services' => $services,
+        'service_count' => $serviceCount,
+        'topService' => $topService,
+    ]);
+}
 }

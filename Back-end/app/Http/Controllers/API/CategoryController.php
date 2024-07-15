@@ -13,10 +13,14 @@ class CategoryController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $category = Category::all();
-        return response()->json($category);
-    }
+{
+    $category = Category::all();
+    $categoryCount = $category->count();
+    return response()->json([
+        'category' => $category,
+        'category_count' => $categoryCount,
+    ]);
+}
 
     /**
      * Store a newly created resource in storage.

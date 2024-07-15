@@ -252,6 +252,7 @@ function formatTime(date) {
   return new Date(date).toLocaleTimeString();
 }
 </script>
+
 <style scoped>
 .profile-container {
   display: flex;
