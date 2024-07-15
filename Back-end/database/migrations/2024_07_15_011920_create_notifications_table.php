@@ -6,25 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /*
+    /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('fixing_progress', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->integer('booking_id');
-            $table->integer('fixer_id');
-            $table->string('action')->default('progress');
+            $table->integer("user_id")->nullable();
+            $table->text("content");
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
-    /*
+    /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('fixing_progress');
+        Schema::dropIfExists('notifications');
     }
 };

@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\FixingProgressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\FixerController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\API\PromotionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,3 +86,11 @@ Route::delete('/chat/delete/{id}', [ChatController::class, "destroy"]);
 Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
 Route::delete('/fixer/cancel-accept/{id}', [FixingProgressController::class, 'cancelAccept']);
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
+
+
+// Notification routes
+Route::get('/notification/list', [NotificationController::class, 'index']);
+Route::post('/notification/create', [NotificationController::class, 'store']);
+Route::get('/notification/show/{id}', [NotificationController::class, "show"]);
+Route::put('/notification/update/{id}', [NotificationController::class, "update"]);
+Route::delete('/notification/delete/{id}', [NotificationController::class, "destroy"]);
