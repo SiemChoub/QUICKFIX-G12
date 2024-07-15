@@ -31,10 +31,10 @@
                 <label for="address" class="text-gray-700 font-medium text-sm">address</label>
                 <input id="address" type="text" name="address" value="{{ old('address', $user->address) }}" placeholder="Enter address" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
               </div>
-                <div class="">
-                  <label for="image" class="block text-gray-700 font-medium mb-1 text-sm">Image</label>
-                  <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-sm">
-                </div>
+                {{-- <div class="">
+                  <label for="profile" class="block text-gray-700 font-medium mb-1 text-sm">Image</label>
+                  <input id="profile" type="file" name="profile" value="{{ old('profile') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-sm">
+                </div> --}}
                 <div class="form-group">
                 <label for="role" class="block text-gray-700 font-medium mb-1 text-sm">Role</label>
                 <select class="form-control" id="role" name="role">
