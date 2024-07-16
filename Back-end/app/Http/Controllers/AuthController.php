@@ -92,4 +92,44 @@ class AuthController extends Controller
         'token_type' => 'Bearer',
     ], 201);
 }
+
+    public function fixerRegister(Request $request): JsonResponse
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string', 
+        'password' => 'required|string|min:8',
+        'location' => 'required|string|max:255', 
+        'phone' => 'required|string', 
+        'career' => 'required|string|max:255'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
+    }
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'location' => $request->location, 
+        'phone' => $request->phone, 
+        'career' => $request->career, 
+        'email_verified_at' => now(),
+        'remember_token' => Str::random(20),
+        'role' => 'fixer'
+    ]);
+
+    $user->assignRole('fixer');
+    $user->givePermissionTo(['Mail access']); 
+
+    $tokenResult = $user->createToken('auth_token');
+
+    return response()->json([
+        'message' => 'User registered successfully',
+        'user' => $user,
+        'access_token' => $tokenResult->plainTextToken,
+        'token_type' => 'Bearer',
+    ], 201);
+}
+
 }

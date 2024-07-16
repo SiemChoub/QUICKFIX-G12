@@ -25,6 +25,11 @@ Route::get('/', function () {
     // return redirect()->route('login');
 });
 
+Route::get('/fixerForm', function () {
+    return view('fixerForm');
+    // return redirect()->route('login');
+});
+
 
 Route::get('/test-mail',function(){
 

@@ -14,13 +14,10 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="messagesDropdown" style="width: 400px; max-height: 500px; overflow-y: auto;">
           <div class="message-info space-y-2 d-flex flex-col gap-3" style="height: 300px; overflow-y: scroll;">
-            @foreach ($categories as $category)
-          <!-- --------------------------------- -->
+\          <!-- --------------------------------- -->
             <div class="message-card dropdown-item d-flex border border-warning justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
               <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;object-fit: cover;  ">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">{{$category->name}}</h5>
-                <p class="text-600 fw-bold text-sm truncate" style="font-size:10px;">{{$category->discription}}</p>
               </div>
               <div class="evaluation">
                 <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0">
@@ -30,7 +27,6 @@
               </div>
             </div>
             <!-- -------------------------------- -->
-              @endforeach
             <!-- --------------------------------- -->
             <div class="message-card dropdown-item d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
               <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;object-fit: cover;">
