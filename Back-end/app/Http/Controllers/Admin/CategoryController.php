@@ -28,7 +28,6 @@ class CategoryController extends Controller
     public function index()
     {
         $Category= Category::paginate(5);
-        $services = Category::with('category')->get();
         return view('category.index',['categories'=>$Category]);
     }
 
