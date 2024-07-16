@@ -29,7 +29,7 @@ class AdminSeeder extends Seeder
             'name'=>'User',
             'email'=>'user@gmail.com',
             'password'=>bcrypt('password'),
-            'role' => 'customer',
+            'role' => 'fixer',
         ]);
         $fixer = User::create([
             'name'=>'fixer',

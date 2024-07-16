@@ -70,7 +70,6 @@ Route::resource('/fixing_progressing', FixingProgressController::class)->middlew
 
 Route::get('/service', [AuthController::class, 'index'])->name('service');
 Route::get('/discount', [PromotionController::class, 'index'])->name('service');
-
 Route::get('/promotion', [PromotionController::class, 'index'])->name('promotion');
 // Route::get('/promotion',[PromotionController::class, 'index'])->name('promotion');
 Route::post('/promotion/create', [PromotionController::class, 'store'])->name('promotion.create');
@@ -101,3 +100,4 @@ Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAcc
 Route::put('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
 
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
+Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);

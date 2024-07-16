@@ -17,7 +17,7 @@
               <div class="des">
                 We value your time. Our streamlined processes and skilled technicians ensure prompt and efficient repairs, minimizing downtime for your vehicle.
               </div>
-              <button>See More</button>
+              <router-link :to="'/fixerForm'"><button>Register Now</button></router-link>
             </div>
           </div>
           <div
@@ -106,42 +106,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import WebLayout from '@/Components/Layouts/WebLayout.vue';
-import ProvinceMap from '@/Components/ProvinceMap.vue';
-import AboutPage from '@/Components/AboutPage.vue';
-import FooterPage from '@/Components/FooterPage.vue';
-import WebService from '@/Components/WebServiceCustomer.vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+import WebLayout from '@/Components/Layouts/WebLayout.vue'
+import ProvinceMap from '@/Components/ProvinceMap.vue'
+import AboutPage from '@/Components/AboutPage.vue'
+import FooterPage from '@/Components/FooterPage.vue'
+import WebService from '@/Components/WebServiceCustomer.vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter();
 const slide = ref(null);
 const nextButton = ref(null);
 const prevButton = ref(null);
 const moveSlide = (direction: string) => {
-  const items = slide.value?.querySelectorAll('.item');
+  const items = slide.value?.querySelectorAll('.item')
   if (items && items.length > 0) {
     if (direction === 'next') {
-      slide.value?.appendChild(items[0]);
+      slide.value?.appendChild(items[0])
     } else if (direction === 'prev') {
-      slide.value?.prepend(items[items.length - 1]);
+      slide.value?.prepend(items[items.length - 1])
     }
   }
-};
+}
 
 onMounted(() => {
   if (nextButton.value && prevButton.value) {
-    nextButton.value.addEventListener('click', () => moveSlide('next'));
-    prevButton.value.addEventListener('click', () => moveSlide('prev'));
+    nextButton.value.addEventListener('click', () => moveSlide('next'))
+    prevButton.value.addEventListener('click', () => moveSlide('prev'))
   }
-});
+})
 
 onBeforeUnmount(() => {
   if (nextButton.value && prevButton.value) {
-    nextButton.value.removeEventListener('click', () => moveSlide('next'));
-    prevButton.value.removeEventListener('click', () => moveSlide('prev'));
+    nextButton.value.removeEventListener('click', () => moveSlide('next'))
+    prevButton.value.removeEventListener('click', () => moveSlide('prev'))
   }
-});
+})
 </script>
 
 <style scoped>
@@ -162,8 +162,13 @@ onBeforeUnmount(() => {
   text-align: center;
   color: #fff;
   width: 100%;
-  z-index: 1; 
-  background: rgba(11, 11, 11, 0.142); /* Adjust the rgba values to get the desired gray color with opacity */
+  z-index: 1;
+  background: rgba(
+    11,
+    11,
+    11,
+    0.142
+  ); /* Adjust the rgba values to get the desired gray color with opacity */
   /* padding: 10px; Add padding to make text more readable */
 }
 

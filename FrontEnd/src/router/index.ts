@@ -112,6 +112,13 @@ const routes = [
       }
     ]
   },
+  
+  {
+    path: '/fixerForm',
+    name: 'fixerForm',
+    component: () => import('../views/Web/Fixer/form.vue')
+  },
+
   {
     path: '/fixerUser',
     name: 'fixerUser',
