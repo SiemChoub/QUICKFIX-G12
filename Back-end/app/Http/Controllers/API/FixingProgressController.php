@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bookin_deadline;
 use App\Models\Bookin_immediately;
 use App\Models\Booking;
 use App\Models\FixingProgress;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class FixingProgressController extends Controller
 {
@@ -104,33 +106,57 @@ class FixingProgressController extends Controller
     }
     public function startFixer(string $id)
     {
+        // Retrieve the fixing progress record
         $fixingProgress = FixingProgress::find($id);
         if (!$fixingProgress) {
             return response()->json(['error' => 'Fixing progress not found'], 404);
         }
 
-        $booking = Booking::findOrFail($fixingProgress->booking_id);
-        // return $booking;
-        $bookImmediately = Bookin_immediately::where('id', $booking->booking_type_id)->first();
-        if (!$bookImmediately) {
-            return response()->json(['error' => 'BookImmediately record not found'], 404);
+        // Retrieve the associated booking record
+        $booking = Booking::find($fixingProgress->booking_id);
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
         }
 
-        $latitude = $bookImmediately->latitude;
-        $longitude = $bookImmediately->longitude;
+        // Determine the booking type and query the appropriate table
+        $bookingType = $booking->booking_type_id;
 
-        $fixingProgress->action = 'started';
-        $fixingProgress->save();
+        if ($booking->type === 'immediately') {
+            $bookDetails = Bookin_immediately::find($bookingType);
+        } elseif ($booking->type === 'deadline') {
+            $bookDetails = Bookin_deadline::find($bookingType);
+        } else {
+            return response()->json(['error' => 'Invalid booking type'], 400);
+        }
 
-        $booking->action = 'in_progress';
-        $booking->save();
+        if (!$bookDetails) {
+            return response()->json(['error' => 'Booking details not found'], 404);
+        }
 
-        return response()->json([
-            'message' => 'Fixing process started successfully',
-            'fixingProgress' => $fixingProgress,
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-        ]);
+        DB::beginTransaction();
+
+        try {
+            // Update the action status for both fixing progress and booking
+            $fixingProgress->action = 'started';
+            $fixingProgress->save();
+
+            $booking->action = 'started';
+            $booking->save();
+
+            DB::commit();
+
+            // Return a success response with the required data
+            return response()->json([
+                'message' => 'Fixing process started successfully',
+                'fixingProgress' => $fixingProgress,
+                'latitude' => $bookDetails->latitude,
+                'longitude' => $bookDetails->longitude,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'An error occurred while starting the fixing process', 'details' => $e->getMessage()], 500);
+        }
     }
+
 
 }

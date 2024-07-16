@@ -80,11 +80,6 @@ const routes = [
     component: () => import('../Components/FixerVue.vue')
   },
   {
-    path: '/post',
-    name: 'post',
-    component: () => import('../views/Web/Post/ListView.vue')
-  },
-  {
     path: '/HomeFixer',
     name: 'HomeFixer',
     component: () => import('../views/Fixer/HomeFixer.vue'),

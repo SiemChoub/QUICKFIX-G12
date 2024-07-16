@@ -8,56 +8,74 @@
     <div class="container-fluid p-0">
       <div class="container-slider">
         <div class="slide" ref="slide">
-          <div class="item" style="background-image: url(https://i.ibb.co/qCkd9jS/img1.jpg)">
+          <div
+            class="item"
+            style="background-image: url(https://i.pinimg.com/564x/86/17/d3/8617d33d2e81105204f8a68b9b2866ec.jpg)"
+          >
             <div class="content">
-              <div class="name">Fixer</div>
+              <div class="name">Efficient Service</div>
               <div class="des">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!
+                We value your time. Our streamlined processes and skilled technicians ensure prompt and efficient repairs, minimizing downtime for your vehicle.
               </div>
               <router-link :to="'/fixerForm'"><button>Register Now</button></router-link>
             </div>
           </div>
-          <div class="item" style="background-image: url(https://i.ibb.co/jrRb11q/img2.jpg)">
+          <div
+            class="item"
+            style="background-image: url(https://i.pinimg.com/564x/31/65/46/316546a7fb5d1ce47e3f6146fb90a162.jpg)"
+          >
             <div class="content">
-              <div class="name">Finland</div>
+              <div class="name">Skilled Technicians</div>
               <div class="des">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!
+                Our team consists of highly trained and certified technicians who have extensive experience in repairing a wide range of vehicles, including cars, motorcycles, and more.
               </div>
               <button>See More</button>
             </div>
           </div>
-          <div class="item" style="background-image: url(https://i.ibb.co/NSwVv8D/img3.jpg)">
+          <div
+            class="item"
+            style="background-image: url(https://i.pinimg.com/564x/df/1d/1a/df1d1af1897cd846b3e5fa3e265913ab.jpg)"
+          >
             <div class="content">
-              <div class="name">Iceland</div>
+              <div class="name">Quality Parts</div>
               <div class="des">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!
+                We use high-quality, genuine parts and materials in our repairs to ensure durability and performance.
               </div>
               <button>See More</button>
             </div>
           </div>
-          <div class="item" style="background-image: url(https://i.ibb.co/Bq4Q0M8/img4.jpg)">
+          <div
+            class="item"
+            style="background-image: url(https://i.pinimg.com/564x/65/45/1f/65451f8ab361bb8f42f5db02b0fcd20c.jpg)"
+          >
             <div class="content">
-              <div class="name">Australia</div>
+              <div class="name">Specialized Knowledge</div>
               <div class="des">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!
+                We stay updated with the latest advancements in automotive technology and repair techniques to ensure that we can diagnose and resolve issues effectively.
               </div>
               <button>See More</button>
             </div>
           </div>
-          <div class="item" style="background-image: url(https://i.ibb.co/jTQfmTq/img5.jpg)">
+          <div
+            class="item"
+            style="background-image: url(https://i.pinimg.com/736x/f3/ad/f5/f3adf501c6010aaab1aceb6377de20ea.jpg)"
+          >
             <div class="content">
-              <div class="name">Netherland</div>
+              <div class="name">Excellent Customer Service</div>
               <div class="des">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!
+                Our friendly and knowledgeable staff are dedicated to ensuring your satisfaction. We prioritize clear communication and strive to exceed your expectations.
               </div>
               <button>See More</button>
             </div>
           </div>
-          <div class="item" style="background-image: url(https://i.ibb.co/RNkk6L0/img6.jpg)">
+          <div
+            class="item"
+            style="background-image: url(https://i.pinimg.com/564x/20/06/58/200658ead1212c34b994d8842b8538ee.jpg)"
+          >
             <div class="content">
-              <div class="name">Ireland</div>
+              <div class="name">Personalized Service</div>
               <div class="des">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!
+                Each vehicle is treated with individual attention and care. We tailor our services to meet your specific needs and preferences.
               </div>
               <button>See More</button>
             </div>
@@ -69,7 +87,7 @@
           <button class="next" ref="nextButton"><i class="bi bi-arrow-right"></i></button>
         </div>
       </div>
-
+      
       <!-- Additional Content -->
       <div class="content">
         <WebService />

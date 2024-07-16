@@ -22,10 +22,20 @@
             </div>
             <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2">
                 @can('Progress access')
-                    @foreach ($fixing_progress->filter(function($booking) {
+                    {{-- @foreach ($fixing_progress->filter(function($booking) {
                         return $booking->action === 'progress';
-                    }) as $booking)
-                        <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
+                    }) as $booking) --}}
+                    @foreach ($fixing_progress as $progre)
+                    @if ($progre->action === 'progress')
+                        @php 
+                        $booking = $bookings->where('id', $progre->booking_id)->first();
+                        @endphp
+                        
+                        {{$booking}}
+                        @endif
+                    @endforeach
+
+                        {{-- <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
                             <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
                                 <img src="{{ $users->where('id', $booking->user_id)->pluck('profile')->first() }}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
                                 <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
@@ -43,7 +53,7 @@
                                         }
 
                                         if ($booking->type == 'immediately') {
-                                            $booking_date = $immediatelys->where('id', $booking->booking_type_id)->pluck('created_at')->first();
+                                            $booking_date = $immediatelys->where('id', $booking->booking_type_id)->pluck('date')->first();
                                             $deadline = 'Fix now';
                                             $customer_message = $immediatelys->where('id', $booking->booking_type_id)->pluck('message')->first();
                                             $customer_imagesend = $immediatelys->where('id', $booking->booking_type_id)->pluck('image')->first();
@@ -52,27 +62,25 @@
                                             $customer_message = $deadlines->where('id', $booking->booking_type_id)->pluck('message')->first();
                                             $customer_imagesend = $deadlines->where('id', $booking->booking_type_id)->pluck('image')->first();
                                             $booking_date = $deadlines->where('id', $booking->booking_type_id)->pluck('created_at')->first();
-                                            $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date_todo')->first();
+                                            $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date')->first();
                                             $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
                                         }
-
-                                        if (isset($service_id) || $service_id != null) {
+                                       
+                                        if (isset($service_id) && $service_id!=null) {
                                             $service_name = $services->where('id', $service_id)->pluck('name')->first();
                                         }
                                     @endphp
                                     {{ $service_name }}
                                     </p>
                                 </div>
-                                <!-- @if ($booking->type == 'immediately')
-                                    <i class='bx bxs-user-voice bx-burst text-green-700 text-3xl'></i>
-                                @else
-                                    <i class='bx bxs-calendar text-green-700 text-3xl'></i>
-                                @endif -->
+                          
                                 <i class='bx bxs-wrench bx-tada text-yellow-400 text-3xl' ></i>
                                 <div class="evaluation">
                                 <button class="btn btn-outline-warning btn-sm text-center"
                                     data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
-                                    data-booking-image="{{$customer->profile}}"
+                                    @if(isset($customer->profile))
+                                        data-booking-image="{{$customer->profile}}"
+                                    @endif
                                     data-booking-stars="{{$service_name}}"
                                     data-booking-type="{{$booking->type}}"
                                     data-booking-date="{{$booking_date}}"
@@ -133,8 +141,9 @@
                                     </div>
                                 @endcan
                             </div>
-                        </div>
-                    @endforeach
+                        </div> --}}
+                        {{-- @endif
+                    @endforeach --}}
                 @endcan
             </div>
         </div>
