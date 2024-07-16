@@ -15,109 +15,120 @@
         </option>
       </select>
     </div>
-      <hr>
+    <hr />
     <div class="repairers-list container m-4 d-flex gap-5">
       <div v-if="filteredRepairers.length === 0" class="no-results">No repairers found.</div>
-      <div v-for="repairer in fixers" :key="repairer.id" class="repairer-card">
+      <div v-for="repairer in filteredRepairers" :key="repairer.id" class="repairer-card">
         <div class="repairer-content">
-          <div class="repairer-image" >
-            <img :src="repairer.image" alt="Repairer Image" />
+          <div class="repairer-image">
+            <img v-if="repairer.image" :src="repairer.image" alt="Repairer Image" />
+            <img
+              v-else
+              src="https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg="
+              alt="Default Repairer Image"
+            />
           </div>
           <div class="repairer-info">
-            <h3>Name: <span>{{ repairer.name }}</span> </h3>
-            <p class="career">Career: <span>{{ repairer.career }}</span> </p>
-            <p class="place">Place: <span> {{ repairer.place }}</span></p>
-            <p class="phone">Tel: <span>111111</span></p>
-            <div class="repairer-icons">
-              <i class="fas fa-phone"></i>
-              <button class="btn btn-primary" @click="bookAppointment(repairer)">Book</button> 
-            </div>
+            <h3>
+              Name: <span>{{ repairer.name }}</span>
+            </h3>
+            <p class="career">
+              Career: <span>{{ repairer.career }}</span>
+            </p>
+            <p class="place">
+              Place: <span>{{ repairer.place }}</span>
+            </p>
+            <p class="phone">Tel: <span>{{ repairer.phone }}</span></p>
+          </div>
+          <div class="repairer-icons">
+            <i class="fas fa-phone"></i>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Book</button>
           </div>
         </div>
       </div>
     </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </template>
 
 <script>
-
-import axios from 'axios';
-import { ref, computed } from 'vue';
-import NavbarView from '@/Components/WebHeaderMenu.vue'; // Adjust path based on your structure
+import axios from 'axios'
+import { ref, computed } from 'vue'
+import NavbarView from '@/Components/WebHeaderMenu.vue' 
+import ModalForm from '@/Components/BookingForm.vue'
 
 export default {
   components: {
     NavbarView,
+    ModalForm
   },
   data() {
     return {
-      fixers:[],
-      careers: [
-        { name: '' },
-      ],
-      places: [
-        { name: '' },
-      ],
-      repairers: [
-        {
-          name: '',
-          career: '',
-          place: '',
-          image: '', // Adjust path based on your structure
-        },
-      ],
+      fixers: [],
+      careers: [{ name: '' }],
+      places: [{ name: '' }],
       selectedCareer: '',
       selectedPlace: '',
-    };
+      showModal: false,
+      selectedRepairer: null
+    }
   },
-  mounted(){
-    this.getFixer();
-  }
-  ,
-   methods: {
+  mounted() {
+    this.getFixer()
+  },
+  methods: {
     async getFixer() {
       try {
-        this.showSpinner = true;
-        const response = await axios.get('http://127.0.0.1:8000/api/fixer/list');
-        console.log(response.data);
-        this.fixers = response.data;
+        const response = await axios.get('http://127.0.0.1:8000/api/fixer/list')
+        console.log(response.data)
+        this.fixers = response.data
+        this.careers = [...new Set(this.fixers.map(fixer => ({ name: fixer.career })))]
+        this.places = [...new Set(this.fixers.map(fixer => ({ name: fixer.place })))]
       } catch (error) {
-        if (error.response && error.response.status === 422) {
-          this.errorMessage = Object.values(error.response.data.errors).flat().join(' ');
-        } else {
-          console.error('Error registering user:', error.message);
-          this.errorMessage = 'Registration failed. Please try again.';
-        }
-      } finally {
-        this.showSpinner = false; // Hide spinner regardless of success or failure
+        console.error('Error fetching fixers:', error.message)
       }
     },
-    loginWithGoogle() {
-      // Implement Google login functionality if needed
+    openBookingForm(repairer) {
+      this.selectedRepairer = repairer
+      this.showModal = true
+    },
+    closeModal() {
+      this.showModal = false
+      this.selectedRepairer = null
     }
   },
   computed: {
     filteredRepairers() {
-      let filtered = this.repairers;
+      let filtered = this.fixers
 
       if (this.selectedCareer) {
-        filtered = filtered.filter(repairer => repairer.career === this.selectedCareer);
+        filtered = filtered.filter(repairer => repairer.career === this.selectedCareer)
       }
 
       if (this.selectedPlace) {
-        filtered = filtered.filter(repairer => repairer.place === this.selectedPlace);
+        filtered = filtered.filter(repairer => repairer.place === this.selectedPlace)
       }
 
-      return filtered;
-    },
-  },
-  // methods: {
-  //   bookAppointment(repairer) {
-  //     // Implement your booking logic here
-  //     console.log(`Booking appointment with ${repairer.name}`);
-  //   },
-  // },
-};
+      return filtered
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -125,28 +136,30 @@ export default {
   margin-top: 20px;
   text-align: center;
 }
-hr{
-    border: 2px solid orange;
-    margin-top: 50px;
-    width: 94%;
-    margin: auto;
-    margin-top: 40px;
-    margin-bottom: 40px;
-    align-self: center;
+hr {
+  border: 2px solid orange;
+  margin-top: 50px;
+  width: 94%;
+  margin: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  align-self: center;
 }
 
 .form-select {
-  margin: 0 35px ;
+  margin: 0 35px;
   margin-top: 80px;
-  padding: 8px 12px;/* Adjust padding for better spacing */
+  padding: 8px 12px; /* Adjust padding for better spacing */
 }
-
+.career span {
+  color: blue;
+  font-family: cursive;
+}
 .repairers-list {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
 }
-
 .repairer-card {
   background-color: #fff;
   border: 1px solid #e0e0e0;
@@ -184,14 +197,15 @@ hr{
 }
 
 .repairer-info {
-  flex: 1;
   padding-left: 15px;
+  height: 25vh;
 }
 
 .repairer-info h3 {
   margin: 0;
   font-size: 1.2rem;
   color: #333;
+  margin-top: 15px;
 }
 
 .repairer-info p {
@@ -216,6 +230,8 @@ hr{
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 10%;
+  margin-top: 90px;
 }
 
 .btn-primary:hover {

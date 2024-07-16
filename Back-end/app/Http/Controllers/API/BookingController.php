@@ -17,11 +17,21 @@ class BookingController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        //
-        $booking = Booking::all();
-        return response()->json($booking);
+{
+    try {
+        $action = 'request'; // Define the action you want to filter by
+
+        $bookings = Booking::where('action', $action)->get();
+
+        return response()->json($bookings);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Failed to fetch bookings.',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
 
     /**
      * Store a newly created resource in storage.
@@ -53,6 +63,8 @@ class BookingController extends Controller
         $fixingProgress = new FixingProgress();
         $fixingProgress->booking_type_id = $booking['booking_type_id'];
         $fixingProgress->type = $booking['type'];
+        $fixingProgress->user_id = $booking['user_id'];
+        $fixingProgress->booking_id = $id;
         if ($booking->fixer_id != null) {
             $fixingProgress->fixer_id = $booking->fixer_id;  
         }else{

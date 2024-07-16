@@ -1,7 +1,9 @@
 <template>
-  <transition name="fade">
-    <router-view />
-  </transition>
+<router-view>
+   <router-view v-slot="{ Component }">
+      <component :is="Component" />
+    </router-view>
+</router-view>
   <WebLayout>
     <div class="container-fluid p-0">
       <div class="container-slider">
@@ -94,11 +96,10 @@ import FooterPage from '@/Components/FooterPage.vue'
 import WebService from '@/Components/WebServiceCustomer.vue'
 import { useRouter } from 'vue-router'
 
-const router = useRouter()
-const slide = ref(null)
-const nextButton = ref(null)
-const prevButton = ref(null)
-
+const router = useRouter();
+const slide = ref(null);
+const nextButton = ref(null);
+const prevButton = ref(null);
 const moveSlide = (direction: string) => {
   const items = slide.value?.querySelectorAll('.item')
   if (items && items.length > 0) {

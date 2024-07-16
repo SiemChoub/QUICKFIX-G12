@@ -56,6 +56,13 @@
                         placeholder="Enter promotion code (if any)"
                       />
                     </div>
+                    <div class="form-group">
+                      <textarea
+                        type="text"
+                        v-model="information"
+                        placeholder="More information....."
+                      />
+                    </div>
                     <button type="submit" class="btn btn-primary">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
@@ -122,22 +129,56 @@ async function fetchServices() {
   }
 }
 
-const submitBooking = async () => {
+const submitBooking = async (event) => {
+  event.preventDefault();
+  console.log('submitBooking called');
+
+  const userString = localStorage.getItem('user');
+  if (!userString) {
+    console.error('No user found in localStorage');
+    return;
+  }
+
+  const user = JSON.parse(userString);
+  const user_id = user.id;
+  const today = new Date().toISOString().split('T')[0];
+  const isImmediateBooking = bookingDate.value == today;
+  const information = ref('');
+
+  const [latitude, longitude] = location.value.split(',').map(coord => parseFloat(coord.trim()));
+
   const bookingData = {
-    serviceId: props.service.id,
-    location: location.value,
-    service: selectedService.value,
-    bookingDate: bookingDate.value,
-    promotionCode: promotionCode.value
-  }
+    service_id: props.service.id,
+    user_id: user_id,
+    date: bookingDate.value,
+    promotion_id: promotionCode.value || null,
+    message: information.value || null,
+    latitude: latitude,
+    longitude: longitude
+
+  };
+
+  console.log('Booking Data:', bookingData);
+  console.log(isImmediateBooking);
+
   try {
-    const response = await axios.post('http://127.0.0.1:8000/api/booking', bookingData)
-    console.log('Booking data:', bookingData)
-    emit('close')
+    console.log('Submitting booking:', bookingData);
+    let response;
+    if (isImmediateBooking) {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+      console.log(response.data);
+    } else {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline/create', bookingData);
+      console.log(response.data);
+    }
+    emit('close');
   } catch (error) {
-    console.error('Error submitting booking:', error)
+    console.error('Error submitting booking:', error);
   }
-}
+};
+
+
+
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
@@ -146,7 +187,7 @@ const getCurrentLocation = () => {
         const latLng = [position.coords.longitude, position.coords.latitude]
         location.value = `${latLng[1]}, ${latLng[0]}`
         reverseGeocode(latLng)
-        map.flyTo({ center: latLng, zoom: 18 })
+        map.flyTo({ center: latLng, zoom: 16 })
         addMarker(latLng)
         setTodayDate()
       },
@@ -204,8 +245,11 @@ async function reverseGeocode(latLng) {
       }
     )
     if (response.data.features.length > 0) {
-      reverseGeocodeResult.value = response.data.features[0].place_name
+      const place = response.data.features[0]
+      reverseGeocodeResult.value = place.place_name
 
+      const street = place.text
+      const specificLocation = place.properties.address
     } else {
       console.error('No results found for reverse geocoding.')
     }
@@ -335,13 +379,11 @@ const selectPlace = (place) => {
   margin-bottom: 5px;
   font-weight: bold;
 }
-.date{
+.date {
   display: flex;
-  
 }
-.date input{
-    border-radius: 0 5px 5px 0;
-
+.date input {
+  border-radius: 0 5px 5px 0;
 }
 
 .form-group input,
