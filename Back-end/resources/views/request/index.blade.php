@@ -56,7 +56,7 @@
                                             $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
                                         }
 
-                                        if (isset($service_id) || $service_id != null) {
+                                        if (isset($service_id) && $service_id != null) {
                                             $service_name = $services->where('id', $service_id)->pluck('name')->first();
                                         }
                                     @endphp
