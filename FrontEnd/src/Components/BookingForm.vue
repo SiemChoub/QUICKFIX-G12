@@ -63,7 +63,7 @@
                         placeholder="More information....."
                       />
                     </div>
-                    <button type="submit" class="btn btn-primary">Book</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
                 </div>
@@ -91,8 +91,6 @@ const props = defineProps({
     required: true
   }
 })
-
-const emit = defineEmits(['close'])
 
 const location = ref('')
 const reverseGeocodeResult = ref('')
@@ -158,20 +156,14 @@ const submitBooking = async (event) => {
 
   };
 
-  console.log('Booking Data:', bookingData);
-  console.log(isImmediateBooking);
-
   try {
-    console.log('Submitting booking:', bookingData);
     let response;
     if (isImmediateBooking) {
       response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
       console.log(response.data);
     } else {
-      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline/create', bookingData);
-      console.log(response.data);
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData);
     }
-    emit('close');
   } catch (error) {
     console.error('Error submitting booking:', error);
   }
