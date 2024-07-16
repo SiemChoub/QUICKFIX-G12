@@ -1,14 +1,17 @@
+
 <template>
   <div class="container">
     <div id="btn-back">
-      <button @click="goBack" class="btn btn-secondary back-button">Back</button>
+      <router-link to="/homePage">
+        <button @click="goBack" class="btn btn-secondary back-button">Back</button>
+      </router-link>
     </div>
     <div class="overlay">
       <div class="card shadow">
         <div class="card-body">
           <h2 class="card-title text-center mb-4 title-highlight">Fixer Register</h2>
-          <form @submit.prevent="submitForm" novalidate>
-           <div id="profile-fixer" class="text-center mb-4">
+          <form @submit.prevent="submitForm">
+            <div id="profile-fixer" class="text-center mb-4">
               <div class="profile-fixxer">
                 <label for="profileInput" class="profile-upload">
                   <input
@@ -19,23 +22,17 @@
                     accept="image/*"
                   />
                   <div id="profile-input" class="position-relative">
-                    <i class="bi bi-camera"></i>
+                    <i class="bi bi-camera profile-icon"></i>
                     <img
-                      src="https://www.shutterstock.com/image-vector/vector-flat-illustration-grayscale-avatar-600nw-2264922221.jpg"
+                      :src="profilePicture ? profilePicture : defaultProfilePicture"
                       alt="Profile"
-                      class="profile-placeholder"
+                      class="profile-image"
                     />
                   </div>
                 </label>
-                <img
-                  v-if="profilePicture"
-                  :src="profilePicture"
-                  class="profile-image"
-                  alt="Profile Preview"
-                />
               </div>
               <div class="name-fixer">
-                <p>Fixer Name</p>
+                <p>{{ name }}</p>
               </div>
             </div>
 
@@ -46,17 +43,18 @@
                   <span class="input-group-text"><i class="bi bi-person"></i></span>
                   <input
                     type="text"
-                    id="name"
+                    id="nameInput"
                     class="form-control"
-                    v-model="formData.name"
-                    :class="{ 'is-invalid': submitted && !formData.name }"
+                    v-model="name"
                     placeholder="Enter your name"
                     required
+                    :class="{ 'is-invalid': !nameValid && nameTouched }"
+                    @blur="nameTouched = true"
                     autocomplete="name"
                   />
-                </div>
-                <div v-if="submitted && !formData.name" class="invalid-feedback">
-                  Please enter your name.
+                  <div v-if="!nameValid && nameTouched" class="invalid-feedback">
+                    Name is required
+                  </div>
                 </div>
               </div>
               <div class="mb-3">
@@ -67,15 +65,16 @@
                     type="email"
                     id="emailInput"
                     class="form-control"
-                    v-model="formData.email"
-                    :class="{ 'is-invalid': submitted && !validEmail(formData.email) }"
+                    v-model="email"
                     placeholder="Please enter your email"
                     required
+                    :class="{ 'is-invalid': !emailValid && emailTouched }"
+                    @blur="emailTouched = true"
                     autocomplete="email"
                   />
-                </div>
-                <div v-if="submitted && !validEmail(formData.email)" class="invalid-feedback">
-                  Please enter a valid email.
+                  <div v-if="!emailValid && emailTouched" class="invalid-feedback">
+                    Valid email is required
+                  </div>
                 </div>
               </div>
             </div>
@@ -89,15 +88,16 @@
                     type="password"
                     id="passwordInput"
                     class="form-control"
-                    v-model="formData.password"
-                    :class="{ 'is-invalid': submitted && !formData.password }"
+                    v-model="password"
                     placeholder="Please enter your password"
                     required
+                    :class="{ 'is-invalid': !passwordValid && passwordTouched }"
+                    @blur="passwordTouched = true"
                     autocomplete="new-password"
                   />
-                </div>
-                <div v-if="submitted && !formData.password" class="invalid-feedback">
-                  Please enter your password.
+                  <div v-if="!passwordValid && passwordTouched" class="invalid-feedback">
+                    Password is required
+                  </div>
                 </div>
               </div>
 
@@ -109,65 +109,67 @@
                     type="text"
                     id="locationInput"
                     class="form-control"
-                    v-model="formData.location"
-                    :class="{ 'is-invalid': submitted && !formData.location }"
+                    v-model="location"
                     placeholder="Enter your location"
                     required
+                    :class="{ 'is-invalid': !locationValid && locationTouched }"
+                    @blur="locationTouched = true"
                     autocomplete="location"
                   />
-                </div>
-                <div v-if="submitted && !formData.location" class="invalid-feedback">
-                  Please enter your location.
+                  <div v-if="!locationValid && locationTouched" class="invalid-feedback">
+                    Location is required
+                  </div>
                 </div>
               </div>
             </div>
 
             <div class="form-group">
               <div class="mb-3">
-                <label for="careerSelect" class="form-label">Career</label>
-                <select
-                  class="form-select"
-                  id="careerSelect"
-                  v-model="formData.career"
-                  :class="{ 'is-invalid': submitted && !formData.career }"
-                  required
-                >
-                  <option value="" disabled>Choose...</option>
-                  <option value="Mechanic">Mechanic</option>
-                  <option value="Electrician">Electrician</option>
-                  <option value="Plumber">Plumber</option>
-                </select>
-                <div v-if="submitted && !formData.career" class="invalid-feedback">
-                  Please choose your career.
+                <label for="phoneInput" class="form-label">Phone</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                  <input
+                    type="text"
+                    id="phoneInput"
+                    class="form-control"
+                    v-model="phone"
+                    placeholder="Enter your phone"
+                    required
+                    :class="{ 'is-invalid': !phoneValid && phoneTouched }"
+                    @blur="phoneTouched = true"
+                    autocomplete="phone"
+                  />
+                  <div v-if="!phoneValid && phoneTouched" class="invalid-feedback">
+                    Phone is required
+                  </div>
                 </div>
               </div>
-
-              <!-- <div class="mb-3">
-                <label for="profileInput" class="form-label">Profile Picture</label>
-                <input
-                  type="file"
-                  class="form-control"
-                  id="profileInput"
-                  @change="handleFileUpload"
-                  :class="{ 'is-invalid': submitted && !profilePicture }"
-                  required
-                />
-                <div v-if="submitted && !profilePicture" class="invalid-feedback">
-                  Please select your profile picture.
+              <div class="mb-3">
+                <label for="careerSelect" class="form-label">Career</label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi bi-bag-plus"></i></span>
+                  <select
+                    class="form-select"
+                    id="careerSelect"
+                    v-model="career"
+                    required
+                    :class="{ 'is-invalid': !careerValid && careerTouched }"
+                    @blur="careerTouched = true"
+                  >
+                    <option value="" disabled>Choose...</option>
+                    <option value="Mechanic">Mechanic</option>
+                    <option value="Electrician">Electrician</option>
+                    <option value="Plumber">Plumber</option>
+                  </select>
+                  <div v-if="!careerValid && careerTouched" class="invalid-feedback">
+                    Career is required
+                  </div>
                 </div>
-              </div> -->
+              </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100">
-              {{ submitted ? 'Submitting...' : 'Submit' }}
-            </button>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
           </form>
-
-          <transition name="fade">
-            <div v-if="submitted && validForm" class="alert alert-success mt-4" role="alert">
-              Thank you for your registration! We will get back to you soon.
-            </div>
-          </transition>
         </div>
       </div>
     </div>
@@ -175,136 +177,197 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import axios from 'axios'
 
 export default {
-  name: 'FixerRegisterForm',
+  name: 'fixerRegister',
   setup() {
-    const formData = ref({
-      name: '',
-      email: '',
-      password: '',
-      location: '',
-      career: ''
-    })
+    const name = ref('')
+    const email = ref('')
+    const password = ref('')
+    const location = ref('')
+    const phone = ref('')
+    const profilePicture = ref('')
+    const career = ref('')
 
-    const profilePicture = ref(null)
-    const submitted = ref(false)
-    const validForm = ref(false)
+    const nameTouched = ref(false)
+    const emailTouched = ref(false)
+    const passwordTouched = ref(false)
+    const locationTouched = ref(false)
+    const phoneTouched = ref(false)
+    const careerTouched = ref(false)
+
+    const defaultProfilePicture = 'https://via.placeholder.com/150'
 
     const validEmail = (email) => {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       return re.test(email)
     }
 
-    const validateForm = () => {
-      validForm.value =
-        formData.value.name &&
-        validEmail(formData.value.email) &&
-        formData.value.password &&
-        formData.value.location &&
-        formData.value.career &&
-        profilePicture.value
-    }
+    const nameValid = computed(() => name.value.trim() !== '')
+    const emailValid = computed(() => validEmail(email.value))
+    const passwordValid = computed(() => password.value.trim() !== '')
+    const locationValid = computed(() => location.value.trim() !== '')
+    const phoneValid = computed(() => phone.value.trim() !== '')
+    const careerValid = computed(() => career.value.trim() !== '')
+    const profilePictureValid = computed(() => profilePicture.value !== '')
+
+    const validateForm = computed(() => {
+      return (
+        nameValid.value &&
+        emailValid.value &&
+        passwordValid.value &&
+        locationValid.value &&
+        phoneValid.value &&
+        careerValid.value &&
+        profilePictureValid.value
+      )
+    })
 
     const handleFileUpload = (event) => {
-      profilePicture.value = event.target.files[0]
-    }
-
-    const submitForm = () => {
-      submitted.value = true
-      validateForm()
-      if (validForm.value) {
-        // Simulate form submission (replace with actual API call)
-        setTimeout(() => {
-          console.log('Form data:', formData.value, 'Profile picture:', profilePicture.value)
-          submitted.value = false // Reset submitted state
-        }, 1000)
+      const file = event.target.files[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          profilePicture.value = e.target.result
+        }
+        reader.readAsDataURL(file)
       }
     }
 
+    const submitForm = async () => {
+      nameTouched.value = true
+      emailTouched.value = true
+      passwordTouched.value = true
+      locationTouched.value = true
+      phoneTouched.value = true
+      careerTouched.value = true
+
+      if (!validateForm.value) {
+        alert('Please fill out all fields correctly.')
+        return
+      }
+
+      const formData = {
+        name: name.value,
+        email: email.value,
+        password: password.value,
+        location: location.value,
+        phone: phone.value,
+        career: career.value,
+        profilePicture: profilePicture.value
+      }
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/fixer/register', formData)
+        console.log(response.data)
+        resetForm()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const resetForm = () => {
+      name.value = ''
+      email.value = ''
+      password.value = ''
+      location.value = ''
+      phone.value = ''
+      career.value = ''
+      profilePicture.value = ''
+
+      nameTouched.value = false
+      emailTouched.value = false
+      passwordTouched.value = false
+      locationTouched.value = false
+      phoneTouched.value = false
+    }
+
+    const goBack = () => {
+      // Assuming you are using Vue Router
+      this.$router.push('/homePage')
+    }
+
     return {
-      formData,
-      submitted,
-      validEmail,
-      validForm,
+      name,
+      email,
+      password,
+      location,
+      phone,
+      profilePicture,
+      career,
+      defaultProfilePicture,
       handleFileUpload,
-      submitForm
+      submitForm,
+      goBack,
+      nameValid,
+      emailValid,
+      passwordValid,
+      locationValid,
+      phoneValid,
+      careerValid,
+      profilePictureValid,
+      validateForm
     }
   }
 }
 </script>
 
+
+
 <style scoped>
 #profile-fixer {
   justify-content: center;
   align-items: center;
+  margin-left: 35%;
   margin-bottom: 20px;
 }
 .position-relative i {
   font-size: 180%;
   position: absolute;
-  top: 70%;
-  left: 22%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   opacity: 0.7;
+  color: #fff;
 }
-
 
 .name-fixer {
   font-size: 1.5rem;
+  margin-left: -59%;
 }
 
 .profile-fixxer {
   position: relative;
   display: flex;
   justify-content: center;
-  width: 20%;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #ff8c00;
 }
 
 #profile-input {
   position: relative;
   width: 100%;
+  height: 100%;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: background-color 0.3s;
 }
 
-.profile-placeholder {
-  width: 100%;
-  border-radius: 50%;
+#profile-input:hover {
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .profile-image {
-  width: 160%;
-  border-radius: 50%;
-}
-
-
-
-#profile-fixer {
-  /* display: flex; */
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.profile-icon {
-  margin-top: -4%;
-  font-size: 4rem;
-  color: #ff8c00;
-}
-
-.name-fixer {
-  font-size: 1.5rem;
-}
-.profile-fixxer {
-  display: flex;
-  justify-content: center;
-  margin-left: 40%;
-  width: 20%;
-  /* border: 1.5px solid rgba(0, 0, 0, 0.567); */
-  border-radius: 50vh;
-  margin-top: -2%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .title-highlight {

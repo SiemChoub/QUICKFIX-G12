@@ -52,7 +52,7 @@ const routes = [
     }
   },
   {
-    path: '/',
+    path: '/homePage',
     name: 'home',
     component: () => import('../views/Web/HomeView.vue'),
     meta: {
