@@ -75,7 +75,7 @@ async function fetchCategories() {
 async function fetchServices() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/service/list');
-    services.value = response.data;
+    services.value = response.data.services;
   } catch (error) {
     console.error('Error fetching services:', error);
     throw error;
