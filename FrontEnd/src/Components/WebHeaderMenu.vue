@@ -200,7 +200,7 @@ onMounted(async () => {
 })
 const logout = async () => {
   try {
-    authStore.logout()
+    authStore.logout() 
     alert('User logged out successfully!')
     location.reload()
   } catch (error) {

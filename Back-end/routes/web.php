@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\{
     ProfileController,
     MailSettingController,
     UserController,
+    ChatController, 
 };
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Mail;
@@ -74,6 +75,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('requests','RequestController');
         Route::resource('progresss','ProgressController');
         Route::resource('dones','DoneController');
+        Route::resource('feedbacks','FeedbackController');
         Route::resource('chats','ChatController');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
