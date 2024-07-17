@@ -22,6 +22,7 @@
     "@fullcalendar/timegrid": "^6.1.14",
     "@fullcalendar/vue3": "^6.1.14",
     "@iconify-icons/bi": "^1.2.19",
+    "@syncfusion/ej2-base": "^26.1.42",
     "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
