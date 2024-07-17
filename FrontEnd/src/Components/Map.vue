@@ -11,7 +11,7 @@
       <div class="info-container">
         <div class="info">
           <p>Name Repair</p>
-          <p>{{phone}}</p>
+          <p>{{ phone }}</p>
           <p>Repair</p>
           <p>Customer</p>
           <p>Duration</p>
@@ -52,7 +52,7 @@ export default {
   data() {
     return {
       map: null,
-      destination: [104.91, 11.55],
+      destination: null,
       distance: 0,
       duration: 0,
       userLocation: null,
@@ -60,12 +60,11 @@ export default {
       deliveryMarker: null,
       route: null,
       locationWatchId: null,
-      phone:null
+      phone: null
     }
   },
   mounted() {
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
+    mapboxgl.accessToken ='pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
 
     this.map = new mapboxgl.Map({
       container: this.$refs.map,
@@ -76,42 +75,71 @@ export default {
 
     this.map.on('load', () => {
       this.getCurrentLocation()
+      this.getCustomerLocation()
     })
-    this.phone = JSON.parse(localStorage.getItem('user')).phone
+
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (user && user.phone) {
+      this.phone = user.phone
+    }
   },
   methods: {
     getCurrentLocation() {
       if (navigator.geolocation) {
         const options = {
           enableHighAccuracy: true,
+          timeout: 10000,
           maximumAge: 0
-        };
+        }
 
         this.locationWatchId = navigator.geolocation.watchPosition(
           (position) => {
-            const { latitude, longitude } = position.coords;
-            this.userLocation = [longitude, latitude];
-            this.updateMap();
+            const { latitude, longitude } = position.coords
+            this.userLocation = [longitude, latitude]
+            console.log('Current location:', this.userLocation)
+            this.updateMap()
           },
           (error) => {
-            console.error('Error getting current location:', error);
-            let errorMessage = 'Please enable location services for accurate map positioning.';
-            
-            if (error.code === 1) {
-              errorMessage = 'Location access denied. Please enable location services.';
-            } else if (error.code === 2) {
-              errorMessage = 'Location unavailable. Please try again later.';
+            console.error('Error getting current location:', error)
+            let errorMessage = 'Please enable location services for accurate map positioning.'
+
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                errorMessage = 'Location access denied. Please enable location services.'
+                break
+              case error.POSITION_UNAVAILABLE:
+                errorMessage = 'Location unavailable. Please try again later.'
+                break
+              case error.TIMEOUT:
+                errorMessage = 'Location request timed out. Please try again.'
+                break
+              default:
+                errorMessage = 'An unknown error occurred.'
+                break
             }
-            
-            alert(errorMessage);
+
+            alert(errorMessage)
           },
           options
-        );
+        )
       } else {
-        alert('Geolocation is not supported by this browser.');
+        alert('Geolocation is not supported by this browser.')
+      }
+    },
+    getCustomerLocation() {
+      const customerLongitude = parseFloat(localStorage.getItem('longitude'))
+      const customerLatitude = parseFloat(localStorage.getItem('latitude'))
+
+      if (customerLongitude && customerLatitude) {
+        this.destination = [customerLongitude, customerLatitude]
+        this.addDeliveryMarker()
+      } else {
+        console.error('Customer location not found in localStorage')
       }
     },
     updateMap() {
+      if (!this.userLocation) return
+
       this.map.setCenter(this.userLocation)
       this.map.setZoom(13)
 
@@ -123,16 +151,17 @@ export default {
         this.userMarker.setLngLat(this.userLocation)
       }
 
-      if (!this.deliveryMarker) {
+      this.calculateRoute()
+    },
+    addDeliveryMarker() {
+      if (this.destination && !this.deliveryMarker) {
         this.deliveryMarker = new mapboxgl.Marker({ color: '#3887be' })
           .setLngLat(this.destination)
           .addTo(this.map)
       }
-
-      this.calculateRoute()
     },
     calculateRoute() {
-      if (!this.userLocation) return
+      if (!this.userLocation || !this.destination) return
 
       const coordinates = [this.userLocation, this.destination]
       const apiUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinates[0][0]},${coordinates[0][1]};${coordinates[1][0]},${coordinates[1][1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
@@ -142,8 +171,8 @@ export default {
         .then((data) => {
           const route = data.routes[0]
           this.route = route
-          this.distance = (route.distance / 1000).toFixed(1)
-          this.duration = Math.floor(route.duration / 60)
+          this.distance = (route.distance / 1000).toFixed(1) 
+          this.duration = Math.floor(route.duration / 60) 
 
           if (this.map.getLayer('route')) {
             this.map.removeLayer('route')
@@ -284,26 +313,8 @@ export default {
 }
 
 .icon .bi {
-  font-size: 24px;
-  color: #ffffff;
-  transition: color 0.3s ease;
-}
-
-.icon .center {
-  background-color: #4caf50;
-}
-
-.icon .center:hover {
-  animation: bounce 0.5s ease alternate infinite;
-}
-
-@keyframes bounce {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-5px);
-  }
+  font-size: 1.5rem;
+  color: #fff;
 }
 
 .map-container {
