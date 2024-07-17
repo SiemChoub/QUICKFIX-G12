@@ -118,6 +118,11 @@ const routes = [
     name: 'fixerForm',
     component: () => import('../views/Web/Fixer/form.vue')
   },
+  {
+    path: '/paymentForm',
+    name: 'paymentForm',
+    component: () => import('../views/Web/Service/paymentForm.vue')
+  },
 
   {
     path: '/fixerUser',
