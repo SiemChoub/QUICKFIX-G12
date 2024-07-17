@@ -20,7 +20,7 @@
                 We value your time. Our streamlined processes and skilled technicians ensure prompt
                 and efficient repairs, minimizing downtime for your vehicle.
               </div>
-              <button>See More</button>
+              <router-link :to="'/fixerForm'"><button>Register Now</button></router-link>
             </div>
           </div>
           <div
@@ -299,6 +299,7 @@ onBeforeUnmount(() => {
 
 .custom-prev {
   left: 10px;
+  background: #000;
 }
 
 .custom-next {
@@ -401,6 +402,15 @@ onBeforeUnmount(() => {
   cursor: pointer;
   opacity: 0;
   animation: animate 1s ease-in-out 0.6s 1 forwards;
+  background: orange;
+  color: white;
+  
+}
+.content button:hover{
+  background: #f9a825;
+  border-radius:5px;
+  transition:5ms;
+  box-shadow: #000;
 }
 
 @keyframes animate {

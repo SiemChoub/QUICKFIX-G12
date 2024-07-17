@@ -16,8 +16,8 @@
           <li
             v-for="(category, index) in categories"
             :key="index"
-            @click="filterServices(category.id)"
-            :class="{ active: selectedCategory === category.id }"
+            @click="filterServices(category.name)"
+            :class="{ active: selectedCategory === category.name }"
             class="category-item"
           >
             {{ category.name }}
@@ -28,6 +28,9 @@
 
     <section id="services">
       <div class="card-containers">
+        <div v-if="filteredServices.length === 0" class="no-services">
+          No services found.
+        </div>
         <div v-for="(service, index) in filteredServices" :key="index" class="card">
           <div class="image">
             <img :src="service.image" class="card-img-top" :alt="service.name" />
@@ -65,7 +68,7 @@ onMounted(async () => {
 async function fetchCategories() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/category/list');
-    categories.value = response.data;
+    categories.value = response.data.category;
   } catch (error) {
     console.error('Error fetching categories:', error);
     throw error;
@@ -75,7 +78,7 @@ async function fetchCategories() {
 async function fetchServices() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/service/list');
-    services.value = response.data;
+    services.value = response.data.services;
   } catch (error) {
     console.error('Error fetching services:', error);
     throw error;
@@ -86,6 +89,7 @@ const closeModal = () => {
   showModal.value = false;
   selectedService.value = null;
 };
+
 const openModal = (service) => {
   selectedService.value = service;
   showModal.value = true;
@@ -94,7 +98,10 @@ const openModal = (service) => {
 const filteredServices = computed(() => {
   let filtered = services.value;
   if (selectedCategory.value !== null) {
-    filtered = filtered.filter((service) => service.categoryId === selectedCategory.value);
+    filtered = filtered.filter((service) => {
+      const category = categories.value.find(cat => cat.name === service.category);
+      return category && category.name === selectedCategory.value;
+    });
   }
   if (searchTerm.value.trim() !== '') {
     const regex = new RegExp(searchTerm.value.trim(), 'i');
@@ -105,10 +112,15 @@ const filteredServices = computed(() => {
   return filtered;
 });
 
-function filterServices(categoryId) {
-  selectedCategory.value = categoryId;
+function filterServices(categoryName) {
+  selectedCategory.value = categoryName;
+}
+
+function filterCategories() {
+  selectedCategory.value = null;
 }
 </script>
+
 
 <style scoped>
 :root {

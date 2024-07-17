@@ -3,7 +3,7 @@
     <div class="sidebar">
       <div class="sidebar-header">
         <i class="bi bi-chevron-left"></i>
-        <router-link to="/" class="back"> Back</router-link>
+        <router-link to="/" class="back">Back</router-link>
       </div>
       <div class="sidebar-image">
         <h2>Information</h2>
@@ -11,7 +11,7 @@
       <div class="info-container">
         <div class="info">
           <p>Name Repair</p>
-          <p>Number Phone Repair</p>
+          <p>{{ phone }}</p>
           <p>Repair</p>
           <p>Customer</p>
           <p>Duration</p>
@@ -22,8 +22,8 @@
           <p>0978907237</p>
           <p>Kampong Cham</p>
           <p>Kampong Thom</p>
-          <p>17 mn</p>
-          <p>8 km</p>
+          <p>{{ duration }} mn</p>
+          <p>{{ distance }} km</p>
         </div>
       </div>
       <div class="icon">
@@ -31,7 +31,9 @@
           <i class="bi bi-telephone-fill"></i>
         </div>
         <div class="center">
-          <i class="bi bi-chat-dots"></i>
+          <router-link to="/messanger">
+            <i class="bi bi-chat-dots"></i>
+          </router-link>
         </div>
         <div class="left">
           <i class="bi bi-x-circle-fill"></i>
@@ -46,24 +48,169 @@
 import mapboxgl from 'mapbox-gl'
 
 export default {
-  name: 'MapView',
+  name: 'DeliveryMap',
+  data() {
+    return {
+      map: null,
+      destination: null,
+      distance: 0,
+      duration: 0,
+      userLocation: null,
+      userMarker: null,
+      deliveryMarker: null,
+      route: null,
+      locationWatchId: null,
+      phone: null
+    }
+  },
   mounted() {
-    mapboxgl.accessToken =
-      'pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
-    const map = new mapboxgl.Map({
+    mapboxgl.accessToken ='pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
+
+    this.map = new mapboxgl.Map({
       container: this.$refs.map,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [105, 12.5657], // Centered on Cambodia
-      zoom: 7 // Adjust zoom level as needed
+      center: [105, 12.5657],
+      zoom: 17
     })
 
-    // Remove mapbox attribution
-    map.on('load', () => {
-      let rmFoot = document.querySelector('.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib')
-      if (rmFoot) {
-        rmFoot.innerHTML = ''
-      }
+    this.map.on('load', () => {
+      this.getCurrentLocation()
+      this.getCustomerLocation()
     })
+
+    const user = JSON.parse(localStorage.getItem('user'))
+    if (user && user.phone) {
+      this.phone = user.phone
+    }
+  },
+  methods: {
+    getCurrentLocation() {
+      if (navigator.geolocation) {
+        const options = {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0
+        }
+
+        this.locationWatchId = navigator.geolocation.watchPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords
+            this.userLocation = [longitude, latitude]
+            console.log('Current location:', this.userLocation)
+            this.updateMap()
+          },
+          (error) => {
+            console.error('Error getting current location:', error)
+            let errorMessage = 'Please enable location services for accurate map positioning.'
+
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                errorMessage = 'Location access denied. Please enable location services.'
+                break
+              case error.POSITION_UNAVAILABLE:
+                errorMessage = 'Location unavailable. Please try again later.'
+                break
+              case error.TIMEOUT:
+                errorMessage = 'Location request timed out. Please try again.'
+                break
+              default:
+                errorMessage = 'An unknown error occurred.'
+                break
+            }
+
+            alert(errorMessage)
+          },
+          options
+        )
+      } else {
+        alert('Geolocation is not supported by this browser.')
+      }
+    },
+    getCustomerLocation() {
+      const customerLongitude = parseFloat(localStorage.getItem('longitude'))
+      const customerLatitude = parseFloat(localStorage.getItem('latitude'))
+
+      if (customerLongitude && customerLatitude) {
+        this.destination = [customerLongitude, customerLatitude]
+        this.addDeliveryMarker()
+      } else {
+        console.error('Customer location not found in localStorage')
+      }
+    },
+    updateMap() {
+      if (!this.userLocation) return
+
+      this.map.setCenter(this.userLocation)
+      this.map.setZoom(13)
+
+      if (!this.userMarker) {
+        this.userMarker = new mapboxgl.Marker({ color: '#FF5733' })
+          .setLngLat(this.userLocation)
+          .addTo(this.map)
+      } else {
+        this.userMarker.setLngLat(this.userLocation)
+      }
+
+      this.calculateRoute()
+    },
+    addDeliveryMarker() {
+      if (this.destination && !this.deliveryMarker) {
+        this.deliveryMarker = new mapboxgl.Marker({ color: '#3887be' })
+          .setLngLat(this.destination)
+          .addTo(this.map)
+      }
+    },
+    calculateRoute() {
+      if (!this.userLocation || !this.destination) return
+
+      const coordinates = [this.userLocation, this.destination]
+      const apiUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinates[0][0]},${coordinates[0][1]};${coordinates[1][0]},${coordinates[1][1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
+
+      fetch(apiUrl)
+        .then((response) => response.json())
+        .then((data) => {
+          const route = data.routes[0]
+          this.route = route
+          this.distance = (route.distance / 1000).toFixed(1) 
+          this.duration = Math.floor(route.duration / 60) 
+
+          if (this.map.getLayer('route')) {
+            this.map.removeLayer('route')
+            this.map.removeSource('route')
+          }
+
+          this.map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'LineString',
+                  coordinates: route.geometry.coordinates
+                }
+              }
+            },
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#3887be',
+              'line-width': 8,
+              'line-opacity': 0.8
+            }
+          })
+        })
+        .catch((error) => console.error('Error calculating the route:', error))
+    }
+  },
+  beforeDestroy() {
+    if (navigator.geolocation && this.locationWatchId) {
+      navigator.geolocation.clearWatch(this.locationWatchId)
+    }
   }
 }
 </script>
@@ -75,73 +222,11 @@ export default {
   width: 100%;
   overflow: hidden;
 }
-.icon {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  border-radius: 10px;
-  background-color: #f9f9f9; /* Light background */
-  width: 100%;
-  max-width: 300px; /* Adjust max-width as per your design */
-  margin: auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
-}
-
-.icon > div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px; /* Larger width for cute design */
-  height: 50px; /* Larger height for cute design */
-  background-color: #f57c00; /* Orange background color */
-  border-radius: 50%; /* Makes the icons circular */
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for background color and transform */
-  cursor: pointer; /* Changes cursor to pointer on hover */
-}
-
-.icon > div:hover {
-  background-color: #ff9800; /* Lighter orange on hover */
-  transform: scale(1.1); /* Scale effect on hover */
-}
-
-
-
-.icon .right p:hover {
-  color: #007bff; /* Blue hover color for text */
-}
-
-.icon .bi {
-  font-size: 24px; /* Larger icon size for cute design */
-  color: #ffffff; /* White icon color */
-  transition: color 0.3s ease; /* Smooth transition for icon color */
-}
-
-.icon .left:hover .bi, .icon .center:hover .bi {
-  color: #ffffff; /* White icon color on hover */
-}
-
-.icon .center {
-  background-color: #4caf50; /* Green background color for center icon */
-}
-
-.icon .center:hover {
-  animation: bounce 0.5s ease alternate infinite; /* Bounce animation on hover */
-}
-
-@keyframes bounce {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-5px);
-  }
-}
 
 .sidebar {
   width: 30%;
-  background: #e8e9e5;
-  padding: 25px;
+  background: #f7f7f7;
+  padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -196,6 +281,40 @@ export default {
 .info p,
 .info-details p {
   margin: 0;
+}
+
+.icon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #fff;
+  width: 100%;
+  margin-top: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #f57c00;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.icon > div:hover {
+  background-color: #ff9800;
+  transform: scale(1.1);
+}
+
+.icon .bi {
+  font-size: 1.5rem;
+  color: #fff;
 }
 
 .map-container {

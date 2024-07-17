@@ -7,6 +7,7 @@ use App\Models\Mailsetting;
 use Config;
 use App\Models\Booking;
 use App\Models\FixingProgress;
+use App\Models\Chat;
 use App\Models\Category;
 use App\Models\Feedback;
 use App\Models\Service;
@@ -52,8 +53,10 @@ class AppServiceProvider extends ServiceProvider
             }
         }
 
-        if (Schema::hasTable('bookings') && Schema::hasTable('fixing_progress') && Schema::hasTable('categories') && Schema::hasTable('services') && Schema::hasTable('users') && Schema::hasTable('feedback')){
-            view()->share(['bookings' => Booking::all(), 'FixingProgress' => FixingProgress::all(),'Categories'=>Category::all(),'Service'=> Service::all(),'users'=> User::all(), 'feedbacks'=>Feedback::all()]);
+            
+        if (Schema::hasTable('bookings') && Schema::hasTable('fixing_progress') && Schema::hasTable('categories') && Schema::hasTable('services') && Schema::hasTable('users')&& Schema::hasTable('Chats')&& Schema::hasTable('feedback')){
+            view()->share(['bookings' => Booking::all(), 'FixingProgress' => FixingProgress::all(),'Categories'=>Category::all(),'Service'=> Service::all(),'users'=> User::all() ,'messages' => Chat::all(), 'feedbacks'=>Feedback::all()]);
+
         }
 
     }

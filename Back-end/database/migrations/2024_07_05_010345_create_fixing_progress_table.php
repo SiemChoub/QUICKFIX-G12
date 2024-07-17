@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('fixer_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('booking_id');        
-          $table->string('action')->default('progress');
+            $table->string('action')->default('progress');
             $table->timestamps();
         });
     }

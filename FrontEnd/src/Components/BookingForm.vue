@@ -63,7 +63,7 @@
                         placeholder="More information....."
                       />
                     </div>
-                    <button type="submit" class="btn btn-primary">Book</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Book</button>
                   </div>
                   <div class="map" ref="mapContainer"></div>
                 </div>
@@ -91,8 +91,6 @@ const props = defineProps({
     required: true
   }
 })
-
-const emit = defineEmits(['close'])
 
 const location = ref('')
 const reverseGeocodeResult = ref('')
@@ -158,20 +156,14 @@ const submitBooking = async (event) => {
 
   };
 
-  console.log('Booking Data:', bookingData);
-  console.log(isImmediateBooking);
-
   try {
-    console.log('Submitting booking:', bookingData);
     let response;
     if (isImmediateBooking) {
       response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
       console.log(response.data);
     } else {
-      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline/create', bookingData);
-      console.log(response.data);
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData);
     }
-    emit('close');
   } catch (error) {
     console.error('Error submitting booking:', error);
   }
@@ -184,12 +176,12 @@ const getCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log(position.coords.latitude,position.coords.longitude);
         const latLng = [position.coords.longitude, position.coords.latitude]
         location.value = `${latLng[1]}, ${latLng[0]}`
-        reverseGeocode(latLng)
+        // reverseGeocode(latLng)
         map.flyTo({ center: latLng, zoom: 16 })
         addMarker(latLng)
-        setTodayDate()
       },
       (error) => {
         console.error('Error getting location:', error)
@@ -207,17 +199,17 @@ const setTodayDate = () => {
 
 let map
 const initializeMap = () => {
-  const cambodiaBounds = [
-    [102.144, 10.486],
-    [107.625, 14.704]
-  ]
+  // const cambodiaBounds = [
+  //   [102.144, 10.486],
+  //   [107.625, 14.704]
+  // ]
 
   map = new mapboxgl.Map({
     container: document.querySelector('.map'),
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [104.917, 12.5657],
-    zoom: 6,
-    maxBounds: cambodiaBounds
+    zoom: 8,
+    // maxBounds: cambodiaBounds
   })
 
   map.on('load', () => {
@@ -246,6 +238,7 @@ async function reverseGeocode(latLng) {
     )
     if (response.data.features.length > 0) {
       const place = response.data.features[0]
+      console.log(response.data.features);
       reverseGeocodeResult.value = place.place_name
 
       const street = place.text

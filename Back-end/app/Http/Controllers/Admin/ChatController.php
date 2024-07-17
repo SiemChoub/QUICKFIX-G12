@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -23,34 +23,20 @@ class ChatController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request
-        // $validator = Validator::make($request->all(), [
-        //     'sender_id' => 'required|integer',
-        //     'receiver_id' => 'required|integer',
-        //     'message' => 'required|string',
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json(['error' => $validator->errors()], 400);
-        // }
-
-        // Process the image file
-        // if ($request->hasFile('image')) {
-        //     $image = $request->file('image');
-        //     $base64Image = base64_encode(file_get_contents($image->path()));
-
-        //     // Store in database
-        // }
-        // Chat::create([
-        //     'sender_id' => $request->sender_id,
-        //     'receiver_id' => $request->receiver_id,
-        //     'message' => $request->message,
-        // ]);
-
-        return "Chat created successfully";
-
+        $request->validate([
+            'message' => 'required',
+        ]);
+    
+        Chat::create([
+            'sender_id' => 1,
+            'receiver_id' => $request->receiver_id,
+            'message' => $request->message,
+        ]);
+    
+        $card = $request->card;
+        return redirect()->back()->with(['messaged' => true, 'card' => $card]);
     }
-
+    
     /**
      * Display the specified resource.
      */
@@ -68,8 +54,6 @@ class ChatController extends Controller
         return response()->json(['message' => 'Chats retrieved successfully', 'data' => $chats]);
     }
     
-
-
     /**
      * Update the specified resource in storage.
      */

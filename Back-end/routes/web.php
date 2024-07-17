@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\{
     ProfileController,
     MailSettingController,
     UserController,
+    ChatController, 
 };
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +23,11 @@ use Illuminate\Support\Facades\Mail;
 
 Route::get('/', function () {
     return view('auth.login');
+    // return redirect()->route('login');
+});
+
+Route::get('/fixerForm', function () {
+    return view('fixerForm');
     // return redirect()->route('login');
 });
 
@@ -70,10 +76,12 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('progresss','ProgressController');
         Route::resource('dones','DoneController');
         Route::resource('feedbacks','FeedbackController');
+        Route::resource('chats','ChatController');
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
         Route::put('/update/{id}', [UserController::class, 'updateInformation']);
         Route::post('/update/profile/{id}',[UserController::class,'updateProfile'])->name('profile.update');
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
+        Route::post('/admin/chat/store', [ChatController::class, 'store'])->name('admin.ChatController.store');
 });

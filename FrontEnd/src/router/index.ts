@@ -59,15 +59,11 @@ const routes = [
       requiresAuth: false // Public page, no authentication required
     }
   },
-  {
-    path: '/service',
-    name: 'service',
-    component: () => import('../views/Web/Service/ServicePage.vue')
-  },
+  
   {
     path: '/profile',
     name: 'profile',
-    component: () => import('../views/Web/Service/ProfileView.vue')
+    component: () => import('../Components/Service/ProfileEdit/Profile.vue')
   },
   {
     path: '/profile/edit',
@@ -78,11 +74,6 @@ const routes = [
     path: '/fixer',
     name: 'fixer',
     component: () => import('../Components/FixerVue.vue')
-  },
-  {
-    path: '/post',
-    name: 'post',
-    component: () => import('../views/Web/Post/ListView.vue')
   },
   {
     path: '/HomeFixer',
@@ -117,6 +108,13 @@ const routes = [
       }
     ]
   },
+  
+  {
+    path: '/fixerForm',
+    name: 'fixerForm',
+    component: () => import('../views/Web/Fixer/form.vue')
+  },
+
   {
     path: '/fixerUser',
     name: 'fixerUser',
