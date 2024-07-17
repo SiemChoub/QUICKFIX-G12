@@ -10,7 +10,8 @@
       <div data-bs-toggle="modal" data-bs-target="#messageModal">
         <a class=" nav-link dropdown-toggle" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bx bx-mail-send"></i>
-          <span class="badge bg-warning rounded-pill">5</span>
+          <span class="badge bg-warning rounded-pill">{{ $messages->where('receiver_id', 1)->where('is_read', 0)->count();
+          }}</span>
         </a>
       </div>
       <div class="dropdown ms-3">
