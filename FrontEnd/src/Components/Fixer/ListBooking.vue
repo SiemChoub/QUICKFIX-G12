@@ -25,12 +25,30 @@
             <p class="mb-0">Date: {{ book.date }}</p>
           </div>
           <div class="btn-groups d-flex flex-wrap flex-md-nowrap justify-content-end mt-2 mt-md-0 gap-5">
-            <button class="btn" @click="rejectBooking(book.id)">
-              <i class="bi text-danger text-25px bi-x-circle-fill"></i>
+            <button class="btn" @click="getDetail(book.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      <i class="bi bi-info-circle"></i> Detail
             </button>
             <button class="btn" @click="acceptBooking(book.id)">
               <i class="bi text-secondary text-25px bi-check2-circle"></i>
             </button>
+            <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
           </div>
         </li>
       </ul>
@@ -67,15 +85,15 @@ async function acceptBooking(bookingId) {
     const fixer = JSON.parse(localStorage.getItem('user'));
     const fixer_id = fixer.id;
 
-    const response = await axios.post('http://127.0.0.1:8000/api/fixer/accept', {
-      fixer_id: fixer_id,
-      booking_id: bookingId
-    }, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
+    // const response = await axios.post('http://127.0.0.1:8000/api/fixer/accept', {
+    //   fixer_id: fixer_id,
+    //   booking_id: bookingId
+    // }, {
+    //   headers: {
+    //     Authorization: `Bearer ${accessToken}`,
+    //     'Content-Type': 'application/json'
+    //   }
+    // });
     console.log('Booking accepted:', response.data);
     getBooking(); 
   } catch (error) {
@@ -85,7 +103,7 @@ async function acceptBooking(bookingId) {
   }
 }
 
-async function rejectBooking(bookingId) {
+async function getDetail(bookingId) {
   try {
     const response = await axios.post('http://127.0.0.1:8000/api/fixer/reject', {
       booking_id: bookingId
