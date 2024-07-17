@@ -7,6 +7,7 @@
           <div class="logo-color"></div>
           <h2 class="quickfix ms-2">QUICKFIX</h2>
         </div>
+        <hr style="border:2px solid orange">
 
         <div class="sidebar-content">
           <button
@@ -93,7 +94,6 @@
                   </li>
                 </ul>
               </div>
-              <button @click="logout" class="btn btn-outline-secondary ms-auto">Log Out</button>
             </div>
           </div>
         </nav>
@@ -188,21 +188,33 @@ export default {
 .sidebar-content {
   display: flex;
   flex-direction: column;
-  margin-top: 60px; /* Adjust margin as needed */
+  margin-top: 60px;
+  align-items: flex-start;
+}
+.sidebar-content button{
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  align-items: flex-start;
+  padding-left: 30px;
 }
 
 .btn-outline-secondary {
   position: relative;
   transition: all 0.3s ease-in-out;
   border: none;
-  padding: 15px 0;
-  margin: 20px 0;
+  padding: 13px 0;
+  margin: 10px 0;
+  border-radius: 0px;
 }
 
 .btn-outline-secondary:hover,
 .btn-outline-secondary.active {
   background-color: orange;
   color: white;
+    padding-left: 40px;
+    border: 0px;
+
 }
 
 .main-content {
