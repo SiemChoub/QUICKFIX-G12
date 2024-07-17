@@ -37,7 +37,7 @@
             <button class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="setFixerId(fixer.id, fixer.booking_id)">
               <i class="bi text-warning text-25px bi-x-circle"></i> Cancel
             </button>
-            <button class="btn" @click="startFixer(fixer.id)">
+            <button class="btn" @click="startFixer(fixer.id,fixer.booking_id)">
               <i class="bi text-primary text-25px bi-play-circle"></i> Start
             </button>
           </div>
@@ -102,6 +102,7 @@ const acceptedFixers = ref([])
 let fixerId = JSON.parse(localStorage.getItem('user')).id
 let fixer_id = ref()
 let booking_id = ref()
+let fixing_progress_id = ref()
 
 async function getAcceptedFixers() {
   try {
@@ -111,8 +112,8 @@ async function getAcceptedFixers() {
         'Content-Type':'application/json'
       }
     })
-    acceptedFixers.value = response.data.accepted_bookings
     console.log(response.data.accepted_bookings);
+    acceptedFixers.value = response.data.accepted_bookings
   } catch (error) {
     console.error('Error fetching accepted fixers:', error)
   }
@@ -135,27 +136,34 @@ async function cancelFixerAction() {
       }
     })
     console.log('Cancellation response:', response.data);
-    await getAcceptedFixers(); 
+    await getAcceptedFixers();  
   } catch (error) {
     console.error('Error cancelling fixer:', error)
   }
 }
-async function startFixer(fixerId) {
+async function startFixer(fixing_progress_id,booking_progres_id) {
   try {
-    // const response = await axios.post(`http://127.0.0.1:8000/api/fixer/start/${fixerId}`, {}, {
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //     'Content-Type': 'application/json'
-    //   }
-    // });
-    router.push('/map');
-    console.log(fixerId);
-    console.log('Start fixer response:', response.data);
-    await getAcceptedFixers(); 
+    const response = await axios.put(`http://127.0.0.1:8000/api/fixer/start/${fixing_progress_id}`,{
+      booking_id:booking_progres_id,
+      fixer_id:fixerId
+
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    console.log('Starting fixer with ID:', response.data);
+    localStorage.setItem('latitude',response.data.latitude)
+    localStorage.setItem('longitude',response.data.longitude)
+    router.push('/map')
+
   } catch (error) {
     console.error('Error starting fixer:', error);
   }
 }
+
 
 onMounted(async () => {
   await getAcceptedFixers()

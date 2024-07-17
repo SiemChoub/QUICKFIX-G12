@@ -143,7 +143,7 @@ export default {
 
         setAuthUser(user);
 
-        if (user["role"] === "cutomer") {
+        if (user["role"] === "customer") {
 
           localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("access_token", access_token);

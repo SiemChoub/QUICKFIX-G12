@@ -23,7 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->longText('profile')->nullable();
             $table->string('role')->default('user');
-            $table->integer('location_id')->nullable();
+            $table->integer('location')->nullable();
+            $table->string('career')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

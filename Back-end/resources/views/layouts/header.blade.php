@@ -163,10 +163,14 @@
                 @if ($message->receiver_id == 1 && !in_array($message->sender_id, $sender))
                     @php 
                       foreach ($messages as $messag){
-                        if($messag->receiver_id == 1 && $messag->sender_id == $message->sender_id){
+                        if(($messag->receiver_id == 1 && $messag->sender_id == $message->sender_id)){
                           $mess= $messag->message;
                           $date=$messag->created_at;
                           $is_read = $messag->is_read;
+                        }elseif(($messag->receiver_id == $message->sender_id  && $messag->sender_id ==1 )){
+                          $mess= $messag->message;
+                          $date=$messag->created_at;
+                          $is_read = 1;
                         }
                       } 
                         $sender[] = $message->sender_id;
@@ -186,7 +190,7 @@
                         @if ($is_read==0)
                         <p class=" mb-0 truncate" style="font-size:0.75rem;"><strong>{{$mess}}</strong></p>
                         @else
-                        <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">{{$mess}}</p>
+                        <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">You: {{$mess}}</p>
                         @endif
                       </div>
                       @if ($user->role=='fixer')
@@ -219,18 +223,24 @@ $sent = [];
                 <p class="bg-warning text-white text-sm truncate rounded -ml-2" style="font-size:11px;">{{ $account->role }}</p>
             </div>
             <span class='text-info -mr-9'>Online</span>
-            <div class='bg-light mb-3 p-3 d-flex' style="height: 370px; overflow-y: auto; border: 1px solid #ddd;">
-                <div id="chatBox" class="d-flex flex-column justify-content-end" style='width:100%'>
+            <div class='bg-light mb-3 p-3 d-flex' style="height: 370px; border: 1px solid #ddd;">
+                <div id="chatBox" class="d-flex flex-column justify-content-end" style='width:100%;overflow-y: auto;'>
                     @foreach ($messages as $message)
                         @if ($message->receiver_id == 1 && $message->sender_id == $account->id)
                             <div class="d-flex align-items-center gap-2 mt-2">
                                 <img src="{{ $account->profile }}" class="rounded-circle" alt="Profile Image" style="height: 2rem; width: 2rem; object-fit: cover;">
                                 <span class='bg-white p-2 rounded-lg'>{{ $message->message }}</span>
                             </div>
+                            @php 
+                              $re = $message->sender_id;
+                            @endphp
                         @elseif ($message->receiver_id == $account->id && $message->sender_id == 1)
                             <div class="text-end mt-4">
                             <span class='bg-info p-2 rounded-lg'>{{ $message->message }}</span>
                           </div>
+                          @php 
+                              $re = $message->receiver_id;
+                            @endphp
                         @endif
                     @endforeach
                 </div>
@@ -239,7 +249,7 @@ $sent = [];
     @csrf
             <div class="input-group">
                 <input type="text" value='{{ $account->id }}' name='card' hidden>
-                <input type="text" value='{{ $message->sender_id == 1 ? $message->receiver_id : $message->sender_id }}' name='receiver_id' hidden>
+                <input type="text" value='{{ $re}}' name='receiver_id' hidden>
                 <input type="text" id="messageInput" name='message' class="form-control" placeholder="Type a message" aria-label="Message" require>
                 <div class="input-group-append">
                     <button class="btn btn-warning" id="sendMessageButton" type="submit" aria-label="Send message">Send</button>
@@ -261,27 +271,7 @@ $sent = [];
   </div>
 </div>
 
-@if (session('messaged'))
-    <script>
-      var non = document.querySelector('#message_toselect')
-        window.onload = function() {
-            var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
-            var cardId = "sender{{ session('card') }}"; // Retrieve the card ID from session
-            var cardElement = document.getElementById(cardId);
-            
-            if (cardElement) {
-                cardElement.style.display = "block"; // Display the specified card element
-                non.style.display = "none";
-                non = cardElement;
-            } else {
-                console.warn("Card element not found:", cardId);
-            }
 
-            console.log("Card ID:", cardId);
-            messageModal.show(); // Show the message modal
-        }
-    </script>
-@endif
 
 
 <style>
@@ -339,8 +329,27 @@ $sent = [];
     color: #333; /* Text color when card is focused or active */
   }
 </style>
-<script>
 
+@if (session('messaged'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+            var cardId = "{{ session('card') }}"; // Retrieve the card ID from session
+            var cardElement = document.getElementById(cardId);
+            if (cardElement) {
+                requestAnimationFrame(function() {
+                    cardElement.click();
+                    messageModal.show(); // Show the message modal immediately
+                });
+            } else {
+                console.warn("Card element not found:", cardId);
+            }
+        });
+    </script>
+@endif
+
+
+<script>
   // -------------spacific------------
   let showall = document.querySelector('#showall');
   let fixers = document.querySelector('#fixers');
@@ -381,22 +390,19 @@ $sent = [];
       send.addEventListener('click', function () {
         let messages = document.querySelector(discuss).children[3].children[0];
         if(messages.value!='') {
-        let main = document.querySelector(discuss).children[2].children[0];
-        let d = document.createElement('div');
-        d.classList.add('text-end','mt-4');
-        let newMessage = document.createElement('span');
-        newMessage.classList.add('bg-info', 'p-2', 'rounded-lg');
-        newMessage.style.display = 'inline-block';
-        newMessage.style.whiteSpace = 'normal';
-        newMessage.textContent = messages.value;
-        d.appendChild(newMessage);
-        main.appendChild(d);
-        messages.value='';
-      }
-        
-        });
-
-     
-  });
+          let main = document.querySelector(discuss).children[2].children[0];
+          let d = document.createElement('div');
+          d.classList.add('text-end','mt-4');
+          let newMessage = document.createElement('span');
+          newMessage.classList.add('bg-info', 'p-2', 'rounded-lg');
+          newMessage.style.display = 'inline-block';
+          newMessage.style.whiteSpace = 'normal';
+          newMessage.textContent = messages.value;
+          d.appendChild(newMessage);
+          main.appendChild(d);
+          messages.value='';
+        }
+      });
+    });
   }
 </script>

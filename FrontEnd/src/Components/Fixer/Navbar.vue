@@ -255,7 +255,7 @@ export default {
   }
 
   .navbar {
-    height: auto;
+    height: auto; 
   }
 }
 </style>

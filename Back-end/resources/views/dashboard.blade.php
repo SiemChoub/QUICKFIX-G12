@@ -1,520 +1,442 @@
 <x-app-layout>
-    <div>
-         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-             <div class="container mx-auto px-6 py-8">
-                 <div class="product w-100 h-20 d-flex justify-content-around">
-                 <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
-                         <div class="content flex flex-col items-start">
-                         <h6 class="text-lg font-medium text-gray-800 mb-1">Categories</h6>
-                         <p class="text-gray-600 text-sm">99</p>
-                         </div>
-                         <div class="icon">
-                             <i class='bx bxs-category text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
-                         </div>
-                     </div>
-                  <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md flex justify-between items-center">
-                    <div class="content flex flex-col items-start">
-                      <h6 class="text-lg font-medium text-gray-800 mb-1">Services</h6>
-                      <p class="text-gray-600 text-sm">10</p>
-                    </div>
-                    <div class="icon">
-                      <i class='bx bxs-briefcase-alt-2 text-yellow-500 text-3xl'></i>
-                    </div>
-                  </div>
-                     <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
-                         <div class="content flex flex-col items-start">
-                         <h6 class="text-lg font-medium text-gray-800 mb-1">Top</h6>
-                         <p class="text-gray-600 text-sm">Services</p>
-                         </div>
-                         <div class="icon">
-                             <i class='bx bxs-star text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
-                         </div>
-                     </div>
-                     <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
-                         <div class="content flex flex-col items-start">
-                         <h6 class="text-lg font-medium text-gray-800 mb-1">Top</h6>
-                         <p class="text-gray-600 text-sm">Fixer</p>
-                         </div>
-                         <div class="icon">
-                         <i class='bx bx-crown text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
-                         </div>
-                     </div>
-                     <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
-                         <div class="content flex flex-col items-start">
-                         <h6 class="text-lg font-medium text-gray-800 mb-1">Users</h6>
-                         <p class="text-gray-600 text-sm">999</p>
-                         </div>
-                         <div class="icon">
-                         <i class='bx bx-user text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
-                         </div>
-                     </div>
+  <div>
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+      <div class="container mx-auto px-6 py-8">
+        <div class="product w-100 h-20 d-flex justify-content-around">
+          <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
+            <div class="content flex flex-col items-start">
+              <h6 class="text-lg font-medium text-gray-800 mb-1">Categories</h6>
+              <p class="text-gray-600 text-sm">{{count($Categories)}}</p>
+            </div>
+            <div class="icon">
+              <i class='bx bxs-category text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
+            </div>
+          </div>
+          <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md flex justify-between items-center">
+            <div class="content flex flex-col items-start">
+              <h6 class="text-lg font-medium text-gray-800 mb-1">Services</h6>
+              <p class="text-gray-600 text-sm">{{count($Service)}}</p>
+            </div>
+            <div class="icon">
+              <i class='bx bxs-briefcase-alt-2 text-yellow-500 text-3xl'></i>
+            </div>
+          </div>
+          <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
+            <div class="content flex flex-col items-start">
+              <h6 class="text-lg font-medium text-gray-800 mb-1">Top</h6>
+              <p class="text-gray-600 text-sm">Services</p>
+            </div>
+            <div class="icon">
+              <i class='bx bxs-star text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
+            </div>
+          </div>
+          <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
+            <div class="content flex flex-col items-start">
+              <h6 class="text-lg font-medium text-gray-800 mb-1">Top</h6>
+              <p class="text-gray-600 text-sm">Fixer</p>
+            </div>
+            <div class="icon">
+              <i class='bx bx-crown text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
+            </div>
+          </div>
+          <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
+            <div class="content flex flex-col items-start">
+              <h6 class="text-lg font-medium text-gray-800 mb-1">Users</h6>
+              <p class="text-gray-600 text-sm">{{count($users)}}</p>
+            </div>
+            <div class="icon">
+              <i class='bx bx-user text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
+            </div>
+          </div>
+        </div>
+        <div class="data p-2 pt-4 row">
+          <div class="left col-md-6">
+            <!-- ----------------top service----------------- -->
+            <section id="top-service">
+              <div class="top-services bg-white p-3 rounded-lg shadow">
+                <div class="title d-flex justify-content-between items-center mb-2">
+                  <h6 class="text-lg font-medium text-gray-800 mb-1">Top Service</h6>
                 </div>
-                <div class="data p-2 pt-4 row">
-                    <div class="left col-md-6">
-                        <!-- ----------------top service----------------- -->
-                      <section id="top-service">
-                        <div class="top-services bg-white p-3 rounded-lg shadow">
-                            <div class="title d-flex justify-content-between items-center mb-2">
-                                <h6 class="text-lg font-medium text-gray-800 mb-1">Top Service</h6>
-                            </div>
-                            <div class="top-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
-                                <!-- ------------------------- -->
-                                <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <div class="d-flex items-center">
-                                            <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;object-fit: cover;">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;object-fit: cover;">+99
-                                        </div>
-                                    </div>
-                                    <div class="evaluation">
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="999"
-                                            >
-                                    View more
-                                    </button>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <div class="d-flex items-center">
-                                            <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">+99
-                                        </div>
-                                    </div>
-                                    <div class="evaluation">
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="999"
-                                            >
-                                    View more
-                                    </button>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <div class="d-flex items-center">
-                                            <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">+99
-                                        </div>
-                                    </div>
-                                    <div class="evaluation">
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="999"
-                                            >
-                                    View more
-                                    </button>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <div class="d-flex items-center">
-                                            <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">+99
-                                        </div>
-                                    </div>
-                                    <div class="evaluation">
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="999"
-                                            >
-                                    View more
-                                    </button>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <div class="d-flex">
-                                            <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">
-                                            <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10"style="margin-left: -20px;">+99
-                                        </div>
-                                    </div>
-                                    <div class="evaluation items-center ">
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                        <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                                    </div>
-                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="999"
-                                            >
-                                    View more
-                                    </button>
-                                </div>
-                                <!-- ---------------------------------- -->
-                            </div>
-                        </div>
-                        </section>
-                        <!-- ----------------top service end----------------- -->
-                        <!-- ----------------low service----------------- -->
-                        <div class="low-services bg-white p-3 rounded-lg shadow mt-4">
-                            <div class="title">
-                                <h6 class="text-lg font-medium text-gray-800 mb-1">Low Service</h6>
-                            </div>
-                            <div class="low-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
-                                <!-- ------------------------- -->
-                                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <p class="text-red-600 text-sm">Nothing booking!</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-info-circle"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <p class="text-red-600 text-sm">Nothing booking!</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm "
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-info-circle"></i>view more</button>                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <p class="text-red-600 text-sm">Nothing booking!</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm"
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-info-circle"></i>view more</button>                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                                    <div class="title relative">
-                                        <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
-                                        <p class="text-red-600 text-sm">Nothing booking!</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm"
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-info-circle"></i>view more</button>                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                            </div>
-                        </div>
-                        <!-- ----------------low service end----------------- -->
-                    </div>
-                    <div class="right col-md-6 p-3 pt-0 flex flex-col space-y-6">
-                    <div class="service-performent bg-white p-3 rounded-lg shadow" style="height: 270px;">
-                      <div class="title d-flex align-items-center justify-content-between">
-                          <h6 class="text-lg font-medium text-gray-800 mb-0">Services performent</h6>
-                          <div class="date-input">
-                              <input type="date" class="form-control" placeholder="Select a date">
-                              <i class="bi bi-calendar3"></i>
-                          </div>
+                <div class="top-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
+                  
+                <!-- ------------------------- -->
+                  <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                    <div class="title relative">
+                      <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                      <div class="d-flex items-center">
+                        <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;object-fit: cover;">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;object-fit: cover;">+99
                       </div>
-                       <canvas id="myChart"></canvas>
                     </div>
-                        <div class="top-than bg-white p-3 rounded-lg shadow " style="height:250px;">
-                            <div class="title">
-                                <h6 class="text-lg font-medium text-gray-800">Top Fixer</h6>
-                            </div>
-                            <div class="topthan-info d-flex justify-content-center" >
-                                <!-- ...................................... -->
-                                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
-                                </div>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
-                                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
-                                    <div class="evaluation d-flex justify-content-center mb-2">
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                    </div>
-                                  <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>                                </div>
-                                </div>
-                                <!-- ...................................... -->
-                                <!-- ...................................... -->
-                                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
-                                </div>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
-                                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
-                                    <div class="evaluation d-flex justify-content-center mb-2">
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                    </div>
-                                  <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>                                </div>
-                                </div>
-                                <!-- ...................................... -->
-                                <!-- ...................................... -->
-                                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
-                                <div class="d-flex justify-content-center">
-                                    <img src="https://i.pinimg.com/564x/68/e3/5f/68e35faf0dc4ff48db6592251a66112f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
-                                </div>
-                                <div class="card-body text-center">
-                                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
-                                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
-                                    <div class="evaluation d-flex justify-content-center mb-2">
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                        <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                                    </div>
-                                  <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>                                </div>
-                                </div>
-                                <!-- ...................................... -->
-
-                            </div>
-                            
-                            </div>
-                            <!-- ----------------Customer feedback----------------- -->
-                        <div class="customer-feedback bg-white p-3 rounded-lg shadow mt-4">
-                            <div class="title">
-                                <h6 class="text-lg font-medium text-gray-800 mb-1">Customer feedback</h6>
-                            </div>
-                            <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2" style="height: 200px; overflow-y: scroll;">
-                                <!-- ------------------------- -->
-                                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                    <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                        <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                                        <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-love"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                    <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                        <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                                        <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-love"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                    <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                        <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                                        <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-love"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                    <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                        <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                                        <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-love"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                    <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                        <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                                        <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-love"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                                <!-- ------------------------- -->
-                                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                    <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                        <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                                        <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                                    </div>
-                                    <div class="evaluation">
-                                        <button class="btn btn-outline-warning btn-sm text-center" 
-                                        data-bs-toggle="modal" data-bs-target="#lowServiceDetail"
-                                            data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                                            data-service-title="Premium Service"
-                                            data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat."
-                                            data-service-stars="0"
-                                            ><i class="bx bx-love"></i>view more</button>                                    
-                                    </div>
-                                </div>
-                                <!-- ---------------------------------- -->
-                            </div>
-                        </div>
-                        <!-- ---------------- customer feedback end----------------- -->
-                        </div>
-                    <div class="data -pr-3 mt-4">
-                         <iframe class="map bg-white  rounded-lg shadow" style='height:250px;' src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31273.788411035468!2d104.88050064999999!3d11.5358151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2skh!4v1719023181034!5m2!1sen!2skh" width="930" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div class="evaluation">
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
                     </div>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="999">
+                      View more
+                    </button>
+                  </div>
+                  <!-- ---------------------------------- -->
+                  <!-- ------------------------- -->
+                  <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                    <div class="title relative">
+                      <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                      <div class="d-flex items-center">
+                        <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">+99
+                      </div>
+                    </div>
+                    <div class="evaluation">
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="999">
+                      View more
+                    </button>
+                  </div>
+                  <!-- ---------------------------------- -->
+                  <!-- ------------------------- -->
+                  <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                    <div class="title relative">
+                      <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                      <div class="d-flex items-center">
+                        <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">+99
+                      </div>
+                    </div>
+                    <div class="evaluation">
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="999">
+                      View more
+                    </button>
+                  </div>
+                  <!-- ---------------------------------- -->
+                  <!-- ------------------------- -->
+                  <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                    <div class="title relative">
+                      <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                      <div class="d-flex items-center">
+                        <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">+99
+                      </div>
+                    </div>
+                    <div class="evaluation">
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="999">
+                      View more
+                    </button>
+                  </div>
+                  <!-- ---------------------------------- -->
+                  <!-- ------------------------- -->
+                  <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                    <div class="title relative">
+                      <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                      <div class="d-flex">
+                        <img src="https://i.pinimg.com/564x/c8/3f/05/c83f052eb98923de6edab81de2d6465b.jpg" class=" w-9 h-9 rounded-full shadow-md z-10">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">
+                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="  w-9 h-9 rounded-full shadow-md z-10" style="margin-left: -20px;">+99
+                      </div>
+                    </div>
+                    <div class="evaluation items-center ">
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
+                    </div>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="999">
+                      View more
+                    </button>
+                  </div>
+                  <!-- ---------------------------------- -->
                 </div>
-
-         </main>
-     </div>
- </div>
-
-<!-- ---------------------top service detail------------------ -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<div class="modal fade" id="lowServiceDetail" tabindex="-1" aria-labelledby="lowServiceDetailLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
-        <h5 class="modal-title" id="lowServiceDetailLabel">Low Service detail</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-6">
-            <img src="" class="img-fluid rounded" alt="Service Image" id="service-image">
+              </div>
+            </section>
+            <!-- ----------------top service end----------------- -->
+            <!-- ----------------low service----------------- -->
+            <div class="low-services bg-white p-3 rounded-lg shadow mt-4">
+              <div class="title">
+                <h6 class="text-lg font-medium text-gray-800 mb-1">Low Service</h6>
+              </div>
+              <div class="low-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
+                <!-- ------------------------- -->
+                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                  <div class="title relative">
+                    <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                    <p class="text-red-600 text-sm">Nothing booking!</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-info-circle"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                  <div class="title relative">
+                    <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                    <p class="text-red-600 text-sm">Nothing booking!</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm " data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-info-circle"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                  <div class="title relative">
+                    <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                    <p class="text-red-600 text-sm">Nothing booking!</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-info-circle"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
+                  <div class="title relative">
+                    <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
+                    <p class="text-red-600 text-sm">Nothing booking!</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-info-circle"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+              </div>
+            </div>
+            <!-- ----------------low service end----------------- -->
           </div>
-          <div class="col-md-6">
-            <h4 class="text-warning" id="service-title">Premium Service</h4>
-            <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
-            <p>Stars: <span id="service-star"></span></p>
+          <div class="right col-md-6 p-3 pt-0 flex flex-col space-y-6">
+            <div class="service-performent bg-white p-3 rounded-lg shadow" style="height: 270px;">
+              <div class="title d-flex align-items-center justify-content-between">
+                <h6 class="text-lg font-medium text-gray-800 mb-0">Services performent</h6>
+                <div class="date-input">
+                  <input type="date" class="form-control" placeholder="Select a date">
+                  <i class="bi bi-calendar3"></i>
+                </div>
+              </div>
+              <canvas id="myChart"></canvas>
+            </div>
+            <div class="top-than bg-white p-3 rounded-lg shadow " style="height:250px;">
+              <div class="title">
+                <h6 class="text-lg font-medium text-gray-800">Top Fixer</h6>
+              </div>
+              <div class="topthan-info d-flex justify-content-center">
+                <!-- ...................................... -->
+                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
+                  <div class="d-flex justify-content-center">
+                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
+                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
+                    <div class="evaluation d-flex justify-content-center mb-2">
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                    </div>
+                    <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>
+                  </div>
+                </div>
+                <!-- ...................................... -->
+                <!-- ...................................... -->
+                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
+                  <div class="d-flex justify-content-center">
+                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
+                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
+                    <div class="evaluation d-flex justify-content-center mb-2">
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                    </div>
+                    <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>
+                  </div>
+                </div>
+                <!-- ...................................... -->
+                <!-- ...................................... -->
+                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
+                  <div class="d-flex justify-content-center">
+                    <img src="https://i.pinimg.com/564x/68/e3/5f/68e35faf0dc4ff48db6592251a66112f.jpg" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem;object-fit: cover;">
+                  </div>
+                  <div class="card-body text-center">
+                    <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">uuuuuuuuuuuuuuuuuuu</h5>
+                    <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
+                    <div class="evaluation d-flex justify-content-center mb-2">
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                      <i class='bx bxs-star text-warning fs-6 me-1'></i>
+                    </div>
+                    <button class="btn btn-warning btn-sm btn-sm detail-button d-none"><small>View more</small></button>
+                  </div>
+                </div>
+                <!-- ...................................... -->
+
+              </div>
+
+            </div>
+            <!-- ----------------Customer feedback----------------- -->
+            <div class="customer-feedback bg-white p-3 rounded-lg shadow mt-4">
+              <div class="title">
+                <h6 class="text-lg font-medium text-gray-800 mb-1">Customer feedback</h6>
+              </div>
+              <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2" style="height: 200px; overflow-y: scroll;">
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+              </div>
+            </div>
+            <!-- ---------------- customer feedback end----------------- -->
+          </div>
+          <div class="data -pr-3 mt-4">
+            <iframe class="map bg-white  rounded-lg shadow" style='height:250px;' src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31273.788411035468!2d104.88050064999999!3d11.5358151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2skh!4v1719023181034!5m2!1sen!2skh" width="930" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal">Close</button>
+
+    </main>
+  </div>
+  </div>
+
+  <!-- ---------------------top service detail------------------ -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <div class="modal fade" id="lowServiceDetail" tabindex="-1" aria-labelledby="lowServiceDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title" id="lowServiceDetailLabel">Low Service detail</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <img src="" class="img-fluid rounded" alt="Service Image" id="service-image">
+            </div>
+            <div class="col-md-6">
+              <h4 class="text-warning" id="service-title">Premium Service</h4>
+              <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
+              <p>Stars: <span id="service-star"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ----------------low service-------------------------------- -->
-<div class="modal fade" id="topServiceDetail" tabindex="-1" aria-labelledby="topServiceDetailLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
-    <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
-        <h5 class="modal-title" id="topServiceDetailLabel">Top Service detail</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-6">
-            <img src="" class="img-fluid rounded" alt="Service Image" id="service-image">
-          </div>
-          <div class="col-md-6">
-            <h4 class="text-warning" id="service-title">Premium Service</h4>
-            <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
-            <p>Stars: <span id="service-star"></span></p>
+  <!-- ----------------low service-------------------------------- -->
+  <div class="modal fade" id="topServiceDetail" tabindex="-1" aria-labelledby="topServiceDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title" id="topServiceDetailLabel">Top Service detail</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <img src="" class="img-fluid rounded" alt="Service Image" id="service-image">
+            </div>
+            <div class="col-md-6">
+              <h4 class="text-warning" id="service-title">Premium Service</h4>
+              <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
+              <p>Stars: <span id="service-star"></span></p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal">Close</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-warning btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
- <script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+  <script>
     // ......................graph building....................
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
@@ -552,415 +474,460 @@
       }
     });
 
-// -------------detail data--------------------------
+    // -------------detail data--------------------------
 
-// Get the modal
-var model_topservice = document.getElementById('topServiceDetail');
-var model_lowservice = document.getElementById('lowServiceDetail');
+    // Get the modal
+    var model_topservice = document.getElementById('topServiceDetail');
+    var model_lowservice = document.getElementById('lowServiceDetail');
 
-// Get the button that opens the model_topservice
-var btn_topservice = document.querySelectorAll('[data-bs-target="#topServiceDetail"]');
-var btn_lowservice = document.querySelectorAll('[data-bs-target="#lowServiceDetail"]');
+    // Get the button that opens the model_topservice
+    var btn_topservice = document.querySelectorAll('[data-bs-target="#topServiceDetail"]');
+    var btn_lowservice = document.querySelectorAll('[data-bs-target="#lowServiceDetail"]');
 
-// When the user clicks the button, update the model_topservice content
-btn_topservice.forEach(function(button) {
-  button.addEventListener('click', function() {
-    var serviceImage = this.getAttribute('data-service-image');
-    var serviceTitle = this.getAttribute('data-service-title');
-    var serviceDescription = this.getAttribute('data-service-description');
-    var servoceStars = this.getAttribute('data-service-stars');
+    // When the user clicks the button, update the model_topservice content
+    btn_topservice.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var serviceImage = this.getAttribute('data-service-image');
+        var serviceTitle = this.getAttribute('data-service-title');
+        var serviceDescription = this.getAttribute('data-service-description');
+        var servoceStars = this.getAttribute('data-service-stars');
 
-    model_topservice.querySelector('#service-image').src = serviceImage;
-    model_topservice.querySelector('#service-title').textContent = serviceTitle;
-    model_topservice.querySelector('#service-description').textContent = serviceDescription;
-    model_topservice.querySelector('#service-star').textContent = servoceStars;
-  });
-});
+        model_topservice.querySelector('#service-image').src = serviceImage;
+        model_topservice.querySelector('#service-title').textContent = serviceTitle;
+        model_topservice.querySelector('#service-description').textContent = serviceDescription;
+        model_topservice.querySelector('#service-star').textContent = servoceStars;
+      });
+    });
 
-btn_lowservice.forEach(function(button) {
-  button.addEventListener('click', function() {
-    var serviceImage = this.getAttribute('data-service-image');
-    var serviceTitle = this.getAttribute('data-service-title');
-    var serviceDescription = this.getAttribute('data-service-description');
-    var servoceStars = this.getAttribute('data-service-stars');
+    btn_lowservice.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var serviceImage = this.getAttribute('data-service-image');
+        var serviceTitle = this.getAttribute('data-service-title');
+        var serviceDescription = this.getAttribute('data-service-description');
+        var servoceStars = this.getAttribute('data-service-stars');
 
-    model_lowservice.querySelector('#service-image').src = serviceImage;
-    model_lowservice.querySelector('#service-title').textContent = serviceTitle;
-    model_lowservice.querySelector('#service-description').textContent = serviceDescription;
-    model_lowservice.querySelector('#service-star').textContent = servoceStars;
-  });
-});
+        model_lowservice.querySelector('#service-image').src = serviceImage;
+        model_lowservice.querySelector('#service-title').textContent = serviceTitle;
+        model_lowservice.querySelector('#service-description').textContent = serviceDescription;
+        model_lowservice.querySelector('#service-star').textContent = servoceStars;
+      });
+    });
   </script>
   <style>
     .card-top:hover .detail-button {
-  display: inline-block !important;
-}
+      display: inline-block !important;
+    }
 
-.card-top {
-    width: 8rem;
-    height: 11rem;
-    transition: all 0.3s ease-in-out;
-  }
+    .card-top {
+      width: 8rem;
+      height: 11rem;
+      transition: all 0.3s ease-in-out;
+    }
 
-  .card-top:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+    .card-top:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-  .product-card {
-  transition: all 0.3s ease-in-out;
-}
+    .product-card {
+      transition: all 0.3s ease-in-out;
+    }
 
-.product-card:hover {
-  transform: scale(1.1);
-  background-color: #f5f5f5;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
+    .product-card:hover {
+      transform: scale(1.1);
+      background-color: #f5f5f5;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
 
-.product-card .icon i {
-  transition: all 0.1s ease-in-out;
-}
+    .product-card .icon i {
+      transition: all 0.1s ease-in-out;
+    }
 
-.product-card:hover .icon i {
-  font-size: 2rem;
-}
-
-
-
-/* Tablet styles */
-@media (max-width: 991px) and (min-width: 768px) {
-  .product-card{
-    width: 9rem;
-    transition: all 0.3s ease-in-out;
-  }
-  .top-service-card{
-    transition: all 0.3s ease-in-out;
-  }
-  .top-service-card .evaluation i{
-    font-size: 0.6rem;
-  }
-  .top-service-card button{
-    font: 0.5em sans-serif;
-    margin-top: 4rem;
-  }
+    .product-card:hover .icon i {
+      font-size: 2rem;
+    }
 
 
-  .low-service-card button{
-    font: 0.5em sans-serif;
-  }
- 
-  .low-service-card{
-    transition: all 0.3s ease-in-out;
-  }
-  .card-top{
-    width: 8rem;
-    height: 11rem;
-    transition: all 0.3s ease-in-out;
-  }
 
-  .topthan-info {
-  overflow-y: auto;
-  height: 300px !important;
-  padding-left:140px ;
-}
+    /* Tablet styles */
+    @media (max-width: 991px) and (min-width: 768px) {
+      .product-card {
+        width: 9rem;
+        transition: all 0.3s ease-in-out;
+      }
 
-.top-than{
-  height: 270px !important;
-}
+      .top-service-card {
+        transition: all 0.3s ease-in-out;
+      }
 
-.customer-feedback-card button{
-  font: 0.5em sans-serif;
-}
+      .top-service-card .evaluation i {
+        font-size: 0.6rem;
+      }
 
-.map{
-  width: 650px;
-}
-.bx-menu{
-  display:block;
-}
-
-}
-
-/* Mobile styles */
-@media (max-width: 320px) and (min-width:568px){
-
-  .product-card{
-    justify-Content: space-around;
-    gap:2rem;
-    width: 5rem;
-    height:2rem;
-    transition: all 0.1s ease-in-out;
-    font-size: 5px;
-  }
-  .product-card .content h6{
-    font-size: 0.5rem;
-    margin:0;
-  }
-
-  .product-card .content p{    
-    justify-Content: space-between;
-    font-size: 0.5rem;
-    margin:0;
-    margin-top: -10px;
-  }
-  .product-card .icon i{
-    font-size: 2rem;
-    margin-left:-20px;
-    font-size: 1.5rem;
-  }
-  .product-card .icon .bxs-briefcase-alt-2{
-    font-size: 1.5rem;
-    margin-left:-20px;
-  }
-  .product-card .icon .bxs-star{
-    font-size: 1.5rem;
-    margin-left:-30px;
-  }
-  .product-card .content{
-    margin-left:-15px;
-  }
-  .product{
-    overflow-x:auto;
-  }
-  .product{
-    margin-top:-20px;
-  }
-  .data{
-    margin-top:-40px;
-  }
-  .top-services{
-    width:290px;
-    margin-left:-20px;
-  }
-  .top-service-card{
-    width: 270px;
-    transition: all 0.3s ease-in-out;
-    margin:0px;
-    margin-left:-20px;
-  }
-  .top-service-card .evaluation i{
-    font-size: 0.9rem;
-  }
-  .top-service-card button{
-    font: 0.5em sans-serif;
-    margin-top: 2rem;
-  }
-
-  .top-service-card .title .d-flex img{
-    width: 1.5rem !important;
-    height: 1.5rem !important;
-  }
-  .top-service-card .title .d-flex{
-    font-size: 1rem !important;
-  }
-  .top-service-info{
-    width:300px;
-  }
+      .top-service-card button {
+        font: 0.5em sans-serif;
+        margin-top: 4rem;
+      }
 
 
-  .low-services{
-    width:290px;
-    margin-left:-20px;
-  }
-  .low-service-card{
-    width: 270px;
-    transition: all 0.3s ease-in-out;
-    margin:0px;
-    margin-left:-20px;
-  }
-  .low-service-card button{
-    font: 0.5em sans-serif;
-    margin-top: 2rem;
-  }
+      .low-service-card button {
+        font: 0.5em sans-serif;
+      }
 
-  .service-performent{
-    margin-top:20px;
-    width:290px;
-    margin-left:-20px;
-    height: 200px;
-  }
-  .service-performent .title h6{
-    font-size: 15px;
-  }
+      .low-service-card {
+        transition: all 0.3s ease-in-out;
+      }
 
-  .top-than{
-    margin-top:20px;
-    width:290px;
-    margin-left:-20px;
-  }
-  .card-top{
-    width: 8rem;
-    height: 11rem;
-    transition: all 0.3s ease-in-out;
-  }
+      .card-top {
+        width: 8rem;
+        height: 11rem;
+        transition: all 0.3s ease-in-out;
+      }
 
-  .topthan-info {
-  overflow-y: auto;
-  height: 300px !important;
-  padding-left:140px ;
-}
+      .topthan-info {
+        overflow-y: auto;
+        height: 300px !important;
+        padding-left: 140px;
+      }
 
-.top-than{
-  height: 270px !important;
-}
-.customer-feedback{
-  margin-top:20px;
-  width:290px;
-  margin-left:-20px;
-}
-.customer-feedback-card button{
-  font: 0.5em sans-serif;
-}
-.map{
-  margin-top:20px;
-  width:290px;
-  margin-left:-20px;
-  height:10rem !important;
-  margin-top:-20px;
-}
+      .top-than {
+        height: 270px !important;
+      }
 
-}
-/* Mobile styles */
-@media (max-width: 600px){
+      .customer-feedback-card button {
+        font: 0.5em sans-serif;
+      }
 
+      .map {
+        width: 650px;
+      }
 
-  .product-card{
-    justify-Content: space-around;
-    gap:2rem;
-    width: 5rem;
-    height:2rem;
-    transition: all 0.1s ease-in-out;
-    font-size: 5px;
-  }
-  .product-card .content h6{
-    font-size: 0.5rem;
-    margin:0;
-  }
+      .bx-menu {
+        display: block;
+      }
 
-  .product-card .content p{    
-    justify-Content: space-between;
-    font-size: 0.5rem;
-    margin:0;
-    margin-top: -10px;
-  }
-  .product-card .icon i{
-    font-size: 2rem;
-    margin-left:-20px;
-    font-size: 1.5rem;
-  }
-  .product-card .icon .bxs-briefcase-alt-2{
-    font-size: 1.5rem;
-    margin-left:-20px;
-  }
-  .product-card .icon .bxs-star{
-    font-size: 1.5rem;
-    margin-left:-30px;
-  }
-  .product-card .content{
-    margin-left:-15px;
-  }
-  .product{
-    overflow-x:auto;
-  }
-  .product{
-    margin-top:-20px;
-  }
-  .data{
-    margin-top:-40px;
-  }
-  .top-services{
-    width:340px;
-    margin-left:-20px;
-  }
-  .top-service-card{
-    width: 310px;
-    transition: all 0.3s ease-in-out;
-    margin:0px;
-    margin-left:-20px;
-  }
-  .top-service-card .evaluation i{
-    font-size: 0.9rem;
-  }
-  .top-service-card button{
-    font: 0.5em sans-serif;
-  }
+    }
 
-  .top-service-card .title .d-flex img{
-    width: 1.5rem !important;
-    height: 1.5rem !important;
-  }
-  .top-service-card .title .d-flex{
-    font-size: 1rem !important;
-  }
-  .top-service-info{
-    width:300px;
-  }
+    /* Mobile styles */
+    @media (max-width: 320px) and (min-width:568px) {
+
+      .product-card {
+        justify-Content: space-around;
+        gap: 2rem;
+        width: 5rem;
+        height: 2rem;
+        transition: all 0.1s ease-in-out;
+        font-size: 5px;
+      }
+
+      .product-card .content h6 {
+        font-size: 0.5rem;
+        margin: 0;
+      }
+
+      .product-card .content p {
+        justify-Content: space-between;
+        font-size: 0.5rem;
+        margin: 0;
+        margin-top: -10px;
+      }
+
+      .product-card .icon i {
+        font-size: 2rem;
+        margin-left: -20px;
+        font-size: 1.5rem;
+      }
+
+      .product-card .icon .bxs-briefcase-alt-2 {
+        font-size: 1.5rem;
+        margin-left: -20px;
+      }
+
+      .product-card .icon .bxs-star {
+        font-size: 1.5rem;
+        margin-left: -30px;
+      }
+
+      .product-card .content {
+        margin-left: -15px;
+      }
+
+      .product {
+        overflow-x: auto;
+      }
+
+      .product {
+        margin-top: -20px;
+      }
+
+      .data {
+        margin-top: -40px;
+      }
+
+      .top-services {
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .top-service-card {
+        width: 270px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .top-service-card .evaluation i {
+        font-size: 0.9rem;
+      }
+
+      .top-service-card button {
+        font: 0.5em sans-serif;
+        margin-top: 2rem;
+      }
+
+      .top-service-card .title .d-flex img {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
+
+      .top-service-card .title .d-flex {
+        font-size: 1rem !important;
+      }
+
+      .top-service-info {
+        width: 300px;
+      }
 
 
-  .low-services{
-    width:340px;
-    margin-left:-20px;
-  }
-  .low-service-card{
-    width: 310px;
-    transition: all 0.3s ease-in-out;
-    margin:0px;
-    margin-left:-20px;
-  }
-  .low-service-card button{
-    font: 0.5em sans-serif;
-    margin-top: 2rem;
-  }
+      .low-services {
+        width: 290px;
+        margin-left: -20px;
+      }
 
-  .service-performent{
-    margin-top:20px;
-    width:310px;
-    margin-left:-20px;
-    height: 200px;
-  }
-  .service-performent .title h6{
-    font-size: 15px;
-  }
+      .low-service-card {
+        width: 270px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
 
-  .top-than{
-    margin-top:20px;
-    width:290px;
-    margin-left:-20px;
-  }
-  .card-top{
-    width: 8rem;
-    height: 11rem;
-    transition: all 0.3s ease-in-out;
-  }
+      .low-service-card button {
+        font: 0.5em sans-serif;
+        margin-top: 2rem;
+      }
 
-  .topthan-info {
-  overflow-y: auto;
-  height: 300px !important;
-  padding-left:140px ;
-}
+      .service-performent {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+        height: 200px;
+      }
 
-.top-than{
-  height: 270px !important;
-}
-.customer-feedback{
-  margin-top:20px;
-  width:290px;
-  margin-left:-20px;
-}
-.customer-feedback-card button{
-  font: 0.5em sans-serif;
-}
-.map{
-  margin-top:20px;
-  width:290px;
-  margin-left:-20px;
-  height:10rem !important;
-  margin-top:-20px;
-}
+      .service-performent .title h6 {
+        font-size: 15px;
+      }
 
-}
+      .top-than {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
 
+      .card-top {
+        width: 8rem;
+        height: 11rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .topthan-info {
+        overflow-y: auto;
+        height: 300px !important;
+        padding-left: 140px;
+      }
+
+      .top-than {
+        height: 270px !important;
+      }
+
+      .customer-feedback {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .customer-feedback-card button {
+        font: 0.5em sans-serif;
+      }
+
+      .map {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+        height: 10rem !important;
+        margin-top: -20px;
+      }
+
+    }
+
+    /* Mobile styles */
+    @media (max-width: 600px) {
+
+
+      .product-card {
+        justify-Content: space-around;
+        gap: 2rem;
+        width: 5rem;
+        height: 2rem;
+        transition: all 0.1s ease-in-out;
+        font-size: 5px;
+      }
+
+      .product-card .content h6 {
+        font-size: 0.5rem;
+        margin: 0;
+      }
+
+      .product-card .content p {
+        justify-Content: space-between;
+        font-size: 0.5rem;
+        margin: 0;
+        margin-top: -10px;
+      }
+
+      .product-card .icon i {
+        font-size: 2rem;
+        margin-left: -20px;
+        font-size: 1.5rem;
+      }
+
+      .product-card .icon .bxs-briefcase-alt-2 {
+        font-size: 1.5rem;
+        margin-left: -20px;
+      }
+
+      .product-card .icon .bxs-star {
+        font-size: 1.5rem;
+        margin-left: -30px;
+      }
+
+      .product-card .content {
+        margin-left: -15px;
+      }
+
+      .product {
+        overflow-x: auto;
+      }
+
+      .product {
+        margin-top: -20px;
+      }
+
+      .data {
+        margin-top: -40px;
+      }
+
+      .top-services {
+        width: 340px;
+        margin-left: -20px;
+      }
+
+      .top-service-card {
+        width: 310px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .top-service-card .evaluation i {
+        font-size: 0.9rem;
+      }
+
+      .top-service-card button {
+        font: 0.5em sans-serif;
+      }
+
+      .top-service-card .title .d-flex img {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
+
+      .top-service-card .title .d-flex {
+        font-size: 1rem !important;
+      }
+
+      .top-service-info {
+        width: 300px;
+      }
+
+
+      .low-services {
+        width: 340px;
+        margin-left: -20px;
+      }
+
+      .low-service-card {
+        width: 310px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .low-service-card button {
+        font: 0.5em sans-serif;
+        margin-top: 2rem;
+      }
+
+      .service-performent {
+        margin-top: 20px;
+        width: 310px;
+        margin-left: -20px;
+        height: 200px;
+      }
+
+      .service-performent .title h6 {
+        font-size: 15px;
+      }
+
+      .top-than {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .card-top {
+        width: 8rem;
+        height: 11rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .topthan-info {
+        overflow-y: auto;
+        height: 300px !important;
+        padding-left: 140px;
+      }
+
+      .top-than {
+        height: 270px !important;
+      }
+
+      .customer-feedback {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .customer-feedback-card button {
+        font: 0.5em sans-serif;
+      }
+
+      .map {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+        height: 10rem !important;
+        margin-top: -20px;
+      }
+
+    }
   </style>
- </x-app-layout>
-
- 
+</x-app-layout>

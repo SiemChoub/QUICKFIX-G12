@@ -13,5 +13,6 @@ class PromotionController extends Controller
    
         $promotions = Discount::all();
         return response()->json($promotions);
+        
     }
 }
