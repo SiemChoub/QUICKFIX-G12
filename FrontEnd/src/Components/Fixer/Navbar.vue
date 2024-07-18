@@ -7,7 +7,7 @@
           <div class="logo-color"></div>
           <h2 class="quickfix ms-2">QUICKFIX</h2>
         </div>
-        <hr style="border:2px solid orange">
+        <hr style="border: 2px solid orange" />
 
         <div class="sidebar-content">
           <button
@@ -18,18 +18,36 @@
             Dashboard
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'Booking' || currentView === 'Booking2' }"
+            :class="{
+              'btn-outline-secondary active':
+                currentView === 'Booking' || currentView === 'Booking2'
+            }"
             @click="setCurrentView('Booking')"
-            class="btn w-100 mb-2"
+            class="btn w-100 mb-2 position-relative"
           >
             Booking List
+            <span
+              class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
+            >
+              0
+              <span class="visually-hidden">unread messages</span>
+            </span>
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'AcceptBooking' }"
+            :class="{
+              'btn-outline-secondary active':
+                currentView === 'AcceptBooking' || currentView === 'Booking2'
+            }"
             @click="setCurrentView('AcceptBooking')"
-            class="btn w-100 mb-2"
+            class="btn w-100 mb-2 position-relative"
           >
-            Accepted Booking
+            Accepted
+            <span
+              class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
+            >
+              0
+              <span class="visually-hidden">unread messages</span>
+            </span>
           </button>
           <button
             :class="{ 'btn-outline-secondary active': currentView === 'Skill' }"
@@ -79,7 +97,11 @@
                   class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-2"
                   aria-labelledby="dropdownMenuLink"
                 >
-                  <li><router-link to="/profile"  class="dropdown-item text-center">View Profile</router-link></li>
+                  <li>
+                    <router-link to="/profile" class="dropdown-item text-center"
+                      >View Profile</router-link
+                    >
+                  </li>
                   <li>
                     <a
                       href="#"
@@ -107,13 +129,13 @@
 </template>
 
 <script>
-import axios from 'axios';
-import Dashboard from './DashBoard.vue';
-import Booking from './ListBooking.vue';
-import Skill from './CardSkill.vue';
-import ChatView from './ChatView.vue';
-import HistoryView from './HistoryView.vue';
-import AcceptBooking from './AcceptBooking.vue';
+import axios from 'axios'
+import Dashboard from './DashBoard.vue'
+import Booking from './ListBooking.vue'
+import Skill from './CardSkill.vue'
+import ChatView from './ChatView.vue'
+import HistoryView from './HistoryView.vue'
+import AcceptBooking from './AcceptBooking.vue'
 
 export default {
   name: 'NavBar',
@@ -128,36 +150,41 @@ export default {
   data() {
     return {
       users: {},
-      currentView: 'Dashboard',
-    };
+      currentView: 'Dashboard'
+    }
   },
   methods: {
     setCurrentView(view) {
-      this.currentView = view;
+      this.currentView = view
     },
     async logout() {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.post('http://127.0.0.1:8000/api/logout', {}, {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const token = localStorage.getItem('access_token')
+        await axios.post(
+          'http://127.0.0.1:8000/api/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        });
-        localStorage.removeItem('user');
-        localStorage.removeItem('access_token');
-        this.$router.push('/');
+        )
+        localStorage.removeItem('user')
+        localStorage.removeItem('access_token')
+        this.$router.push('/')
       } catch (error) {
-        console.error('Logout failed:', error);
+        console.error('Logout failed:', error)
       }
     },
     getUserData() {
-      this.users = JSON.parse(localStorage.getItem('user')) || {};
+      this.users = JSON.parse(localStorage.getItem('user')) || {}
     }
   },
+
   mounted() {
-    this.getUserData();
+    this.getUserData()
   }
-};
+}
 </script>
 
 <style scoped>
@@ -191,7 +218,7 @@ export default {
   margin-top: 60px;
   align-items: flex-start;
 }
-.sidebar-content button{
+.sidebar-content button {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
@@ -212,9 +239,8 @@ export default {
 .btn-outline-secondary.active {
   background-color: orange;
   color: white;
-    padding-left: 40px;
-    border: 0px;
-
+  padding-left: 40px;
+  border: 0px;
 }
 
 .main-content {
@@ -267,7 +293,7 @@ export default {
   }
 
   .navbar {
-    height: auto; 
+    height: auto;
   }
 }
 </style>
