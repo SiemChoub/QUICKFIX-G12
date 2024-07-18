@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\API\UserController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
@@ -101,3 +102,9 @@ Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAcc
 Route::put('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
 
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
+
+
+// --------------------- admin routes -------------------------------
+Route::get('/payment',[PaymentController::class,'getPay']);
+Route::get('/paid',[PaymentController::class,'getPay']);
+Route::post('/payment/create',[PaymentController::class,'store']);

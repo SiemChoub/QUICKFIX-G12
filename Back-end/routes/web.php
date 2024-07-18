@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
     ProfileController,
@@ -69,10 +70,13 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('requests','RequestController');
         Route::resource('progresss','ProgressController');
         Route::resource('dones','DoneController');
+        Route::resource('payments','PaymentController');
+
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
         Route::put('/update/{id}', [UserController::class, 'updateInformation']);
         Route::post('/update/profile/{id}',[UserController::class,'updateProfile'])->name('profile.update');
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
+
 });

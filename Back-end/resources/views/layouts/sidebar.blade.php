@@ -211,6 +211,18 @@
             <span class="mx-3">Discount</span>
             </a>
             @endcanany
+            {{-- ====================== --}}
+            @canany('Payment access', 'Payment create', 'Payment edit')
+            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.payments.index') ? 'active' : '' }}"
+            href="{{ route('admin.payments.index')}}">
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 6h18a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2zm0 4h18m-9 4h4"></path>
+            </svg>
+            <span class="mx-3">Payment</span>
+            
+            </a>
+            @endcanany
+            {{-- ====================== --}}
      
             @canany('Mail access','Mail edit')
              <a class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 fw-semibold text-decoration-none hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.mail.index') ? 'active' : '' }}"
