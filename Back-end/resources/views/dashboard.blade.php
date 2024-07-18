@@ -1,5 +1,9 @@
 <x-app-layout>
+<<<<<<< HEAD
   <div style="margin-top:60px">
+=======
+  <div>
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
       <div class="container mx-auto px-6 py-8">
         <div class="product w-100 h-20 d-flex justify-content-around">
@@ -42,7 +46,11 @@
           <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
             <div class="content flex flex-col items-start">
               <h6 class="text-lg font-medium text-gray-800 mb-1">Users</h6>
+<<<<<<< HEAD
               <p class="text-gray-600 text-sm">{{count($users)}}</p>
+=======
+              <p class="text-gray-600 text-sm">{{count($User)}}</p>
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
             </div>
             <div class="icon">
               <i class='bx bx-user text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
@@ -58,8 +66,13 @@
                   <h6 class="text-lg font-medium text-gray-800 mb-1">Top Service</h6>
                 </div>
                 <div class="top-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
+<<<<<<< HEAD
 
                   <!-- ------------------------- -->
+=======
+                  
+                <!-- ------------------------- -->
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
                   <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
                     <div class="title relative">
                       <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
@@ -295,6 +308,7 @@
               </div>
               <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2" style="height: 200px; overflow-y: scroll;">
                 <!-- ------------------------- -->
+<<<<<<< HEAD
                 @if ( count ($feedbacks) == 0)
                 <div class="feedback mt-12" style="text-align: center;">
                   Nothing Feedback from Customer
@@ -349,6 +363,79 @@
                 </div>
                 <!-- ---------------------------------- -->
                 @endforeach
+=======
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+                <!-- ------------------------- -->
+                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
+                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
+                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                  </div>
+                  <div class="evaluation">
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                  </div>
+                </div>
+                <!-- ---------------------------------- -->
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
               </div>
             </div>
             <!-- ---------------- customer feedback end----------------- -->
@@ -361,9 +448,12 @@
     </main>
   </div>
   </div>
+<<<<<<< HEAD
 <!-- Example CDN includes for SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+=======
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
 
   <!-- ---------------------top service detail------------------ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -420,6 +510,7 @@
       </div>
     </div>
   </div>
+<<<<<<< HEAD
   <!-- ------------end low service detail ------------------------ -->
 
   <!-- ---------------- feedback-------------------------------- -->
@@ -449,6 +540,9 @@
   </div>
 
   <!-- ------------ low feedback detail ------------------------ -->
+=======
+
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
   <script>
     // ......................graph building....................
@@ -526,6 +620,7 @@
         model_lowservice.querySelector('#service-star').textContent = servoceStars;
       });
     });
+<<<<<<< HEAD
 
     /// feedback////
 
@@ -539,6 +634,8 @@
 
 
     });
+=======
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
   </script>
   @if(session('showAlertDelete'))
 <script>
@@ -585,6 +682,7 @@
     .product-card:hover .icon i {
       font-size: 2rem;
     }
+<<<<<<< HEAD
 
     /* Custom CSS for modal dialog width */
     .modal-custom-width {
@@ -614,6 +712,335 @@
 
       .top-service-card button {
         font: 0.5em sans-serif;
+        margin-top: 4rem;
+      }
+=======
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
+
+
+      .low-service-card button {
+        font: 0.5em sans-serif;
+      }
+
+<<<<<<< HEAD
+      .low-service-card {
+        transition: all 0.3s ease-in-out;
+      }
+
+      .card-top {
+        width: 8rem;
+        height: 11rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .topthan-info {
+        overflow-y: auto;
+        height: 300px !important;
+        padding-left: 140px;
+      }
+
+      .top-than {
+        height: 270px !important;
+      }
+
+      .customer-feedback-card button {
+        font: 0.5em sans-serif;
+      }
+
+      .map {
+        width: 650px;
+      }
+
+      .bx-menu {
+        display: block;
+      }
+
+    }
+
+    /* Mobile styles */
+    @media (max-width: 320px) and (min-width:568px) {
+
+      .product-card {
+        justify-Content: space-around;
+        gap: 2rem;
+        width: 5rem;
+        height: 2rem;
+        transition: all 0.1s ease-in-out;
+        font-size: 5px;
+      }
+
+      .product-card .content h6 {
+        font-size: 0.5rem;
+        margin: 0;
+      }
+
+      .product-card .content p {
+        justify-Content: space-between;
+        font-size: 0.5rem;
+        margin: 0;
+        margin-top: -10px;
+      }
+
+      .product-card .icon i {
+        font-size: 2rem;
+        margin-left: -20px;
+        font-size: 1.5rem;
+      }
+
+      .product-card .icon .bxs-briefcase-alt-2 {
+        font-size: 1.5rem;
+        margin-left: -20px;
+      }
+
+      .product-card .icon .bxs-star {
+        font-size: 1.5rem;
+        margin-left: -30px;
+      }
+
+      .product-card .content {
+        margin-left: -15px;
+      }
+
+      .product {
+        overflow-x: auto;
+      }
+
+      .product {
+        margin-top: -20px;
+      }
+
+      .data {
+        margin-top: -40px;
+      }
+
+      .top-services {
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .top-service-card {
+        width: 270px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .top-service-card .evaluation i {
+        font-size: 0.9rem;
+=======
+    /* Tablet styles */
+    @media (max-width: 991px) and (min-width: 768px) {
+      .product-card {
+        width: 9rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .top-service-card {
+        transition: all 0.3s ease-in-out;
+      }
+
+      .top-service-card .evaluation i {
+        font-size: 0.6rem;
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
+      }
+
+      .top-service-card button {
+        font: 0.5em sans-serif;
+<<<<<<< HEAD
+        margin-top: 2rem;
+      }
+
+      .top-service-card .title .d-flex img {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
+
+      .top-service-card .title .d-flex {
+        font-size: 1rem !important;
+      }
+
+      .top-service-info {
+        width: 300px;
+      }
+
+
+      .low-services {
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .low-service-card {
+        width: 270px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .low-service-card button {
+        font: 0.5em sans-serif;
+        margin-top: 2rem;
+      }
+
+      .service-performent {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+        height: 200px;
+      }
+
+      .service-performent .title h6 {
+        font-size: 15px;
+      }
+
+      .top-than {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .card-top {
+        width: 8rem;
+        height: 11rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .topthan-info {
+        overflow-y: auto;
+        height: 300px !important;
+        padding-left: 140px;
+      }
+
+      .top-than {
+        height: 270px !important;
+      }
+
+      .customer-feedback {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .customer-feedback-card button {
+        font: 0.5em sans-serif;
+      }
+
+      .map {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+        height: 10rem !important;
+        margin-top: -20px;
+      }
+
+    }
+
+    /* Mobile styles */
+    @media (max-width: 600px) {
+
+
+      .product-card {
+        justify-Content: space-around;
+        gap: 2rem;
+        width: 5rem;
+        height: 2rem;
+        transition: all 0.1s ease-in-out;
+        font-size: 5px;
+      }
+
+      .product-card .content h6 {
+        font-size: 0.5rem;
+        margin: 0;
+      }
+
+      .product-card .content p {
+        justify-Content: space-between;
+        font-size: 0.5rem;
+        margin: 0;
+        margin-top: -10px;
+      }
+
+      .product-card .icon i {
+        font-size: 2rem;
+        margin-left: -20px;
+        font-size: 1.5rem;
+      }
+
+      .product-card .icon .bxs-briefcase-alt-2 {
+        font-size: 1.5rem;
+        margin-left: -20px;
+      }
+
+      .product-card .icon .bxs-star {
+        font-size: 1.5rem;
+        margin-left: -30px;
+      }
+
+      .product-card .content {
+        margin-left: -15px;
+      }
+
+      .product {
+        overflow-x: auto;
+      }
+
+      .product {
+        margin-top: -20px;
+      }
+
+      .data {
+        margin-top: -40px;
+      }
+
+      .top-services {
+        width: 340px;
+        margin-left: -20px;
+      }
+
+      .top-service-card {
+        width: 310px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .top-service-card .evaluation i {
+        font-size: 0.9rem;
+      }
+
+      .top-service-card button {
+        font: 0.5em sans-serif;
+      }
+
+      .top-service-card .title .d-flex img {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+      }
+
+      .top-service-card .title .d-flex {
+        font-size: 1rem !important;
+      }
+
+      .top-service-info {
+        width: 300px;
+      }
+
+
+      .low-services {
+        width: 340px;
+        margin-left: -20px;
+      }
+
+      .low-service-card {
+        width: 310px;
+        transition: all 0.3s ease-in-out;
+        margin: 0px;
+        margin-left: -20px;
+      }
+
+      .low-service-card button {
+        font: 0.5em sans-serif;
+        margin-top: 2rem;
+=======
         margin-top: 4rem;
       }
 
@@ -905,9 +1332,45 @@
 
       .top-service-info {
         width: 300px;
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
       }
 
+      .service-performent {
+        margin-top: 20px;
+        width: 310px;
+        margin-left: -20px;
+        height: 200px;
+      }
 
+<<<<<<< HEAD
+      .service-performent .title h6 {
+        font-size: 15px;
+      }
+
+      .top-than {
+        margin-top: 20px;
+        width: 290px;
+        margin-left: -20px;
+      }
+
+      .card-top {
+        width: 8rem;
+        height: 11rem;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .topthan-info {
+        overflow-y: auto;
+        height: 300px !important;
+        padding-left: 140px;
+      }
+
+      .top-than {
+        height: 270px !important;
+      }
+
+      .customer-feedback {
+=======
       .low-services {
         width: 340px;
         margin-left: -20px;
@@ -937,11 +1400,14 @@
       }
 
       .top-than {
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
         margin-top: 20px;
         width: 290px;
         margin-left: -20px;
       }
 
+<<<<<<< HEAD
+=======
       .card-top {
         width: 8rem;
         height: 11rem;
@@ -964,6 +1430,7 @@
         margin-left: -20px;
       }
 
+>>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
       .customer-feedback-card button {
         font: 0.5em sans-serif;
       }
