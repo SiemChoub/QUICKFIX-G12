@@ -1,5 +1,5 @@
 <x-app-layout>
-  <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+  <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100" style="margin-top:90px">
     <div class="container mx-auto px-4 mt-4 py-1 pb-16">
       <div class="flex justify-between items-center mb-3">
         <a href="{{ route('admin.services.index') }}" class="btn btn-warning shadow flex items-center border -mt-2 mb-1 border-none hover:bg-warning-600 transition-colors">

@@ -1,5 +1,5 @@
 <x-app-layout>
-  <main class="flex-1 bg-gray-200 px-4 py-6 sm:px-6 lg:px-8">
+  <main class="flex-1 bg-gray-200 px-4 py-6 sm:px-6 lg:px-8" style="margin-top:90px">
   <a href="{{ route('admin.categories.index') }}" class="btn btn-warning me-2 hover-fade shadow d-flex align-items-center border -mt-3 mb-2 border-none w-20 ">
       <i class="bx bx-arrow-back me-2"></i>
       Back
