@@ -10,8 +10,12 @@
       <div data-bs-toggle="modal" data-bs-target="#messageModal">
         <a class=" nav-link dropdown-toggle" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bx bx-mail-send"></i>
-          <span class="badge bg-warning rounded-pill">{{ $messages->where('receiver_id', 1)->where('is_read', 0)->count();
-          }}</span>
+          @php 
+            $mess = $messages->where('receiver_id', 1)->where('is_read', 0)->count();
+          @endphp
+          @if ($mess!=0)
+          <span class="badge bg-warning rounded-pill">{{$mess}}</span>
+          @endif
         </a>
       </div>
       <div class="dropdown ms-3">
@@ -188,8 +192,10 @@
                       </div>
                       <div class="flex-grow-1 text-start ms-3">
                         <h5 class="card-title font-bold mb-1" style="font-size:0.875rem;">{{$user->name}}</h5>
-                        @if ($is_read==0)
+                        @if ($is_read==0 && $user->role!="admin")
                         <p class=" mb-0 truncate" style="font-size:0.75rem;"><strong>{{$mess}}</strong></p>
+                        @elseif($is_read==1 && $user->role!="admin")
+                        <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">{{$mess}}</p>
                         @else
                         <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">You: {{$mess}}</p>
                         @endif
