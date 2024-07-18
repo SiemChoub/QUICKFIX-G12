@@ -117,6 +117,7 @@
                             <div class="rating mb-3">
                                 <p><i class='bx bxs-star'></i> Stars: <span id="service-stars"></span></p>
                             </div>
+                        
                             <div class="service-details">
                                 <p><i class='bx bxs-category'></i> <strong>Category:</strong> <span id="service-category"></span></p>
                                 <p><i class='bx bxs-dollar-circle'></i> <strong>Price:</strong> <span id="service-price"></span>$</p>
