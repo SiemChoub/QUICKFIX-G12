@@ -110,7 +110,7 @@ async function acceptBooking(bookingId) {
 
     const response = await axios.post(
       'http://127.0.0.1:8000/api/fixer/accept',
-      {
+        {
         fixer_id: fixer_id,
         booking_id:bookingId
       },
