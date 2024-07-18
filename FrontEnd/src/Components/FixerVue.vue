@@ -1,17 +1,22 @@
 <template>
   <div>
     <NavbarView />
-    <div class="search-container mt-5 d-flex justify-content-center">
-      <select class="form-select" v-model="selectedCareer" aria-label="Select Career">
-        <option value="">Select Career</option>
-        <option v-for="career in careers" :key="career.id" :value="career.name">{{ career.name }}</option>
+<div class="search-container mt-5 d-flex justify-content-center" style="margin-top:200px">
+      <select class="form-select">
+        <option value="1">Select Career</option>
+        <option value="1">Select Career</option>
+        <option value="1">Select Career</option>
+        <!-- <option v-for="career in careers" :key="career.id" :value="career.name">
+          {{ career.name }}
+        </option> -->
       </select>
-      <select class="form-select" v-model="selectedPlace" aria-label="Select Place">
+      <select class="form-select">
         <option value="">Select Place</option>
-        <option v-for="place in places" :key="place.id" :value="place.name">{{ place.name }}</option>
+        <!-- <option v-for="place in places" :key="place.id" :value="place.name">
+          {{ place.name }}
+        </option> -->
       </select>
     </div>
-
     <hr />
 
     <div class="repairers-list container m-4 d-flex gap-5 flex-wrap">
@@ -22,24 +27,49 @@
             <img :src="repairer.image || 'https://via.placeholder.com/100'" alt="Repairer Image" />
           </div>
           <div class="repairer-info">
-            <h3>Name: <span>{{ repairer.name }}</span></h3>
-            <p class="career">Career: <span>{{ repairer.career }}</span></p>
-            <p class="place">Place: <span>{{ repairer.place }}</span></p>
+            <h3>
+              {{ repairer.name }}
+            </h3>
+            <p class="career">
+              Career: <span>{{ repairer.career }}</span>
+            </p>
+            <p class="place">
+              Place: <span>{{ repairer.place }}</span>
+            </p>
           </div>
           <div class="repairer-icons">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal" @click="openBookingModal(repairer.id)">Book</button>
+            
+              <i class="bi bi-telephone"></i> 
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#bookingModal"
+              @click="openBookingModal(repairer.id)"
+            >Book
+            </button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Modal for Booking Form -->
-    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="bookingModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Booking</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body">
             <form @submit="submitBooking" class="booking-form">
@@ -47,12 +77,25 @@
                 <div class="form-group-map">
                   <div class="input-group">
                     <input type="hidden" v-model="location" />
-                    <input type="text" class="location form-control" v-model="reverseGeocodeResult" @input="searchSimilarPlaces" placeholder="Enter location or use the map icon" required>
-                    <button type="button" class="btn btn-map" @click="getCurrentLocation"><i class="bi bi-geo-alt"></i></button>
+                    <input
+                      type="text"
+                      class="location form-control"
+                      v-model="reverseGeocodeResult"
+                      @input="searchSimilarPlaces"
+                      placeholder="Enter location or use the map icon"
+                      required
+                    />
+                    <button type="button" class="btn btn-map" @click="getCurrentLocation">
+                      <i class="bi bi-geo-alt"></i>
+                    </button>
                   </div>
                   <div v-if="similarPlaces.length" class="similar-places">
                     <ul>
-                      <li v-for="place in similarPlaces" :key="place.id" @click="selectPlace(place)">
+                      <li
+                        v-for="place in similarPlaces"
+                        :key="place.id"
+                        @click="selectPlace(place)"
+                      >
                         {{ place.place_name }}
                       </li>
                     </ul>
@@ -66,12 +109,23 @@
                   </div>
                   <div class="form-group">
                     <label for="promotion">Promotion Code:</label>
-                    <input type="text" v-model="promotionCode" placeholder="Enter promotion code (if any)" class="form-control" />
+                    <input
+                      type="text"
+                      v-model="promotionCode"
+                      placeholder="Enter promotion code (if any)"
+                      class="form-control"
+                    />
                   </div>
                   <div class="form-group">
-                    <textarea v-model="information" placeholder="More information....." class="form-control"></textarea>
+                    <textarea
+                      v-model="information"
+                      placeholder="More information....."
+                      class="form-control"
+                    ></textarea>
                   </div>
-                  <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" >Book</button>
+                  <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                    Book
+                  </button>
                 </div>
                 <div class="map" ref="mapContainer"></div>
               </div>
@@ -114,7 +168,7 @@ onMounted(() => {
   getFixer()
 })
 const openBookingModal = (id) => {
-  fixer_id.value = id;
+  fixer_id.value = id
 }
 
 const getFixer = async () => {
@@ -208,14 +262,13 @@ const submitBooking = async (event) => {
       response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData)
     } else {
       response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData)
-      console.log(response.data);
+      console.log(response.data)
     }
     // Handle response if needed
   } catch (error) {
     console.error('Error submitting booking:', error)
   }
 }
-
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
@@ -326,6 +379,8 @@ const selectPlace = (place) => {
 <style scoped>
 .search-container {
   text-align: center;
+  margin-top: 500px;
+  background: #000;
 }
 hr {
   border: 2px solid orange;
@@ -400,24 +455,45 @@ hr {
 }
 
 .repairer-icons {
-  margin-top: 30px;
+  align-self: flex-end;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
+  width: 40%;
+  border-radius: 0px;
+  padding: 5px 0;
+  /* gap: ; */
 }
 
 .repairer-icons i {
-  font-size: 1.5rem;
-  color: orange;
+  color: white;
+  font-size: 20px;
   margin-right: 10px;
+  padding: 4px 10px;
+    border-radius: 50%;
+    background: orange;
+    cursor: pointer;
+
+  
 }
 
 .repairer-icons button {
-  flex: 0 0 auto;
+  /* flex: 0 0 auto; */
   margin-right: 10px;
-  background-color: orange;
+  background: orange;
+  /* border-redius:1px; */
+  padding: 8px 10px;
+  border: none;
 }
-
+.repairer-icons .btn-primary:hover {
+  background-color:gainsboro;
+  box-shadow: rgba(0, 0, 0, 1);
+  color: orange;
+}
+.repairer-icons i:hover{
+  cursor: pointer;
+  color: #000;
+}
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -544,23 +620,22 @@ hr {
   margin-left: 10px;
 }
 
-.btn {
-  border-radius: 0 5px 5px 0;
+/* .btn {
   cursor: pointer;
   font-size: 1rem;
   padding: 11.5px 20px;
   text-align: center;
-}
+} */
 
-.btn-primary {
+/* .btn-primary {
   background-color: orange;
   color: white;
   border: none;
-}
+} */
 
-.btn-primary:hover {
+/* .btn-primary:hover {
   background-color: #0056b3;
-}
+} */
 
 .btn-map {
   background-color: orange;

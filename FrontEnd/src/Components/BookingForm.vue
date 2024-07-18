@@ -92,9 +92,9 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['close'])
 const location = ref('')
 const reverseGeocodeResult = ref('')
-const selectedService = ref('')
 const bookingDate = ref('')
 const description = ref('')
 const promotionCode = ref('')
@@ -103,10 +103,13 @@ const categories = ref([])
 const services = ref([])
 const similarPlaces = ref([])
 
+let map
+
 onMounted(async () => {
   await fetchCategories()
   await fetchServices()
   initializeMap()
+  setTodayDate()
 })
 
 async function fetchCategories() {
@@ -127,50 +130,42 @@ async function fetchServices() {
   }
 }
 
-const submitBooking = async (event) => {
-  event.preventDefault();
-  console.log('submitBooking called');
-
-  const userString = localStorage.getItem('user');
+const submitBooking = async () => {
+  const userString = localStorage.getItem('user')
   if (!userString) {
-    console.error('No user found in localStorage');
-    return;
+    console.error('No user found in localStorage')
+    return
   }
 
-  const user = JSON.parse(userString);
-  const user_id = user.id;
-  const today = new Date().toISOString().split('T')[0];
-  const isImmediateBooking = bookingDate.value == today;
-  const information = ref('');
-
-  const [latitude, longitude] = location.value.split(',').map(coord => parseFloat(coord.trim()));
+  const user = JSON.parse(userString)
+  const user_id = user.id
+  const today = new Date().toISOString().split('T')[0]
+  const isImmediateBooking = bookingDate.value === today
+  const [latitude, longitude] = location.value.split(',').map(coord => parseFloat(coord.trim()))
 
   const bookingData = {
     service_id: props.service.id,
     user_id: user_id,
     date: bookingDate.value,
     promotion_id: promotionCode.value || null,
-    message: information.value || null,
+    message: description.value || null,
     latitude: latitude,
     longitude: longitude
-
-  };
+  }
 
   try {
-    let response;
+    let response
     if (isImmediateBooking) {
-      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
-      console.log(response.data);
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData)
     } else {
-      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData);
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData)
     }
+        emit('close') // Emit the close event
+    console.log(response.data)
   } catch (error) {
-    console.error('Error submitting booking:', error);
+    console.error('Error submitting booking:', error)
   }
-};
-
-
-
+}
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
@@ -181,7 +176,6 @@ const getCurrentLocation = () => {
         reverseGeocode(latLng)
         map.flyTo({ center: latLng, zoom: 16 })
         addMarker(latLng)
-        setTodayDate()
       },
       (error) => {
         console.error('Error getting location:', error)
@@ -197,7 +191,6 @@ const setTodayDate = () => {
   bookingDate.value = today
 }
 
-let map
 const initializeMap = () => {
   const cambodiaBounds = [
     [102.144, 10.486],
@@ -208,7 +201,7 @@ const initializeMap = () => {
     container: document.querySelector('.map'),
     style: 'mapbox://styles/mapbox/streets-v11',
     center: [104.917, 12.5657],
-    zoom: 6,
+    zoom: 8,
     maxBounds: cambodiaBounds
   })
 
@@ -239,9 +232,6 @@ async function reverseGeocode(latLng) {
     if (response.data.features.length > 0) {
       const place = response.data.features[0]
       reverseGeocodeResult.value = place.place_name
-
-      const street = place.text
-      const specificLocation = place.properties.address
     } else {
       console.error('No results found for reverse geocoding.')
     }

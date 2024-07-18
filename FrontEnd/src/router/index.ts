@@ -59,15 +59,11 @@ const routes = [
       requiresAuth: false // Public page, no authentication required
     }
   },
-  {
-    path: '/service',
-    name: 'service',
-    component: () => import('../views/Web/Service/ServicePage.vue')
-  },
+  
   {
     path: '/profile',
     name: 'profile',
-    component: () => import('../views/Web/Service/ProfileView.vue')
+    component: () => import('../Components/Service/ProfileEdit/Profile.vue')
   },
   {
     path: '/profile/edit',
@@ -161,9 +157,9 @@ const router = createRouter({
   routes
 })
 
+
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
-
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ name: 'Login' });
   } else if (to.meta.role && authStore.user?.role !== to.meta.role) {

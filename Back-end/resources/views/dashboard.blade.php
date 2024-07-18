@@ -42,7 +42,7 @@
           <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
             <div class="content flex flex-col items-start">
               <h6 class="text-lg font-medium text-gray-800 mb-1">Users</h6>
-              <p class="text-gray-600 text-sm">{{count($User)}}</p>
+              <p class="text-gray-600 text-sm">{{count($users)}}</p>
             </div>
             <div class="icon">
               <i class='bx bx-user text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>

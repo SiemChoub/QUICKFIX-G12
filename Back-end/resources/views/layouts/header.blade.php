@@ -150,89 +150,120 @@
               <button class="btn btn-warning" type="button" id="button-addon2"><i class="bx bx-search"></i></button>
             </div>
             <div class="d-flex justify-content-around mb-2">
-              <a href="#" class="btn-hover-border-bottom">Show All</a>
-              <a href="#" class="btn-hover-border-bottom">Fixer</a>
-              <a href="#" class="btn-hover-border-bottom">Customer</a>
+              <a href="#" id='showall' class="btn-hover-border-bottom">Show All</a>
+              <a href="#" id='fixers' class="btn-hover-border-bottom">Fixer</a>
+              <a href="#" id='customers' class="btn-hover-border-bottom">Customer</a>
             </div>
             <div class="list-group d-flex gap-3" id="userList" style="height: 430px; overflow-y: auto;">
               <!-- Example User List Item -->
-                <!-- --------------------------------- -->
-                  <div class=" btn message-card rounded-lg p-3 shadow-md hover:scale-105 transition-all">
-                    <div class="d-flex items-center">
+              @php 
+                $sender = [];
+              @endphp
+              @foreach ($messages as $message)
+                @if ($message->receiver_id == 1 && !in_array($message->sender_id, $sender))
+                    @php 
+                      foreach ($messages as $messag){
+                        if(($messag->receiver_id == 1 && $messag->sender_id == $message->sender_id)){
+                          $mess= $messag->message;
+                          $date=$messag->created_at;
+                          $is_read = $messag->is_read;
+                        }elseif(($messag->receiver_id == $message->sender_id  && $messag->sender_id ==1 )){
+                          $mess= $messag->message;
+                          $date=$messag->created_at;
+                          $is_read = 1;
+                        }
+                      } 
+                        $sender[] = $message->sender_id;
+                        $user = $users->where('id', $message->sender_id)->first();
+                      @endphp
+                 <!-- --------------------------------- -->
+                 <div id="{{ $user->role == 'fixer' ? 'fixer' : 'customer' }}" class="btn message-card rounded-lg p-3 shadow-md hover:scale-105 transition-all">
+                    <div id='{{$user->id}}' class="sen d-flex items-center">
                       <div class="position-relative">
-                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="rounded-circle" alt="Profile Image" style="height: 3rem; width: 3rem; object-fit: cover;">
+                        <img src="{{$user->profile}}" class="rounded-circle" alt="Profile Image" style="height: 3rem; width: 3rem; object-fit: cover;">
                         <span class="position-absolute bottom-0 end-0 translate-middle p-1 bg-success border border-light rounded-circle">
                           <span class="visually-hidden">Online</span>
                         </span>
                       </div>
                       <div class="flex-grow-1 text-start ms-3">
-                        <h5 class="card-title font-bold mb-1" style="font-size:0.875rem;">Chhaiya Sophorn</h5>
-                        <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">Fix lerng kop mg b o jol jit😋</p>
+                        <h5 class="card-title font-bold mb-1" style="font-size:0.875rem;">{{$user->name}}</h5>
+                        @if ($is_read==0)
+                        <p class=" mb-0 truncate" style="font-size:0.75rem;"><strong>{{$mess}}</strong></p>
+                        @else
+                        <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">You: {{$mess}}</p>
+                        @endif
                       </div>
-                      <span class="text-white rounded px-2 py-1 ms-3 mr-6" style="font-size:2em;">👷‍♂️</span>
-                      <p class="text-gray-600 mb-0" style="font-size:0.75rem;">7/8/2025</p>
-                    </div>
-                  </div>
-                <!-- -------------------------------- -->
-                <!-- --------------------------------- -->
-                  <div class="btn message-card rounded-lg p-3 shadow-md hover:scale-105 transition-all">
-                    <div class="d-flex items-center">
-                      <div class="position-relative">
-                        <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="rounded-circle" alt="Profile Image" style="height: 3rem; width: 3rem; object-fit: cover;">
-                        <span class="position-absolute bottom-0 end-0 translate-middle p-1 bg-success border border-light rounded-circle">
-                          <span class="visually-hidden">Online</span>
-                        </span>
-                      </div>
-                      <div class="flex-grow-1 text-start ms-3">
-                        <h5 class="card-title font-bold mb-1" style="font-size:0.875rem;">Chhaiya Sophorn</h5>
-                        <p class="text-gray-600 mb-0 truncate" style="font-size:0.75rem;">Fix lerng kop mg b o jol jit😋</p>
-                      </div>
+                      @if ($user->role=='fixer')
+                        <span class="text-white rounded px-2 py-1 ms-3 mr-6" style="font-size:2em;">👷‍♂️</span>
+                      @else
                       <span class="bg-warning text-white rounded px-2 py-1 ms-3 mr-6" style="font-size:0.50rem;">Customer</span>
-                      <p class="text-gray-600 mb-0" style="font-size:0.75rem;">7/8/2025</p>
+                      @endif
+                      <p class="text-gray-600 mb-0 truncate" style="font-size:0.70rem;">{{$date->format('Y-m-d')}}</p>
                     </div>
                   </div>
                 <!-- -------------------------------- -->
+                 @endif
+                @endforeach
                   <!-- Add more user items here -->
             </div>
           </div>
-          <!-- Message Area -->
-          <div class="col-md-8">
+          @php
+$sent = [];
+@endphp
+@foreach ($messages as $message)
+    @if ($message->receiver_id == 1 && !in_array($message->sender_id, $sent))
+        @php
+            $sent[] = $message->sender_id;
+            $account = $users->where('id', $message->sender_id)->first();
+        @endphp
+        <div id='sender{{ $account->id }}' class="discussion col-md-8" style='display:none'>
             <div class="d-flex align-items-center gap-3 p-2">
-              <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="rounded-circle" alt="Profile Image" style="height: 3rem; width: 3rem; object-fit: cover;">
-              <h5 class="card-title fw-bold mb-0 truncate" style="font-size:20px;">Chhaiya Sophorn</h5>
-              <p class="bg-warning text-white text-sm truncate rounded -ml-2" style="font-size:11px;">Fixer</p>
+                <img src="{{ $account->profile }}" class="rounded-circle" alt="Profile Image" style="height: 3rem; width: 3rem; object-fit: cover;">
+                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:20px;">{{ $account->name }}</h5>
+                <p class="bg-warning text-white text-sm truncate rounded -ml-2" style="font-size:11px;">{{ $account->role }}</p>
             </div>
             <span class='text-info -mr-9'>Online</span>
-            <div class='bg-light mb-3 p-3 d-flex' style="height: 370px; overflow-y: auto; border: 1px solid #ddd;">
-            <div id="chatBox" class="d-flex flex-column justify-content-end" style='width:100%'>
-              <!-- Conversation history will be appended here -->
-               <div class="other d-flex flex-col gap-2">
-                  <div class="d-flex align-items-center gap-2">
-                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="rounded-circle" alt="Profile Image" style="height: 2rem; width: 2rem; object-fit: cover;">
-                    <span class='bg-white p-2 rounded-lg'>Hello b</span>
-                  </div>
-                  <div class="d-flex align-items-center gap-2">
-                    <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="rounded-circle" alt="Profile Image" style="height: 2rem; width: 2rem; object-fit: cover;">
-                    <span class='bg-white p-2 rounded-lg'>Hello b</span>
-                  </div>
-                </div>
-                <!-- ----------------------- -->
-                <div class="us d-flex flex-col gap-4">
-                  <div class="text-end">
-                    <span class='bg-info p-2 rounded-lg'>Hi o</span>
-                  </div>
-                  <div class="text-end">
-                    <span class='bg-info p-2 rounded-lg'>Mean ka ey prozz pov</span>
-                  </div>
+            <div class='bg-light mb-3 p-3 d-flex' style="height: 370px; border: 1px solid #ddd;">
+                <div id="chatBox" class="d-flex flex-column justify-content-end" style='width:100%;overflow-y: auto;'>
+                    @foreach ($messages as $message)
+                        @if ($message->receiver_id == 1 && $message->sender_id == $account->id)
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <img src="{{ $account->profile }}" class="rounded-circle" alt="Profile Image" style="height: 2rem; width: 2rem; object-fit: cover;">
+                                <span class='bg-white p-2 rounded-lg'>{{ $message->message }}</span>
+                            </div>
+                            @php 
+                              $re = $message->sender_id;
+                            @endphp
+                        @elseif ($message->receiver_id == $account->id && $message->sender_id == 1)
+                            <div class="text-end mt-4">
+                            <span class='bg-info p-2 rounded-lg'>{{ $message->message }}</span>
+                          </div>
+                          @php 
+                              $re = $message->receiver_id;
+                            @endphp
+                        @endif
+                    @endforeach
                 </div>
             </div>
-            </div>
+            <form method="POST" action="{{ route('admin.chats.store') }}" enctype="multipart/form-data">
+    @csrf
             <div class="input-group">
-              <input type="text" id="messageInput" class="form-control" placeholder="Type a message">
-              <div class="input-group-append">
-                <button class="btn btn-warning" id="sendMessageButton" type="button">Send</button>
-              </div>
+                <input type="text" value='{{ $account->id }}' name='card' hidden>
+                <input type="text" value='{{ $re}}' name='receiver_id' hidden>
+                <input type="text" id="messageInput" name='message' class="form-control" placeholder="Type a message" aria-label="Message" require>
+                <div class="input-group-append">
+                    <button class="btn btn-warning" id="sendMessageButton" type="submit" aria-label="Send message">Send</button>
+                </div>
             </div>
+        </form>
+
+        </div>
+    @endif
+@endforeach
+          <div  class="discussion col-md-8 d-flex justify-content-center align-items-center" style='display:none'>
+            <span id='message_toselect'>
+              Selecte a chart to start messaging <i class='bx bxs-message-rounded-dots bx-tada text-yellow-300 text-3xl -ml-3' ></i>  
+            </span>
           </div>
         </div>
       </div>
@@ -240,8 +271,10 @@
   </div>
 </div>
 
-<style>
 
+
+
+<style>
 /* Tablet styles */
 @media (max-width: 991px) and (min-width: 768px) {
 
@@ -296,3 +329,80 @@
     color: #333; /* Text color when card is focused or active */
   }
 </style>
+
+@if (session('messaged'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+            var cardId = "{{ session('card') }}"; // Retrieve the card ID from session
+            var cardElement = document.getElementById(cardId);
+            if (cardElement) {
+                requestAnimationFrame(function() {
+                    cardElement.click();
+                    messageModal.show(); // Show the message modal immediately
+                });
+            } else {
+                console.warn("Card element not found:", cardId);
+            }
+        });
+    </script>
+@endif
+
+
+<script>
+  // -------------spacific------------
+  let showall = document.querySelector('#showall');
+  let fixers = document.querySelector('#fixers');
+  let customers = document.querySelector('#customers');
+  let fixer = document.querySelector('#fixer');
+  let customer = document.querySelector('#customer');
+
+  showall.addEventListener('click', function () {
+    customer.style.display='block';
+    fixer.style.display = 'block';
+    fixer.style.animation = 'fadeIn 0.5s ease';
+    customer.style.animation = 'fadeIn 0.5s ease';
+  });
+
+  fixers.addEventListener('click', function () {
+    customer.style.display='none';
+    fixer.style.display = 'block';
+    fixer.style.animation = 'fadeIn 0.5s ease';
+  });
+
+  customers.addEventListener('click', function () {
+    fixer.style.display='none';
+    customer.style.display = 'block';
+    customer.style.animation = 'fadeIn 0.5s ease';
+  });
+
+  // -----------end spacific-----------------------
+  let message_card  = document.querySelectorAll('.sen');
+  let message_toselect  = document.querySelector('#message_toselect');
+
+  for(let sender of message_card) {
+    sender.addEventListener('click', function () {
+      let discuss = '#sender'+ sender.id;
+      message_toselect.style.display="none";
+      document.querySelector(discuss).style.display="block";
+      message_toselect= document.querySelector(discuss);
+      let send = document.querySelector(discuss).children[3].children[1].children[0];
+      send.addEventListener('click', function () {
+        let messages = document.querySelector(discuss).children[3].children[0];
+        if(messages.value!='') {
+          let main = document.querySelector(discuss).children[2].children[0];
+          let d = document.createElement('div');
+          d.classList.add('text-end','mt-4');
+          let newMessage = document.createElement('span');
+          newMessage.classList.add('bg-info', 'p-2', 'rounded-lg');
+          newMessage.style.display = 'inline-block';
+          newMessage.style.whiteSpace = 'normal';
+          newMessage.textContent = messages.value;
+          d.appendChild(newMessage);
+          main.appendChild(d);
+          messages.value='';
+        }
+      });
+    });
+  }
+</script>

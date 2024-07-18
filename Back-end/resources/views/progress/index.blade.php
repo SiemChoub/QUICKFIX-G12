@@ -22,20 +22,13 @@
             </div>
             <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2">
                 @can('Progress access')
-                    {{-- @foreach ($fixing_progress->filter(function($booking) {
+                    @foreach ($fixing_progress->filter(function($booking) {
                         return $booking->action === 'progress';
-                    }) as $booking) --}}
-                    @foreach ($fixing_progress as $progre)
-                    @if ($progre->action === 'progress')
-                        @php 
-                        $booking = $bookings->where('id', $progre->booking_id)->first();
-                        @endphp
-                        
-                        {{$booking}}
-                        @endif
-                    @endforeach
+                    }) as $booking)
+                   
+                
 
-                        {{-- <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
+                        <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
                             <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
                                 <img src="{{ $users->where('id', $booking->user_id)->pluck('profile')->first() }}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
                                 <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
@@ -141,9 +134,8 @@
                                     </div>
                                 @endcan
                             </div>
-                        </div> --}}
-                        {{-- @endif
-                    @endforeach --}}
+                        </div> 
+                    @endforeach
                 @endcan
             </div>
         </div>

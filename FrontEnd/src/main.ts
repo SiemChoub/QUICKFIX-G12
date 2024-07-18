@@ -3,8 +3,11 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css' // Import Bootstrap CSS
 import 'bootstrap/dist/js/bootstrap.min.js' // Import Bootstrap JS
 
-import './assets/main.css' // Custom CSS styles
 
+import './assets/main.css' // Custom CSS styles
+import { registerLicense } from "@syncfusion/ej2-base";
+
+registerLicense("Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCdkx3QHxbf1x0ZFxMYFxbRnVPIiBoS35RckVkWHlccXRVQmdbUk11");
 // Import necessary Vue and related libraries
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

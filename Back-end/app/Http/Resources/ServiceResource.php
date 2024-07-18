@@ -23,7 +23,6 @@ class ServiceResource extends JsonResource
             'category'=>$this->category->name,
             'created_at'=>$this->created_at,
             'updated_at'=>$this->updated_at,
-            // 'discounts'=>DiscountResource::collection($this->discounts)
         ];
     }
 }

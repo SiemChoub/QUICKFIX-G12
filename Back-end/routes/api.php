@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\CategoryController;
-use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\BookingController; 
 use App\Http\Controllers\API\Bookin_memediatelyController;
 use App\Http\Controllers\API\Bookin_deadlineController;
 use App\Http\Controllers\Api\PromotionService;
@@ -98,6 +98,5 @@ Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
 Route::get('/fixer/accepted/{id}', [FixingProgressController::class, 'show']);
 Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAccept']);
 Route::put('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
-
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
 Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
