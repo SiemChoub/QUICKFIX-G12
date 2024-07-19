@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::create('bookin_immediatelies', function (Blueprint $table) {
             $table->id();
-<<<<<<< HEAD
-=======
-            // $table->integer('service_id');
->>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
             $table->integer('user_id');
             $table->integer('service_id')->nullable();
             $table->string('promotion_id')->nullable();

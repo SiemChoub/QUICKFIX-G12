@@ -77,22 +77,16 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('requests','RequestController');
         Route::resource('progresss','ProgressController');
         Route::resource('dones','DoneController');
-<<<<<<< HEAD
         Route::resource('feedbacks','FeedbackController');
         Route::resource('chats','ChatController');
-=======
         Route::resource('payments','PaymentController');
 
->>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
         Route::put('/update/{id}', [UserController::class, 'updateInformation']);
         Route::post('/update/profile/{id}',[UserController::class,'updateProfile'])->name('profile.update');
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
-<<<<<<< HEAD
         Route::post('/admin/chat/store', [ChatController::class, 'store'])->name('admin.ChatController.store');
-=======
 
->>>>>>> b19eb38ff361c44e7f5883fd6b8534771c1c8c0f
 });
