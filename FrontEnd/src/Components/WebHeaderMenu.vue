@@ -446,5 +446,56 @@ const toggleNotifications = () => {
     left: unset;
     right: 10px; /* Adjust notification dropdown position */
   }
-}
+
+  .navbar-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .center {
+    order: -1; /* Move Offer Button to the top */
+  }
+
+  .right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem; /* Adjust spacing between right-aligned icons */
+  }
+
+  .navbar-nav-left {
+    display: flex;
+    justify-content: center;
+    flex: 1; /* Take remaining space on the left */
+    gap: 1rem; /* Adjust spacing between left-aligned items */
+  }
+
+  .nav-item {
+    margin: 0 10px; /* Adjust horizontal spacing between icons */
+    position: relative; /* Ensure tooltip positioning works */
+  }
+
+  .tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: #0a0a0a88;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: -55%;
+    left: 50%;
+    margin-left: -60px; /* Adjust tooltip positioning */
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 15px;
+  }
+
+  .nav-item:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  }
 </style>
