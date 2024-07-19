@@ -37,6 +37,8 @@ class ServiceController extends Controller
         return view('service.index',['services'=>$Service]);
     }
 
+   
+
 
 
     /**
