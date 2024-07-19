@@ -86,6 +86,7 @@ class AdminSeeder extends Seeder
         $permission = Permission::create(['name' => 'Progress delete']);
 
         $permission = Permission::create(['name' => 'Done access']);
+        $permission = Permission::create(['name' => 'Feedback delete']);
 
         $permission = Permission::create(['name' => 'Payment access']);
         $permission = Permission::create(['name' => 'Payment create']);

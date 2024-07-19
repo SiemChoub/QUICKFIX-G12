@@ -1,5 +1,5 @@
 <x-app-layout>
-  <div>
+  <div style="margin-top:60px">
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
       <div class="container mx-auto px-6 py-8">
         <div class="product w-100 h-20 d-flex justify-content-around">
@@ -58,8 +58,8 @@
                   <h6 class="text-lg font-medium text-gray-800 mb-1">Top Service</h6>
                 </div>
                 <div class="top-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
-                  
-                <!-- ------------------------- -->
+
+                  <!-- ------------------------- -->
                   <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
                     <div class="title relative">
                       <p class="text-gray-800 font-medium text-sm">Air Conditioner Repair</p>
@@ -295,77 +295,60 @@
               </div>
               <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2" style="height: 200px; overflow-y: scroll;">
                 <!-- ------------------------- -->
+                @if ( count ($feedbacks) == 0)
+                <div class="feedback mt-12" style="text-align: center;">
+                  Nothing Feedback from Customer
+                </div>
+                
+                @endif
+                @foreach ($feedbacks as $feedback)
+                @php
+                $user = $users->where('id',$feedback->user_id)->first()
+                @endphp
                 <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
+                  <img src="{{$user->profile}}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
                   <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
+                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$user->name}}</h5>
+                    <p class="text-gray-600 text-sm truncate-text" style="font-size:10px;">
+                      {{$feedback->content}}
+                    </p>
                   </div>
                   <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
+                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#feedbackDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0" data-feedback-image="{{ $user->profile }}" data-feedback-name="{{ $user->name }}" data-feedback-content="{{ $feedback->content }}"><i class="bx bx-love"></i>view more</button>
+                    @can('Feedback delete')
+                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $feedback->id }})">Delete</button>
+
+                    <!-- JavaScript for confirmation dialog -->
+                    <script>
+                    function confirmDelete(id) {
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Perform the delete action by submitting the form
+                                document.getElementById(`delete-form-${id}`).submit();
+                            }
+                        });
+                    }
+                    </script>
+
+                    <!-- Form for deletion -->
+                    <form id="delete-form-{{ $feedback->id }}" action="{{ route('admin.feedbacks.destroy', $feedback->id) }}" method="POST" class="d-none">
+                        @csrf
+                        @method('delete')
+                    </form>
+                @endcan
+
                   </div>
                 </div>
                 <!-- ---------------------------------- -->
-                <!-- ------------------------- -->
-                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                  </div>
-                  <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
-                  </div>
-                </div>
-                <!-- ---------------------------------- -->
-                <!-- ------------------------- -->
-                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                  </div>
-                  <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
-                  </div>
-                </div>
-                <!-- ---------------------------------- -->
-                <!-- ------------------------- -->
-                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                  </div>
-                  <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
-                  </div>
-                </div>
-                <!-- ---------------------------------- -->
-                <!-- ------------------------- -->
-                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                  </div>
-                  <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
-                  </div>
-                </div>
-                <!-- ---------------------------------- -->
-                <!-- ------------------------- -->
-                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="https://i.pinimg.com/564x/99/7a/0f/997a0f428eb6e32f37b6ff0c7b863d0f.jpg" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Chhaiya Sophorn</h5>
-                    <p class="text-gray-600 text-sm" style="font-size:10px;">Fix lerng kop mg b o jol jit😋</p>
-                  </div>
-                  <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#lowServiceDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0"><i class="bx bx-love"></i>view more</button>
-                  </div>
-                </div>
-                <!-- ---------------------------------- -->
+                @endforeach
               </div>
             </div>
             <!-- ---------------- customer feedback end----------------- -->
@@ -378,6 +361,9 @@
     </main>
   </div>
   </div>
+<!-- Example CDN includes for SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
   <!-- ---------------------top service detail------------------ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -434,7 +420,35 @@
       </div>
     </div>
   </div>
+  <!-- ------------end low service detail ------------------------ -->
 
+  <!-- ---------------- feedback-------------------------------- -->
+  <div class="modal fade" id="feedbackDetail" tabindex="-1" aria-labelledby="feedbackDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-custom-width">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-white">
+          <h5 class="modal-title" id="topfeedbackDetailLabel">Feedback detail</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <img src="" class="img-fluid rounded" alt="feedback Image" id="feedback-image">
+            </div>
+            <div class="col-md-6">
+              <h4 class="text-warning" id="feedback-name"></h4>
+              <p id="feedback-content"></p>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-warning btn-sm" style="background-color: red;">Delete</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ------------ low feedback detail ------------------------ -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
   <script>
     // ......................graph building....................
@@ -512,7 +526,32 @@
         model_lowservice.querySelector('#service-star').textContent = servoceStars;
       });
     });
+
+    /// feedback////
+
+    document.getElementById('feedbackDetail').addEventListener('show.bs.modal', function(event) {
+
+      var button = event.relatedTarget;
+
+      document.getElementById('feedback-image').src = button.dataset.feedbackImage;
+      document.getElementById('feedback-name').textContent = button.dataset.feedbackName;
+      document.getElementById('feedback-content').textContent = button.dataset.feedbackContent;
+
+
+    });
   </script>
+  @if(session('showAlertDelete'))
+<script>
+    Swal.fire({
+        title: "User's eedback deleted Success!",
+        text: '{{ session("success") }}',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#ff9800',
+        showCloseButton: true,
+    });
+</script>
+@endif
   <style>
     .card-top:hover .detail-button {
       display: inline-block !important;
@@ -547,7 +586,16 @@
       font-size: 2rem;
     }
 
+    /* Custom CSS for modal dialog width */
+    .modal-custom-width {
+      max-width: 600px;
+    }
 
+    .truncate-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     /* Tablet styles */
     @media (max-width: 991px) and (min-width: 768px) {

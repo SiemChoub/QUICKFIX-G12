@@ -59,6 +59,7 @@ Route::get('/admin/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('admin.dashboard');
 
+
 require __DIR__.'/auth.php';
 
 
@@ -76,6 +77,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('requests','RequestController');
         Route::resource('progresss','ProgressController');
         Route::resource('dones','DoneController');
+        Route::resource('feedbacks','FeedbackController');
         Route::resource('chats','ChatController');
         Route::resource('payments','PaymentController');
 

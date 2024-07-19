@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookingResource;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Booking;
@@ -22,6 +23,7 @@ class BookingController extends Controller
         $action = 'request'; // Define the action you want to filter by
 
         $bookings = Booking::where('action', $action)->get();
+        $bookings = BookingResource::collection($bookings);
 
         return response()->json($bookings);
     } catch (\Exception $e) {

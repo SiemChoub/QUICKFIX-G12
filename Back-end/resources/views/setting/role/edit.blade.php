@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div>
+    <div style="margin-top:90px">
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
             <div class="container mx-auto px-6 py-4">
                 <div class="mb-4">
