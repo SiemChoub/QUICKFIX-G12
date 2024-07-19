@@ -2,7 +2,7 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <div class="container mt-3">
+    <div style="margin-top:90px">
         <div class="mb-2 d-flex gap-3 align-items-center">
             <button id="immediately" class="btn btn-warning d-flex align-items-center gap-2 shadow-sm" style="padding: 10px 20px; font-size: 1.1rem; border-radius: 10px; transition: all 0.3s ease;">
                 <i class='bx bxs-user-voice me-2' style='font-size: 1.5rem;'></i>
@@ -22,20 +22,14 @@
             </div>
             <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2">
                 @can('Progress access')
-                    {{-- @foreach ($fixing_progress->filter(function($booking) {
-                        return $booking->action === 'progress';
-                    }) as $booking) --}}
-                    @foreach ($fixing_progress as $progre)
-                    @if ($progre->action === 'progress')
+                    @php 
+                        $fixpro = $fixing_progress->where('action', 'progress');
+                    @endphp
+                    @foreach($fixpro as $ha)
                         @php 
-                        $booking = $bookings->where('id', $progre->booking_id)->first();
+                            $booking=$bookings->where('id',$ha->booking_id)->first();
                         @endphp
-                        
-                        {{$booking}}
-                        @endif
-                    @endforeach
-
-                        {{-- <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
+                        <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
                             <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
                                 <img src="{{ $users->where('id', $booking->user_id)->pluck('profile')->first() }}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
                                 <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
@@ -53,7 +47,6 @@
                                         }
 
                                         if ($booking->type == 'immediately') {
-                                            $booking_date = $immediatelys->where('id', $booking->booking_type_id)->pluck('date')->first();
                                             $deadline = 'Fix now';
                                             $customer_message = $immediatelys->where('id', $booking->booking_type_id)->pluck('message')->first();
                                             $customer_imagesend = $immediatelys->where('id', $booking->booking_type_id)->pluck('image')->first();
@@ -61,11 +54,10 @@
                                         } elseif ($booking->type == 'deadline') {
                                             $customer_message = $deadlines->where('id', $booking->booking_type_id)->pluck('message')->first();
                                             $customer_imagesend = $deadlines->where('id', $booking->booking_type_id)->pluck('image')->first();
-                                            $booking_date = $deadlines->where('id', $booking->booking_type_id)->pluck('created_at')->first();
                                             $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date')->first();
                                             $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
                                         }
-                                       
+                                        $booking_date = $booking->created_at;
                                         if (isset($service_id) && $service_id!=null) {
                                             $service_name = $services->where('id', $service_id)->pluck('name')->first();
                                         }
@@ -141,9 +133,8 @@
                                     </div>
                                 @endcan
                             </div>
-                        </div> --}}
-                        {{-- @endif
-                    @endforeach --}}
+                        </div> 
+                    @endforeach
                 @endcan
             </div>
         </div>

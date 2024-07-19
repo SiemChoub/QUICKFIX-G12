@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feedback_types', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('type_id');
+            $table->unsignedBigInteger('fixer_id');
+            $table->string('price');
+            $table->date('deadline');
+            $table->string('description');
+            $table->string('status')->default('no');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -23,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('feedback_types');
+        Schema::dropIfExists('payments');
     }
 };

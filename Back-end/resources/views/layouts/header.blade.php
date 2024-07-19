@@ -1,6 +1,6 @@
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<header>
+<header style="position: fixed; top: 0; width: 80%; z-index: 1000;">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand" href="#">
@@ -10,7 +10,10 @@
       <div data-bs-toggle="modal" data-bs-target="#messageModal">
         <a class=" nav-link dropdown-toggle" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bx bx-mail-send"></i>
-          <span class="badge bg-warning rounded-pill">5</span>
+          @php $ch =$messages->where('receiver_id', 1)->where('is_read', 0)->count(); @endphp
+          @if($ch>0)
+          <span class="badge bg-warning rounded-pill">{{$ch}}</span>
+          @endif
         </a>
       </div>
       <div class="dropdown ms-3">

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('feedback', function (Blueprint $table) {
             $table->id();
-            $table->integer('type');
+            $table->integer('user_id');
+            $table->string('content');
             $table->timestamps();
         });
     }

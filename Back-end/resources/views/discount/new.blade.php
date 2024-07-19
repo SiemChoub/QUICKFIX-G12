@@ -1,5 +1,5 @@
 <x-app-layout>
-     <main class="flex-1 bg-gray-100 px-4 py-4 sm:px-6 lg:px-8">
+     <main class="flex-1 bg-gray-100 px-4 py-4 sm:px-6 lg:px-8" style="margin-top:90px">
        <div class="flex justify-between items-center mb-3">
          <a href="{{ route('admin.discounts.index') }}" class="btn btn-warning shadow flex items-center border -mt-2 mb-1 border-none hover:bg-warning-600 transition-colors">
            <i class="bx bx-arrow-back mr-2 animate-pulse"></i>

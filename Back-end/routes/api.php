@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\API\UserController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
@@ -12,8 +13,10 @@ use App\Http\Controllers\Api\PromotionService;
 use App\Http\Controllers\Api\FixingProgressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ChatController;
+use App\Http\Controllers\API\FeedbackController;
 use App\Http\Controllers\API\FixerController;
 use App\Http\Controllers\API\PromotionController;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -82,6 +85,14 @@ Route::delete('/promotion/delete/{id}', [PromotionController::class, 'destroy'])
 Route::get('/promotion/list', [PromotionController::class, 'index']);
 
 
+// --------------------------------- feedback API --------------------------------
+
+Route::get('/feedback/list', [FeedbackController::class, 'index']);
+Route::post('/feedback/create', [FeedbackController::class, 'store']);
+Route::put('/feedback/update/{id}', [FeedbackController::class, 'update']);
+Route::get('/feedback/show/{id}', [FeedbackController::class, "showByUser"]);
+Route::delete('/feedback/delete/{id}', [FeedbackController::class, "destroy"]);
+
 // --------------------- chat --------------------
 Route::get('/booking', [BookingController::class, 'index']);
 
@@ -103,3 +114,7 @@ Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
 
 Route::post('/process-payment', 'PaymentController@processPayment');
+// --------------------- admin routes -------------------------------
+Route::get('/payment',[PaymentController::class,'getPay']);
+Route::get('/paid',[PaymentController::class,'getPay']);
+Route::post('/payment/create',[PaymentController::class,'store']);
