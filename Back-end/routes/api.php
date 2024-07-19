@@ -100,3 +100,6 @@ Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAcc
 Route::put('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
 Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
+
+
+Route::post('/process-payment', 'PaymentController@processPayment');
