@@ -90,3 +90,7 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::post('/admin/chat/store', [ChatController::class, 'store'])->name('admin.ChatController.store');
 
 });
+
+// routes/web.php
+// Route::post('/process-payment', 'PaymentController@processPayment');
+

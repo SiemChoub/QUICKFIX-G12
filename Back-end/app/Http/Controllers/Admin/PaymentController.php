@@ -1,5 +1,29 @@
 <?php
 
+<<<<<<< HEAD
+// app/Http/Controllers/PaymentController.php
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class PaymentController extends Controller
+{
+    public function processPayment(Request $request)
+    {
+        $data = $request->validate([
+            'username' => 'required|string',
+            'cardNumber' => 'required|string',
+            'expMonth' => 'required|integer',
+            'expYear' => 'required|integer',
+            'cvv' => 'required|string',
+            'paypalType' => 'nullable|string',
+            'bank' => 'nullable|string'
+        ]);
+
+        // Handle the payment processing logic here
+
+        return response()->json(['message' => 'Payment processed successfully'], 200);
+=======
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -98,5 +122,6 @@ class PaymentController extends Controller
     public function destroy(string $id)
     {
         //
+>>>>>>> ba32cee5b36ef94d1535d3af5280ae65465b0309
     }
 }

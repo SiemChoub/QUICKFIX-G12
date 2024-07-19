@@ -113,6 +113,7 @@ Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChats
 Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
 
+Route::post('/process-payment', 'PaymentController@processPayment');
 // --------------------- admin routes -------------------------------
 Route::get('/payment',[PaymentController::class,'getPay']);
 Route::get('/paid',[PaymentController::class,'getPay']);
