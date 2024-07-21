@@ -26,10 +26,10 @@
             class="btn w-100 mb-2 position-relative"
           >
             Booking List
-            <span
+            <span v-if="request !==0"
               class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
             >
-              0
+              {{request}}
               <span class="visually-hidden">unread messages</span>
             </span>
           </button>
@@ -42,10 +42,10 @@
             class="btn w-100 mb-2 position-relative"
           >
             Accepted
-            <span
+            <span v-if="accepted !==0"
               class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
             >
-              0
+              {{accepted}}
               <span class="visually-hidden">unread messages</span>
             </span>
           </button>
@@ -150,6 +150,8 @@ export default {
   data() {
     return {
       users: {},
+      request:null,
+      accepted:null,
       currentView: 'Dashboard'
     }
   },
@@ -176,13 +178,38 @@ export default {
         console.error('Logout failed:', error)
       }
     },
+    async countRequest() {
+      try {
+        const respone = await axios.get(
+          'http://127.0.0.1:8000/api/booking'
+          
+        )
+        this.request =  respone.data.count
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
+    },
+    async countAccepted() {
+      const fixer = JSON.parse(localStorage.getItem('user')).id
+      try {
+        const respone = await axios.get(
+            `http://127.0.0.1:8000/api/fixer/accepted/${fixer}`
+          
+        )
+        this.accepted =  respone.data.count
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
+    },
     getUserData() {
       this.users = JSON.parse(localStorage.getItem('user')) || {}
     }
   },
 
   mounted() {
-    this.getUserData()
+    this.getUserData(),
+    this.countRequest();
+    this.countAccepted();
   }
 }
 </script>
