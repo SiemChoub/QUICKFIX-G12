@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\{
     ProfileController,
     MailSettingController,
     UserController,
-    ChatController, 
+    ChatController,
 };
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Mail;
