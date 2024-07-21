@@ -46,8 +46,8 @@
             Skill
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'History' }"
-            @click="setCurrentView('History')"
+            :class="{ 'btn-outline-secondary active': currentView === 'HistoryFixer' }"
+            @click="setCurrentView('HistoryFixer')"
             class="btn w-100 mb-2"
           >
             History
@@ -122,6 +122,7 @@ import ChatView from './ChatView.vue';
 import HistoryView from './HistoryView.vue';
 import AcceptBooking from './AcceptBooking.vue';
 import Payment from './Payment.vue';
+import HistoryFixer from './HistoryFixer.vue';
 
 export default {
   name: 'NavBar',
@@ -132,7 +133,8 @@ export default {
     ChatView,
     HistoryView,
     AcceptBooking,
-    Payment
+    Payment,
+    HistoryFixer
   },
   data() {
     return {

@@ -49,6 +49,16 @@
             OFFER
           </button>
         </div>
+          <div class="center1">
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target=".bd-example-modal-lg"
+          >
+            <i class="bi bi-cart"></i>
+          </button>
+        </div>
 
         <div
           class="modal fade custom-slide-modal"
@@ -76,7 +86,7 @@
                     <input
                       type="email"
                       class="form-control me-2"
-                      id="exampleFormControlInput1"
+                      id="exampleFormControlInput"
                       placeholder="Search"
                     />
                   </div>
@@ -92,9 +102,66 @@
                     </div>
                     <div class="date">Promotion {{ promotion.start_date }}</div>
                     <div class="date">Promotion {{ promotion.end_date }}</div>
-                    
                   </div>
                 </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Large modal -->
+
+         <div
+          class="modal fade bd-example-modal-lg"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="myLargeModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Large Modal</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="container mt-5">
+    <h1 class="text-center mb-4">History of Fixer</h1>
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col">Status</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td><span class="badge bg-success">Completed</span></td>
+          <td>2024-07-01</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Jacob</td>
+          <td><span class="badge bg-warning text-dark">In Progress</span></td>
+          <td>2024-07-15</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td>Larry the Bird</td>
+          <td><span class="badge bg-secondary text-light">Pending</span></td>
+          <td>2024-07-19</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
               </div>
             </div>
           </div>
@@ -200,7 +267,7 @@ onMounted(async () => {
 })
 const logout = async () => {
   try {
-    authStore.logout() 
+    authStore.logout()
     alert('User logged out successfully!')
     location.reload()
   } catch (error) {
@@ -270,6 +337,10 @@ const toggleNotifications = () => {
 }
 .card .date {
   font-size: 15px;
+}
+.modal-backdrop{
+  background: white;
+  position:relative;
 }
 /* Logo */
 .logo {
@@ -343,6 +414,12 @@ const toggleNotifications = () => {
 }
 .center {
   display: flex;
+  flex: 0.2;
+  justify-content: center;
+}
+.center1 {
+  display: flex;
+  margin-left: 4%;
   flex: 0.2;
   justify-content: center;
 }
