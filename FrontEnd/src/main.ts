@@ -2,6 +2,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css' 
 import 'bootstrap/dist/js/bootstrap.min.js' 
 
+import '@fortawesome/fontawesome-free/css/all.css';
+
 
 import './assets/main.css' 
 import { registerLicense } from "@syncfusion/ej2-base";

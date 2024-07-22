@@ -1,11 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\{
     ProfileController,
     MailSettingController,
     UserController,
-    ChatController, 
+    ChatController,
 };
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Support\Facades\Mail;
@@ -58,6 +59,7 @@ Route::get('/admin/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('admin.dashboard');
 
+
 require __DIR__.'/auth.php';
 
 
@@ -77,6 +79,8 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('dones','DoneController');
         Route::resource('feedbacks','FeedbackController');
         Route::resource('chats','ChatController');
+        Route::resource('payments','PaymentController');
+
 
         Route::get('/profile',[ProfileController::class,'index'])->name('profile');
         Route::put('/update/{id}', [UserController::class, 'updateInformation']);
@@ -84,4 +88,9 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::get('/mail',[MailSettingController::class,'index'])->name('mail.index');
         Route::put('/mail-update/{mailsetting}',[MailSettingController::class,'update'])->name('mail.update');
         Route::post('/admin/chat/store', [ChatController::class, 'store'])->name('admin.ChatController.store');
+
 });
+
+// routes/web.php
+// Route::post('/process-payment', 'PaymentController@processPayment');
+

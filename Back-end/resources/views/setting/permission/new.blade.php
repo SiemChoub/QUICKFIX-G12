@@ -1,6 +1,6 @@
 <x-app-layout>
    <div>
-        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200" style="margin-top:90px">
             <div class="container mx-auto px-6 py-1">
             <a href="{{ route('admin.permissions.index') }}" class="btn btn-warning shadow flex items-center border mt-2 mb-1 border-none hover:bg-warning-600 transition-colors">
                 <i class="bx bx-arrow-back mr-2 animate-pulse"></i>

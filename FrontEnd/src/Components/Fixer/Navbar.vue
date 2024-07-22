@@ -50,6 +50,13 @@
             </span>
           </button>
           <button
+            :class="{ 'btn-outline-secondary active': currentView === 'Payment' }"
+            @click="setCurrentView('Payment')"
+            class="btn w-100 mb-2"
+          >
+            Payment
+          </button>
+          <button
             :class="{ 'btn-outline-secondary active': currentView === 'Skill' }"
             @click="setCurrentView('Skill')"
             class="btn w-100 mb-2"
@@ -57,8 +64,8 @@
             Skill
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'History' }"
-            @click="setCurrentView('History')"
+            :class="{ 'btn-outline-secondary active': currentView === 'HistoryFixer' }"
+            @click="setCurrentView('HistoryFixer')"
             class="btn w-100 mb-2"
           >
             History
@@ -129,13 +136,15 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Dashboard from './DashBoard.vue'
-import Booking from './ListBooking.vue'
-import Skill from './CardSkill.vue'
-import ChatView from './ChatView.vue'
-import HistoryView from './HistoryView.vue'
-import AcceptBooking from './AcceptBooking.vue'
+import axios from 'axios';
+import Dashboard from './DashBoard.vue';
+import Booking from './ListBooking.vue';
+import Skill from './CardSkill.vue';
+import ChatView from './ChatView.vue';
+import HistoryView from './HistoryView.vue';
+import AcceptBooking from './AcceptBooking.vue';
+import Payment from './Payment.vue';
+import HistoryFixer from './HistoryFixer.vue';
 
 export default {
   name: 'NavBar',
@@ -145,7 +154,9 @@ export default {
     Skill,
     ChatView,
     HistoryView,
-    AcceptBooking
+    AcceptBooking,
+    Payment,
+    HistoryFixer
   },
   data() {
     return {

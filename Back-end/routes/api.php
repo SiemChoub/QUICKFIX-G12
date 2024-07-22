@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\API\UserController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\API\PostController;
 use App\Http\Controllers\API\ServiceController;
@@ -115,3 +116,8 @@ Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
 
 Route::post('/mail', [MailController::class, 'store']);
+Route::post('/process-payment', 'PaymentController@processPayment');
+// --------------------- admin routes -------------------------------
+Route::get('/payment',[PaymentController::class,'getPay']);
+Route::get('/paid',[PaymentController::class,'getPay']);
+Route::post('/payment/create',[PaymentController::class,'store']);
