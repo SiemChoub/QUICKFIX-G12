@@ -36,7 +36,7 @@
                 experience in repairing a wide range of vehicles, including cars, motorcycles, and
                 more.
               </div>
-              <button>See More</button>
+              <!-- <button>See More</button> -->
             </div>
           </div>
           <div
@@ -51,7 +51,7 @@
                 We use high-quality, genuine parts and materials in our repairs to ensure durability
                 and performance.
               </div>
-              <button>See More</button>
+              <!-- <button>See More</button> -->
             </div>
           </div>
           <div
@@ -66,7 +66,7 @@
                 We stay updated with the latest advancements in automotive technology and repair
                 techniques to ensure that we can diagnose and resolve issues effectively.
               </div>
-              <button>See More</button>
+              <!-- <button>See More</button> -->
             </div>
           </div>
           <div
@@ -81,7 +81,7 @@
                 Our friendly and knowledgeable staff are dedicated to ensuring your satisfaction. We
                 prioritize clear communication and strive to exceed your expectations.
               </div>
-              <button>See More</button>
+              <!-- <button>See More</button> -->
             </div>
           </div>
           <div
@@ -96,7 +96,7 @@
                 Each vehicle is treated with individual attention and care. We tailor our services
                 to meet your specific needs and preferences.
               </div>
-              <button>See More</button>
+              <!-- <button>See More</button> -->
             </div>
           </div>
         </div>
@@ -110,7 +110,8 @@
       <!-- Additional Content -->
       <div class="content">
         <button id="feedbackBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Feedback
+                      <i class="bi bi-chat-dots icon"> Feedback</i>
+
         </button>
         <div
           class="modal fade"
@@ -250,8 +251,8 @@ onBeforeUnmount(() => {
     11,
     11,
     0.142
-  ); /* Adjust the rgba values to get the desired gray color with opacity */
-  /* padding: 10px; Add padding to make text more readable */
+  ); 
+
 }
 
 .carousel-title {

@@ -16,11 +16,12 @@ use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\FeedbackController;
 use App\Http\Controllers\API\FixerController;
 use App\Http\Controllers\API\PromotionController;
+ use App\Http\Controllers\API\MailController;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -113,6 +114,8 @@ Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChats
 Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
 
+
+Route::post('/mail', [MailController::class, 'store']);
 Route::post('/process-payment', 'PaymentController@processPayment');
 // --------------------- admin routes -------------------------------
 Route::get('/payment',[PaymentController::class,'getPay']);

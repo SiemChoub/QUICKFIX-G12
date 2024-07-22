@@ -67,12 +67,11 @@
           aria-labelledby="staticBackdropLabel"
           aria-hidden="true"
           data-bs-backdrop="false"
-          style="top: 15px"
+          style="margin-top: 40px"
         >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Promotion</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -167,16 +166,7 @@
           </div>
         </div>
 
-        <!-- Right-aligned Navbar Items -->
         <div class="right navbar-nav-right">
-          <!-- Messages -->
-          <div class="nav-item position-relative">
-            <i class="bi bi-chat-dots icon" @click="showChat = true"></i>
-            <span class="tooltip-text">Messages</span>
-            <span class="badge bg-danger rounded-pill notification-badge">1</span>
-          </div>
-
-          <!-- Notifications -->
           <div class="nav-item position-relative" @click="toggleNotifications">
             <i class="bi bi-bell icon" title="Notifications"></i>
             <span class="tooltip-text">Notifications</span>
@@ -190,8 +180,18 @@
             </div>
           </div>
 
+          <router-link to="/signup"><div v-if="!isLoggedIn" class="nav-item position-relative" @click="goToSignUp">
+            <button class="btn btn-orange" style="padding:6.5px 10px">Register</button>
+          </div>
+          </router-link>
+          <router-link to="/login">
+          <div v-if="!isLoggedIn" class="nav-item position-relative" @click="goToLogin">
+            <button class="btn btn-danger" >Login</button>
+          </div>
+          </router-link>
+
           <!-- Profile Dropdown -->
-          <div class="nav-item dropdown position-relative">
+          <div v-if="isLoggedIn" class="nav-item dropdown position-relative">
             <a
               class="nav-link dropdown-toggle p-0"
               href="#"
@@ -212,29 +212,23 @@
               <span class="tooltip-text">Profile</span>
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li v-if="isLoggedIn">
+              <li>
                 <router-link to="/profile" class="dropdown-item">
                   <i class="bi bi-eye-fill"></i>
                   <p>view Profile</p>
                 </router-link>
               </li>
-              <li v-if="isLoggedIn">
+              <li>
                 <router-link to="#" class="dropdown-item">
                   <i class="bi bi-clock-history"></i>
                   <p>History</p>
                 </router-link>
               </li>
-              <li v-if="isLoggedIn">
+              <li>
                 <a href="#" class="dropdown-item" @click="logout">
                   <i class="bi bi-box-arrow-right"></i>
                   <p>Logout</p>
                 </a>
-              </li>
-              <li v-if="!isLoggedIn">
-                <router-link to="/signup" class="dropdown-item">Sign Up</router-link>
-              </li>
-              <li v-if="!isLoggedIn">
-                <router-link to="/login" class="dropdown-item">Sign In</router-link>
               </li>
             </ul>
           </div>
@@ -243,13 +237,13 @@
     </div>
   </nav>
 
-  <!-- Chat Modal and Booking Form Components -->
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import axios from 'axios'
+
 
 const promotions = ref(null)
 const authStore = useAuthStore()
@@ -309,12 +303,21 @@ const toggleNotifications = () => {
   bottom: 0;
   width: 0%;
   height: 2px;
-  background-color: #007bff; /* Color of the border */
-  transition: width 0.3s ease; /* Smooth transition for width change */
+  background-color: #007bff;
+  transition: width 0.3s ease; 
 }
 
 .hoverable:hover::after {
-  width: 100%; /* Expand the width to show the border on hover */
+  width: 100%;
+}
+#staticBackdrop {
+  position: fixed;
+  top: 30px;
+  left: 0;
+  width: 140%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
 }
 .card {
   background-color: #fff;
@@ -346,6 +349,19 @@ const toggleNotifications = () => {
 .logo {
   width: 150px;
   height: auto;
+}
+.btn-orange {
+  background-color: orange;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 4px;
+}
+
+.btn-orange:hover {
+  background-color: darkorange;
 }
 .navbarSupportedContent {
   display: flex;

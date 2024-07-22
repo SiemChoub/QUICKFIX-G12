@@ -620,28 +620,29 @@ hr {
   margin-left: 10px;
 }
 
-/* .btn {
+.btn {
   cursor: pointer;
   font-size: 1rem;
   padding: 11.5px 20px;
   text-align: center;
-} */
+} 
 
-/* .btn-primary {
+ .btn-primary {
   background-color: orange;
   color: white;
   border: none;
-} */
+}
 
-/* .btn-primary:hover {
+.btn-primary:hover {
   background-color: #0056b3;
-} */
+}
 
 .btn-map {
   background-color: orange;
   color: white;
-  /* padding: 5px 0; */
+  padding: 11px 10px;
   border: none;
+  width: 20%;
 }
 
 .btn-map:hover {

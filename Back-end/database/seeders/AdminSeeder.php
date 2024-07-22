@@ -29,7 +29,7 @@ class AdminSeeder extends Seeder
             'name'=>'User',
             'email'=>'user@gmail.com',
             'password'=>bcrypt('password'),
-            'role' => 'fixer',
+            'role' => 'customer',
         ]);
         $fixer = User::create([
             'name'=>'fixer',
@@ -41,7 +41,7 @@ class AdminSeeder extends Seeder
 
 
         $admin_role = Role::create(['name' => 'admin']);
-        $writer_role = Role::create(['name' => 'user']);
+        $writer_role = Role::create(['name' => 'customer']);
         $fixer_role  = Role::create(['name' => 'fixer']);
 
         $permission = Permission::create(['name' => 'Discount access']);

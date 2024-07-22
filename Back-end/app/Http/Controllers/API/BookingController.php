@@ -20,12 +20,18 @@ class BookingController extends Controller
     public function index()
 {
     try {
-        $action = 'request'; // Define the action you want to filter by
-
-        $bookings = Booking::where('action', $action)->get();
-        $bookings = BookingResource::collection($bookings);
-
-        return response()->json($bookings);
+        $action = 'request'; 
+        $bookings = Booking::where('action', $action)
+                    ->whereNull('fixer_id')
+                    ->get();
+        $count = $bookings->count(); 
+        
+        $bookingsData = BookingResource::collection($bookings);
+        
+        return response()->json([
+            'bookings' => $bookingsData,
+            'count' => $count
+        ]);
     } catch (\Exception $e) {
         return response()->json([
             'message' => 'Failed to fetch bookings.',
@@ -33,6 +39,7 @@ class BookingController extends Controller
         ], 500);
     }
 }
+
 
 
     /**

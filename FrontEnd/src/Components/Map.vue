@@ -45,8 +45,6 @@
 </template>
 
 <script>
-import mapboxgl from 'mapbox-gl'
-
 export default {
   name: 'DeliveryMap',
   data() {
@@ -58,25 +56,23 @@ export default {
       userLocation: null,
       userMarker: null,
       deliveryMarker: null,
-      route: null,
-      locationWatchId: null,
-      phone: null
+      directionsService: null,
+      directionsRenderer: null,
+      phone: null,
+      bookingLocationWatchId: null,
+      bookingLocation: null
     }
   },
   mounted() {
-    mapboxgl.accessToken ='pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
-
-    this.map = new mapboxgl.Map({
-      container: this.$refs.map,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [105, 12.5657],
-      zoom: 17
-    })
-
-    this.map.on('load', () => {
-      this.getCurrentLocation()
-      this.getCustomerLocation()
-    })
+    // Load Google Maps API asynchronously
+    const googleMapsScript = document.createElement('script')
+    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0&libraries=places`
+    googleMapsScript.async = true
+    googleMapsScript.defer = true
+    googleMapsScript.onload = () => {
+      this.initMap()
+    }
+    document.head.appendChild(googleMapsScript)
 
     const user = JSON.parse(localStorage.getItem('user'))
     if (user && user.phone) {
@@ -84,6 +80,22 @@ export default {
     }
   },
   methods: {
+    initMap() {
+      this.map = new google.maps.Map(this.$refs.map, {
+        center: { lat: 12.5657, lng: 105 },
+        zoom: 17,
+      })
+
+      this.directionsService = new google.maps.DirectionsService()
+      this.directionsRenderer = new google.maps.DirectionsRenderer({
+        map: this.map,
+        suppressMarkers: true,
+      })
+
+      this.getCurrentLocation()
+      // Uncomment the line below to start tracking when the map loads
+      // this.trackBookingLocation()
+    },
     getCurrentLocation() {
       if (navigator.geolocation) {
         const options = {
@@ -92,10 +104,10 @@ export default {
           maximumAge: 0
         }
 
-        this.locationWatchId = navigator.geolocation.watchPosition(
+        navigator.geolocation.getCurrentPosition(
           (position) => {
             const { latitude, longitude } = position.coords
-            this.userLocation = [longitude, latitude]
+            this.userLocation = { lat: latitude, lng: longitude }
             console.log('Current location:', this.userLocation)
             this.updateMap()
           },
@@ -126,13 +138,24 @@ export default {
         alert('Geolocation is not supported by this browser.')
       }
     },
+    trackBookingLocation() {
+      // Fetch initial booking location
+      this.getCustomerLocation()
+
+      // Set interval to continuously update booking location
+      this.bookingLocationWatchId = setInterval(() => {
+        this.getCustomerLocation()
+      }, 5000) // Update every 5 seconds (adjust as needed)
+    },
     getCustomerLocation() {
       const customerLongitude = parseFloat(localStorage.getItem('longitude'))
       const customerLatitude = parseFloat(localStorage.getItem('latitude'))
 
       if (customerLongitude && customerLatitude) {
-        this.destination = [customerLongitude, customerLatitude]
+        this.destination = { lat: customerLatitude, lng: customerLongitude }
+        this.bookingLocation = { lat: customerLatitude, lng: customerLongitude }
         this.addDeliveryMarker()
+        this.calculateRoute()
       } else {
         console.error('Customer location not found in localStorage')
       }
@@ -144,72 +167,67 @@ export default {
       this.map.setZoom(13)
 
       if (!this.userMarker) {
-        this.userMarker = new mapboxgl.Marker({ color: '#FF5733' })
-          .setLngLat(this.userLocation)
-          .addTo(this.map)
+        this.userMarker = new google.maps.Marker({
+          position: this.userLocation,
+          map: this.map,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#FF5733',
+            fillOpacity: 1,
+            strokeWeight: 0,
+            scale: 10
+          }
+        })
       } else {
-        this.userMarker.setLngLat(this.userLocation)
+        this.userMarker.setPosition(this.userLocation)
       }
 
       this.calculateRoute()
     },
     addDeliveryMarker() {
       if (this.destination && !this.deliveryMarker) {
-        this.deliveryMarker = new mapboxgl.Marker({ color: '#3887be' })
-          .setLngLat(this.destination)
-          .addTo(this.map)
+        this.deliveryMarker = new google.maps.Marker({
+          position: this.destination,
+          map: this.map,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#3887be',
+            fillOpacity: 1,
+            strokeWeight: 0,
+            scale: 10
+          }
+        })
+      } else {
+        this.deliveryMarker.setPosition(this.destination)
       }
     },
     calculateRoute() {
       if (!this.userLocation || !this.destination) return
 
-      const coordinates = [this.userLocation, this.destination]
-      const apiUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${coordinates[0][0]},${coordinates[0][1]};${coordinates[1][0]},${coordinates[1][1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`
+      const request = {
+        origin: this.userLocation,
+        destination: this.destination,
+        travelMode: 'DRIVING'
+      }
 
-      fetch(apiUrl)
-        .then((response) => response.json())
-        .then((data) => {
-          const route = data.routes[0]
-          this.route = route
-          this.distance = (route.distance / 1000).toFixed(1) 
-          this.duration = Math.floor(route.duration / 60) 
-
-          if (this.map.getLayer('route')) {
-            this.map.removeLayer('route')
-            this.map.removeSource('route')
-          }
-
-          this.map.addLayer({
-            id: 'route',
-            type: 'line',
-            source: {
-              type: 'geojson',
-              data: {
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'LineString',
-                  coordinates: route.geometry.coordinates
-                }
-              }
-            },
-            layout: {
-              'line-join': 'round',
-              'line-cap': 'round'
-            },
-            paint: {
-              'line-color': '#3887be',
-              'line-width': 8,
-              'line-opacity': 0.8
-            }
-          })
-        })
-        .catch((error) => console.error('Error calculating the route:', error))
+      this.directionsService.route(request, (result, status) => {
+        if (status === 'OK') {
+          this.directionsRenderer.setDirections(result)
+          const route = result.routes[0]
+          this.distance = (route.legs[0].distance.value / 1000).toFixed(1)
+          this.duration = Math.floor(route.legs[0].duration.value / 60)
+        } else {
+          console.error('Directions request failed due to ' + status)
+        }
+      })
     }
   },
   beforeDestroy() {
     if (navigator.geolocation && this.locationWatchId) {
       navigator.geolocation.clearWatch(this.locationWatchId)
+    }
+    if (this.bookingLocationWatchId) {
+      clearInterval(this.bookingLocationWatchId)
     }
   }
 }
