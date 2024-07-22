@@ -1,18 +1,20 @@
 <template>
   <div>
     <NavbarView />
-    <div class="search-container mt-5 d-flex justify-content-center">
-      <select class="form-select" v-model="selectedCareer">
-        <option value="">Select Career</option>
-        <option v-for="career in careers" :key="career.id" :value="career.name">
+<div class="search-container mt-5 d-flex justify-content-center" style="margin-top:200px">
+      <select class="form-select">
+        <option value="1">Select Career</option>
+        <option value="1">Select Career</option>
+        <option value="1">Select Career</option>
+        <!-- <option v-for="career in careers" :key="career.id" :value="career.name">
           {{ career.name }}
-        </option>
+        </option> -->
       </select>
-      <select class="form-select" v-model="selectedPlace">
+      <select class="form-select">
         <option value="">Select Place</option>
-        <option v-for="place in places" :key="place.id" :value="place.name">
+        <!-- <option v-for="place in places" :key="place.id" :value="place.name">
           {{ place.name }}
-        </option>
+        </option> -->
       </select>
     </div>
     <hr />
@@ -36,14 +38,14 @@
             </p>
           </div>
           <div class="repairer-icons">
-            <i class="bi bi-messenger"></i>
+            
+              <i class="bi bi-telephone"></i> 
             <button
               class="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#bookingModal"
               @click="openBookingModal(repairer.id)"
-            >
-              Book
+            >Book
             </button>
           </div>
         </div>
@@ -70,60 +72,41 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form @submit.prevent="submitBooking" class="booking-form">
+            <form @submit="submitBooking" class="booking-form">
               <div class="form-group-map-container">
                 <div class="form-group-map">
-                  <input type="hidden" v-model="latitude" />
-                  <input type="hidden" v-model="longitude" />
-
                   <div class="input-group">
+                    <input type="hidden" v-model="location" />
                     <input
                       type="text"
-                      class="form-control map-search"
+                      class="location form-control"
                       v-model="reverseGeocodeResult"
                       @input="searchSimilarPlaces"
                       placeholder="Enter location or use the map icon"
+                      required
                     />
-
-                    <span class="input-group-append">
-                      <button type="button" class="btn btn-map" @click="getCurrentLocation">
-                        <i class="bi bi-geo-alt"></i>
-                      </button>
-                    </span>
+                    <button type="button" class="btn btn-map" @click="getCurrentLocation">
+                      <i class="bi bi-geo-alt"></i>
+                    </button>
                   </div>
-
                   <div v-if="similarPlaces.length" class="similar-places">
-                    <ul class="list-group">
+                    <ul>
                       <li
                         v-for="place in similarPlaces"
-                        :key="place.place_id"
-                        class="list-group-item"
+                        :key="place.id"
                         @click="selectPlace(place)"
                       >
                         {{ place.place_name }}
                       </li>
                     </ul>
                   </div>
-
-                  <input
-                    v-else
-                    type="hidden"
-                    class="form-control map-search"
-                    v-model="reverseGeocodeResult"
-                    placeholder="Enter location or use the map icon"
-                    required
-                  />
-
                   <div class="form-group">
                     <label for="bookingDate">Booking Date:</label>
                     <div class="date">
-                      <input type="date" v-model="bookingDate" required class="form-control" />
-                      <button type="button" class="btn btn-secondary day" @click="setTodayDate">
-                        Today
-                      </button>
+                      <input type="date" v-model="bookingDate" required class="form-control date" />
+                      <button type="button" class="btn btn-map" @click="setTodayDate">Today</button>
                     </div>
                   </div>
-
                   <div class="form-group">
                     <label for="promotion">Promotion Code:</label>
                     <input
@@ -133,16 +116,16 @@
                       class="form-control"
                     />
                   </div>
-
                   <div class="form-group">
                     <textarea
-                      v-model="description"
+                      v-model="information"
                       placeholder="More information....."
                       class="form-control"
                     ></textarea>
                   </div>
-
-                  <button type="submit" class="btn btn-primary">Book</button>
+                  <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                    Book
+                  </button>
                 </div>
                 <div class="map" ref="mapContainer"></div>
               </div>
@@ -154,30 +137,23 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, computed, onMounted, defineProps, defineEmits } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import NavbarView from '@/Components/WebHeaderMenu.vue'
 import '@fortawesome/fontawesome-free/css/all.css'
-import { Loader } from '@googlemaps/js-api-loader'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
-const apiKey = 'AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0'
-const loader = new Loader({
-  apiKey: apiKey,
-  version: 'beta',
-  libraries: ['places']
-})
+mapboxgl.accessToken =
+  'pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
+
 const fixers = ref([])
 const careers = ref([{ name: '' }])
 const places = ref([{ name: '' }])
 const selectedCareer = ref('')
-const map = ref(null)
-const mapContainer = ref(null)
 const selectedPlace = ref('')
-const latitude = ref('')
-const geocoder = ref(null)
-const longitude = ref('')
+const location = ref('')
 const reverseGeocodeResult = ref('')
 const selectedService = ref('')
 const bookingDate = ref('')
@@ -187,15 +163,9 @@ const information = ref('')
 const categories = ref([])
 const services = ref([])
 const similarPlaces = ref([])
-const placesService = ref(null)
 const fixer_id = ref()
-
-onMounted(async () => {
-  await fetchCategories()
-  await fetchServices()
+onMounted(() => {
   getFixer()
-  await loader.load()
-  initializeMap()
 })
 const openBookingModal = (id) => {
   fixer_id.value = id
@@ -212,9 +182,15 @@ const getFixer = async () => {
 
 const openBookingForm = (repairer) => {
   console.log('Opening modal for repairer:', repairer)
-  $('#bookingModal').on('shown.bs.modal')
+  $('#bookingModal').modal('show')
 }
 
+// const submitBookingForm = () => {
+//   console.log('Submitting booking form:', bookingForm.value)
+//   $('#bookingModal').modal('hide')
+//   bookingForm.value.name = ''
+//   bookingForm.value.email = ''
+// }
 
 const filteredRepairers = computed(() => {
   let filtered = fixers.value
@@ -228,6 +204,12 @@ const filteredRepairers = computed(() => {
   }
 
   return filtered
+})
+
+onMounted(async () => {
+  await fetchCategories()
+  await fetchServices()
+  initializeMap()
 })
 
 async function fetchCategories() {
@@ -248,136 +230,149 @@ async function fetchServices() {
   }
 }
 
-const initializeMap = () => {
-  loader.load().then(() => {
-    map.value = new google.maps.Map(document.querySelector('.map'), {
-      center: { lat: 12.5657, lng: 104.917 },
-      zoom: 8,
-    });
+const submitBooking = async (event) => {
+  event.preventDefault()
 
-    geocoder.value = new google.maps.Geocoder();
-    placesService.value = new google.maps.places.PlacesService(map.value);
-  });
-};
+  const userString = localStorage.getItem('user')
+  if (!userString) {
+    console.error('No user found in localStorage')
+    return
+  }
+
+  const user = JSON.parse(userString)
+  const user_id = user.id
+  const today = new Date().toISOString().split('T')[0]
+  const isImmediateBooking = bookingDate.value === today
+
+  const [latitude, longitude] = location.value.split(',').map((coord) => parseFloat(coord.trim()))
+
+  const bookingData = {
+    user_id,
+    fixer_id: fixer_id.value,
+    date: bookingDate.value,
+    promotion_id: promotionCode.value || null,
+    message: information.value || null,
+    latitude,
+    longitude
+  }
+
+  try {
+    let response
+    if (isImmediateBooking) {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData)
+    } else {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData)
+      console.log(response.data)
+    }
+    // Handle response if needed
+  } catch (error) {
+    console.error('Error submitting booking:', error)
+  }
+}
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const { latitude: lat, longitude: lng } = position.coords;
-        const latLng = new google.maps.LatLng(lat, lng);
-        latitude.value = lat
-        longitude.value = lng
-
-        if (map.value) {
-          map.value.setCenter(latLng);
-          map.value.setZoom(14);
-
-          if (marker.value) {
-            marker.value.setMap(null);
-          }
-          marker.value = new google.maps.Marker({
-            position: latLng,
-            map: map.value,
-            title: 'Your current location',
-            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-          });
-
-          const circle = new google.maps.Circle({
-            strokeColor: '#2196F3',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#2196F3',
-            fillOpacity: 0.35,
-            map: map.value,
-            center: latLng,
-            radius: 1000
-          });
-
-          const bounds = new google.maps.LatLngBounds();
-          bounds.extend(marker.value.getPosition());
-          bounds.union(circle.getBounds());
-          map.value.fitBounds(bounds);
-          console.log(bounds);
-
-        }
+        const latLng = [position.coords.longitude, position.coords.latitude]
+        location.value = `${latLng[1]}, ${latLng[0]}`
+        reverseGeocode(latLng)
+        map.flyTo({ center: latLng, zoom: 16 })
+        addMarker(latLng)
+        setTodayDate()
       },
       (error) => {
-        console.error('Error getting location:', error);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
+        console.error('Error getting location:', error)
       }
-    );
+    )
   } else {
-    alert('Geolocation is not supported by this browser.');
+    alert('Geolocation is not supported by this browser.')
   }
-};
+}
+
+const setTodayDate = () => {
+  const today = new Date().toISOString().split('T')[0]
+  bookingDate.value = today
+}
+
+let map
+const initializeMap = () => {
+  const cambodiaBounds = [
+    [102.144, 10.486],
+    [107.625, 14.704]
+  ]
+
+  map = new mapboxgl.Map({
+    container: document.querySelector('.map'),
+    style: 'mapbox://styles/mapbox/streets-v11',
+    center: [104.917, 12.5657],
+    zoom: 6,
+    maxBounds: cambodiaBounds
+  })
+
+  map.on('load', () => {
+    let rmFoot = document.querySelector('.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib')
+    let rmFoot1 = document.querySelector('.mapboxgl-ctrl-bottom-left')
+    if (rmFoot) {
+      rmFoot.style.display = 'none'
+      rmFoot1.style.display = 'none'
+    }
+  })
+}
+
+const addMarker = (latLng) => {
+  new mapboxgl.Marker().setLngLat(latLng).addTo(map)
+}
+
+async function reverseGeocode(latLng) {
+  try {
+    const response = await axios.get(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${latLng[0]},${latLng[1]}.json`,
+      {
+        params: {
+          access_token: mapboxgl.accessToken
+        }
+      }
+    )
+    if (response.data.features.length > 0) {
+      const place = response.data.features[0]
+      reverseGeocodeResult.value = place.place_name
+
+      const street = place.text
+      const specificLocation = place.properties.address
+    } else {
+      console.error('No results found for reverse geocoding.')
+    }
+  } catch (error) {
+    console.error('Error in reverse geocoding:', error)
+  }
+}
 
 const searchSimilarPlaces = async () => {
   try {
-    if (!reverseGeocodeResult.value.trim()) {
-      similarPlaces.value = [];
-      return;
-    }
-
-    const request = {
-      query: reverseGeocodeResult.value,
-      fields: ['formatted_address', 'name', 'place_id', 'geometry']
-    };
-
-    placesService.value.textSearch(request, (results, status) => {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        similarPlaces.value = results.map((place) => ({
-          place_id: place.place_id,
-          place_name: place.name,
-          location: place.geometry.location
-        }));
-      } else {
-        console.error('PlacesService failed with status:', status);
-        similarPlaces.value = [];
+    const response = await axios.get(
+      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
+        encodeURIComponent(reverseGeocodeResult.value) +
+        '.json',
+      {
+        params: {
+          access_token: mapboxgl.accessToken,
+          autocomplete: true
+        }
       }
-    });
+    )
+    similarPlaces.value = response.data.features
   } catch (error) {
-    console.error('Error searching similar places:', error);
-    similarPlaces.value = [];
+    console.error('Error searching similar places:', error)
   }
-};
+}
 
 const selectPlace = (place) => {
-  reverseGeocodeResult.value = place.place_name;
-  similarPlaces.value = [];
-  const latLng = new google.maps.LatLng(place.location.lat(), place.location.lng());
-
-  // Update latitude and longitude
-  latitude.value = place.location.lat();
-  longitude.value = place.location.lng();
-
-  // Update the map center and marker
-  if (map.value) {
-    map.value.setCenter(latLng);
-    map.value.setZoom(14);
-
-    if (marker.value) {
-      marker.value.setMap(null);
-    }
-    marker.value = new google.maps.Marker({
-      position: latLng,
-      map: map.value,
-      title: place.place_name,
-      icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-    });
-
-    // Optionally, fit map bounds to include the marker
-    map.value.panTo(latLng);
-  }
-};
-
-
-const setTodayDate = () => {
-  bookingDate.value = new Date().toISOString().split('T')[0]
+  location.value = `${place.center[1]}, ${place.center[0]}`
+  reverseGeocodeResult.value = place.place_name
+  similarPlaces.value = []
+  map.flyTo({ center: place.center, zoom: 18 })
+  addMarker(place.center)
 }
 </script>
 
@@ -407,17 +402,6 @@ hr {
   display: flex;
   flex-wrap: wrap;
 }
-.form-group label {
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-.date {
-  display: flex;
-}
-.date input {
-  border-radius: 0 5px 5px 0;
-}
-
 .repairer-card {
   background-color: #fff;
   border: 1px solid #e0e0e0;
@@ -486,9 +470,11 @@ hr {
   font-size: 20px;
   margin-right: 10px;
   padding: 4px 10px;
-  border-radius: 50%;
-  background: orange;
-  cursor: pointer;
+    border-radius: 50%;
+    background: orange;
+    cursor: pointer;
+
+  
 }
 
 .repairer-icons button {
@@ -500,11 +486,11 @@ hr {
   border: none;
 }
 .repairer-icons .btn-primary:hover {
-  background-color: gainsboro;
+  background-color:gainsboro;
   box-shadow: rgba(0, 0, 0, 1);
   color: orange;
 }
-.repairer-icons i:hover {
+.repairer-icons i:hover{
   cursor: pointer;
   color: #000;
 }
@@ -583,15 +569,6 @@ hr {
   height: 300px;
   background-color: #f0f0f0;
 }
-.map-search {
-  padding: 11px 0;
-}
-.day {
-  background: orange;
-  color: white;
-  border: none;
-  border-radius: 0 5px 5px 0;
-}
 
 .form-group-select {
   display: flex;
@@ -621,7 +598,7 @@ hr {
 .form-group textarea,
 .form-group select {
   padding: 10px;
-  border: 1px solid orange;
+  border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
   width: 100%;
@@ -637,13 +614,10 @@ hr {
   flex: 1;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
-  border: 1px solid orange;
 }
 
 .input-group-append {
   margin-left: 10px;
-  /* background: #000; */
-  width: 18%;
 }
 
 .btn {
@@ -651,9 +625,9 @@ hr {
   font-size: 1rem;
   padding: 11.5px 20px;
   text-align: center;
-}
+} 
 
-.btn-primary {
+ .btn-primary {
   background-color: orange;
   color: white;
   border: none;
@@ -668,8 +642,7 @@ hr {
   color: white;
   padding: 11px 10px;
   border: none;
-  width: 100%;
-  border-radius: 0 5px 5px 0;
+  width: 20%;
 }
 
 .btn-map:hover {
@@ -688,7 +661,7 @@ hr {
 .similar-places {
   position: absolute;
   background-color: white;
-  width: calc(100% - 50%);
+  width: calc(100% - 20px);
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;

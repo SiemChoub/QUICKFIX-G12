@@ -184,7 +184,7 @@ onMounted(() => {
 }
 
 .btn-accept {
-  background-color: #4CAF50;
+  background-color: orange;
   color: white;
   border: none;
   padding: 10px 20px;
