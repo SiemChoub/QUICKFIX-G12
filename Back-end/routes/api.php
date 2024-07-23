@@ -20,11 +20,12 @@ use App\Http\Controllers\API\PromotionController;
 
 use App\Http\Controllers\API\StripePaymentHandlerController;
 
+ use App\Http\Controllers\API\MailController;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+ 
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -117,6 +118,8 @@ Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChats
 Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
 
+
+Route::post('/mail', [MailController::class, 'store']);
 Route::post('/process-payment', 'PaymentController@processPayment');
 // --------------------- admin routes -------------------------------
 Route::post('/payment',[PaymentController::class,'store']);

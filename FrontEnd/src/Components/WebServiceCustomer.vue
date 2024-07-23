@@ -39,7 +39,7 @@
             <h5 class="card-title">{{ service.name }}</h5>
             <p class="card-text">{{ service.description }}</p>
             <p class="card-text">Price: {{ service.price }}</p>
-            <button @click="openModal(service)" class="btn btn-primary">Book</button>
+            <button @click="openModal(service)" class="btn btn-primary">Get Service</button>
           </div>
         </div>
       </div>

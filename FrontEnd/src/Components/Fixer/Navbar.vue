@@ -7,7 +7,7 @@
           <div class="logo-color"></div>
           <h2 class="quickfix ms-2">QUICKFIX</h2>
         </div>
-        <hr style="border:2px solid orange">
+        <hr style="border: 2px solid orange" />
 
         <div class="sidebar-content">
           <button
@@ -18,18 +18,36 @@
             Dashboard
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'Booking' || currentView === 'Booking2' }"
+            :class="{
+              'btn-outline-secondary active':
+                currentView === 'Booking' || currentView === 'Booking2'
+            }"
             @click="setCurrentView('Booking')"
-            class="btn w-100 mb-2"
+            class="btn w-100 mb-2 position-relative"
           >
             Booking List
+            <span v-if="request !==0"
+              class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
+            >
+              {{request}}
+              <span class="visually-hidden">unread messages</span>
+            </span>
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'AcceptBooking' }"
+            :class="{
+              'btn-outline-secondary active':
+                currentView === 'AcceptBooking' || currentView === 'Booking2'
+            }"
             @click="setCurrentView('AcceptBooking')"
-            class="btn w-100 mb-2"
+            class="btn w-100 mb-2 position-relative"
           >
-            Accepted Booking
+            Accepted
+            <span v-if="accepted !==0"
+              class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
+            >
+              {{accepted}}
+              <span class="visually-hidden">unread messages</span>
+            </span>
           </button>
           <button
             :class="{ 'btn-outline-secondary active': currentView === 'Payment' }"
@@ -46,8 +64,8 @@
             Skill
           </button>
           <button
-            :class="{ 'btn-outline-secondary active': currentView === 'History' }"
-            @click="setCurrentView('History')"
+            :class="{ 'btn-outline-secondary active': currentView === 'HistoryFixer' }"
+            @click="setCurrentView('HistoryFixer')"
             class="btn w-100 mb-2"
           >
             History
@@ -86,7 +104,11 @@
                   class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-2"
                   aria-labelledby="dropdownMenuLink"
                 >
-                  <li><router-link to="/profile"  class="dropdown-item text-center">View Profile</router-link></li>
+                  <li>
+                    <router-link to="/profile" class="dropdown-item text-center"
+                      >View Profile</router-link
+                    >
+                  </li>
                   <li>
                     <a
                       href="#"
@@ -122,6 +144,7 @@ import ChatView from './ChatView.vue';
 import HistoryView from './HistoryView.vue';
 import AcceptBooking from './AcceptBooking.vue';
 import Payment from './Payment.vue';
+import HistoryFixer from './HistoryFixer.vue';
 
 export default {
   name: 'NavBar',
@@ -132,32 +155,62 @@ export default {
     ChatView,
     HistoryView,
     AcceptBooking,
-    Payment
+    Payment,
+    HistoryFixer
   },
   data() {
     return {
       users: {},
       currentView: 'Dashboard',
       payments: [],
-    };
+      request:null,
+      accepted:null,
+    }
   },
   methods: {
     setCurrentView(view) {
-      this.currentView = view;
+      this.currentView = view
     },
     async logout() {
       try {
-        const token = localStorage.getItem('access_token');
-        await axios.post('http://127.0.0.1:8000/api/logout', {}, {
-          headers: {
-            Authorization: `Bearer ${token}`
+        const token = localStorage.getItem('access_token')
+        await axios.post(
+          'http://127.0.0.1:8000/api/logout',
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           }
-        });
-        localStorage.removeItem('user');
-        localStorage.removeItem('access_token');
-        this.$router.push('/');
+        )
+        localStorage.removeItem('user')
+        localStorage.removeItem('access_token')
+        this.$router.push('/')
       } catch (error) {
-        console.error('Logout failed:', error);
+        console.error('Logout failed:', error)
+      }
+    },
+    async countRequest() {
+      try {
+        const respone = await axios.get(
+          'http://127.0.0.1:8000/api/booking'
+          
+        )
+        this.request =  respone.data.count
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
+    },
+    async countAccepted() {
+      const fixer = JSON.parse(localStorage.getItem('user')).id
+      try {
+        const respone = await axios.get(
+            `http://127.0.0.1:8000/api/fixer/accepted/${fixer}`
+          
+        )
+        this.accepted =  respone.data.count
+      } catch (error) {
+        console.error('Logout failed:', error)
       }
     },
     getUserData() {
@@ -171,15 +224,20 @@ export default {
         this.payments = response.data.filter(payment => payment.status === 'no');
       } catch (error) {
         console.error('Error fetching payment list:', error);
+        this.users = JSON.parse(localStorage.getItem('user')) || {}
       }
     },
-  },
+    },
+
+
   mounted() {
     this.getUserData();
     this.getPayments();
-  },
- 
-};
+    this.countRequest();
+    this.countAccepted();
+}
+}
+
 </script>
 
 <style scoped>
@@ -213,7 +271,7 @@ export default {
   margin-top: 60px;
   align-items: flex-start;
 }
-.sidebar-content button{
+.sidebar-content button {
   display: flex;
   flex-direction: column;
   margin-top: 20px;
@@ -234,9 +292,8 @@ export default {
 .btn-outline-secondary.active {
   background-color: orange;
   color: white;
-    padding-left: 40px;
-    border: 0px;
-
+  padding-left: 40px;
+  border: 0px;
 }
 
 .main-content {
@@ -289,7 +346,7 @@ export default {
   }
 
   .navbar {
-    height: auto; 
+    height: auto;
   }
 }
 </style>

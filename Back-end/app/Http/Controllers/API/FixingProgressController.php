@@ -92,10 +92,12 @@ class FixingProgressController extends Controller
         try {
             $acceptedBookings = FixingProgress::where('fixer_id', $id)
                 ->get();
+                $count = $acceptedBookings->count();
 
             return response()->json([
                 'success' => true,
-                'accepted_bookings' => $acceptedBookings
+                'accepted_bookings' => $acceptedBookings,
+                'count'=>$count
             ]);
         } catch (\Exception $e) {
             return response()->json([

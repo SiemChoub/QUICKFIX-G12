@@ -9,18 +9,24 @@
           </div>
           <div class="modal-body">
             <div v-if="service">
+              <transition name="alert-fade">
+                <div v-if="alertMessage" :class="`alert alert-${alertType}`" role="alert">
+                  {{ alertMessage }}
+                </div>
+              </transition>
               <form @submit.prevent="submitBooking" class="booking-form">
                 <div class="form-group-map-container">
                   <div class="form-group-map">
+                    <input type="hidden" v-model="latitude" />
+                    <input type="hidden" v-model="longitude" />
+
                     <div class="input-group">
-                      <input type="hidden" v-model="location" />
                       <input
                         type="text"
-                        class="location"
+                        class="form-control map-search"
                         v-model="reverseGeocodeResult"
                         @input="searchSimilarPlaces"
                         placeholder="Enter location or use the map icon"
-                        required
                       />
                       <span class="input-group-append">
                         <button type="button" class="btn btn-map" @click="getCurrentLocation">
@@ -28,43 +34,44 @@
                         </button>
                       </span>
                     </div>
+
                     <div v-if="similarPlaces.length" class="similar-places">
-                      <ul>
-                        <li
-                          v-for="place in similarPlaces"
-                          :key="place.id"
-                          @click="selectPlace(place)"
-                        >
+                      <ul class="list-group">
+                        <li v-for="place in similarPlaces" :key="place.place_id" class="list-group-item" @click="selectPlace(place)">
                           {{ place.place_name }}
                         </li>
                       </ul>
                     </div>
+
+                    <input
+                      v-else
+                      type="hidden"
+                      class="form-control map-search"
+                      v-model="reverseGeocodeResult"
+                      placeholder="Enter location or use the map icon"
+                      required
+                    />
+
                     <div class="form-group">
                       <label for="bookingDate">Booking Date:</label>
                       <div class="date">
-                        <input type="date" v-model="bookingDate" required class="date" />
-                        <button type="button" class="btn btn-map" @click="setTodayDate">
-                          Today
-                        </button>
+                        <input type="date" v-model="bookingDate" required class="form-control" />
+                        <button type="button" class="btn btn-secondary day" @click="setTodayDate">Today</button>
                       </div>
                     </div>
+
                     <div class="form-group">
                       <label for="promotion">Promotion Code:</label>
-                      <input
-                        type="text"
-                        v-model="promotionCode"
-                        placeholder="Enter promotion code (if any)"
-                      />
+                      <input type="text" v-model="promotionCode" placeholder="Enter promotion code (if any)" class="form-control" />
                     </div>
+
                     <div class="form-group">
-                      <textarea
-                        type="text"
-                        v-model="information"
-                        placeholder="More information....."
-                      />
+                      <textarea v-model="description" placeholder="More information....." class="form-control"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Book</button>
+
+                    <button type="submit" class="btn btn-primary">Book</button>
                   </div>
+
                   <div class="map" ref="mapContainer"></div>
                 </div>
               </form>
@@ -77,196 +84,252 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import axios from 'axios'
-import mapboxgl from 'mapbox-gl'
-import 'mapbox-gl/dist/mapbox-gl.css'
+import axios from 'axios';
+import { ref, onMounted, defineEmits, defineProps } from 'vue';
+import { Loader } from '@googlemaps/js-api-loader';
 
-mapboxgl.accessToken =
-  'pk.eyJ1Ijoic2llbWNob3ViMTExMSIsImEiOiJjbHg3bDRrdGowaW1kMmxweG50MHdpazMzIn0.cAYH_6kwxhwH43FM46qmOg'
+const apiKey = 'AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0';
+const loader = new Loader({
+  apiKey: apiKey,
+  version: 'beta',
+  libraries: ['places']
+});
 
 const props = defineProps({
   service: {
     type: Object,
     required: true
   }
-})
+});
 
-const emit = defineEmits(['close'])
-const location = ref('')
-const reverseGeocodeResult = ref('')
-const bookingDate = ref('')
-const description = ref('')
-const promotionCode = ref('')
+const emit = defineEmits(['close']);
 
-const categories = ref([])
-const services = ref([])
-const similarPlaces = ref([])
-
-let map
+const reverseGeocodeResult = ref('');
+const bookingDate = ref('');
+const description = ref('');
+const promotionCode = ref('');
+const similarPlaces = ref([]);
+const map = ref(null);
+const marker = ref(null);
+const geocoder = ref(null);
+const placesService = ref(null);
+const alertMessage = ref('');
+const alertType = ref('success');
+const latitude = ref('');
+const longitude = ref('');
 
 onMounted(async () => {
-  await fetchCategories()
-  await fetchServices()
-  initializeMap()
-  setTodayDate()
-})
+  await loader.load();
+  initializeMap();
+});
 
-async function fetchCategories() {
-  try {
-    const response = await axios.get('http://127.0.0.1:8000/api/category/list')
-    categories.value = response.data
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-  }
-}
+const initializeMap = () => {
+  map.value = new google.maps.Map(document.querySelector('.map'), {
+    center: { lat: 12.5657, lng: 104.917 },
+    zoom: 8
+  });
 
-async function fetchServices() {
-  try {
-    const response = await axios.get('http://127.0.0.1:8000/api/service/list')
-    services.value = response.data
-  } catch (error) {
-    console.error('Error fetching services:', error)
-  }
-}
-
-const submitBooking = async () => {
-  const userString = localStorage.getItem('user')
-  if (!userString) {
-    console.error('No user found in localStorage')
-    return
-  }
-
-  const user = JSON.parse(userString)
-  const user_id = user.id
-  const today = new Date().toISOString().split('T')[0]
-  const isImmediateBooking = bookingDate.value === today
-  const [latitude, longitude] = location.value.split(',').map(coord => parseFloat(coord.trim()))
-
-  const bookingData = {
-    service_id: props.service.id,
-    user_id: user_id,
-    date: bookingDate.value,
-    promotion_id: promotionCode.value || null,
-    message: description.value || null,
-    latitude: latitude,
-    longitude: longitude
-  }
-
-  try {
-    let response
-    if (isImmediateBooking) {
-      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData)
-    } else {
-      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData)
-    }
-        emit('close') // Emit the close event
-    console.log(response.data)
-  } catch (error) {
-    console.error('Error submitting booking:', error)
-  }
-}
+  geocoder.value = new google.maps.Geocoder();
+  placesService.value = new google.maps.places.PlacesService(map.value);
+};
 
 const getCurrentLocation = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        const latLng = [position.coords.longitude, position.coords.latitude]
-        location.value = `${latLng[1]}, ${latLng[0]}`
-        reverseGeocode(latLng)
-        map.flyTo({ center: latLng, zoom: 16 })
-        addMarker(latLng)
+        const { latitude: lat, longitude: lng } = position.coords;
+        const latLng = new google.maps.LatLng(lat, lng);
+        latitude.value = lat
+        longitude.value = lng
+
+        if (map.value) {
+          map.value.setCenter(latLng);
+          map.value.setZoom(14);
+
+          if (marker.value) {
+            marker.value.setMap(null);
+          }
+          marker.value = new google.maps.Marker({
+            position: latLng,
+            map: map.value,
+            title: 'Your current location',
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+          });
+
+          const circle = new google.maps.Circle({
+            strokeColor: '#2196F3',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#2196F3',
+            fillOpacity: 0.35,
+            map: map.value,
+            center: latLng,
+            radius: 1000
+          });
+
+          const bounds = new google.maps.LatLngBounds();
+          bounds.extend(marker.value.getPosition());
+          bounds.union(circle.getBounds());
+          map.value.fitBounds(bounds);
+          console.log(bounds);
+
+        }
       },
       (error) => {
-        console.error('Error getting location:', error)
-      }
-    )
-  } else {
-    alert('Geolocation is not supported by this browser.')
-  }
-}
-
-const setTodayDate = () => {
-  const today = new Date().toISOString().split('T')[0]
-  bookingDate.value = today
-}
-
-const initializeMap = () => {
-  const cambodiaBounds = [
-    [102.144, 10.486],
-    [107.625, 14.704]
-  ]
-
-  map = new mapboxgl.Map({
-    container: document.querySelector('.map'),
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [104.917, 12.5657],
-    zoom: 8,
-    maxBounds: cambodiaBounds
-  })
-
-  map.on('load', () => {
-    let rmFoot = document.querySelector('.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl-attrib')
-    let rmFoot1 = document.querySelector('.mapboxgl-ctrl-bottom-left')
-    if (rmFoot) {
-      rmFoot.style.display = 'none'
-      rmFoot1.style.display = 'none'
-    }
-  })
-}
-
-const addMarker = (latLng) => {
-  new mapboxgl.Marker().setLngLat(latLng).addTo(map)
-}
-
-async function reverseGeocode(latLng) {
-  try {
-    const response = await axios.get(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${latLng[0]},${latLng[1]}.json`,
+        console.error('Error getting location:', error);
+      },
       {
-        params: {
-          access_token: mapboxgl.accessToken
-        }
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
       }
-    )
-    if (response.data.features.length > 0) {
-      const place = response.data.features[0]
-      reverseGeocodeResult.value = place.place_name
-    } else {
-      console.error('No results found for reverse geocoding.')
-    }
-  } catch (error) {
-    console.error('Error in reverse geocoding:', error)
+    );
+  } else {
+    alert('Geolocation is not supported by this browser.');
   }
-}
+};
 
 const searchSimilarPlaces = async () => {
   try {
-    const response = await axios.get(
-      'https://api.mapbox.com/geocoding/v5/mapbox.places/' +
-        encodeURIComponent(reverseGeocodeResult.value) +
-        '.json',
-      {
-        params: {
-          access_token: mapboxgl.accessToken,
-          autocomplete: true
-        }
+    if (!reverseGeocodeResult.value.trim()) {
+      similarPlaces.value = [];
+      return;
+    }
+
+    const request = {
+      query: reverseGeocodeResult.value,
+      fields: ['formatted_address', 'name', 'place_id', 'geometry']
+    };
+
+    placesService.value.textSearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        similarPlaces.value = results.map((place) => ({
+          place_id: place.place_id,
+          place_name: place.name,
+          location: place.geometry.location
+        }));
+      } else {
+        console.error('PlacesService failed with status:', status);
+        similarPlaces.value = [];
       }
-    )
-    similarPlaces.value = response.data.features
+    });
   } catch (error) {
-    console.error('Error searching similar places:', error)
+    console.error('Error searching similar places:', error);
+    similarPlaces.value = [];
   }
-}
+};
 
 const selectPlace = (place) => {
-  location.value = `${place.center[1]}, ${place.center[0]}`
-  reverseGeocodeResult.value = place.place_name
-  similarPlaces.value = []
-  map.flyTo({ center: place.center, zoom: 18 })
-  addMarker(place.center)
-}
+  reverseGeocodeResult.value = place.place_name;
+  similarPlaces.value = [];
+  const latLng = new google.maps.LatLng(place.location.lat(), place.location.lng());
+
+  if (marker.value) {
+    marker.value.setMap(null);
+  }
+
+  marker.value = new google.maps.Marker({
+    position: latLng,
+    map: map.value,
+    title: place.place_name,
+    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+  });
+
+  const circle = new google.maps.Circle({
+    strokeColor: '#2196F3',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#2196F3',
+    fillOpacity: 0.35,
+    map: map.value,
+    center: latLng,
+    radius: 1000
+  });
+
+  const bounds = new google.maps.LatLngBounds();
+  bounds.extend(marker.value.getPosition());
+  bounds.union(circle.getBounds());
+  map.value.fitBounds(bounds);
+
+  geocoder.value.geocode({ location: latLng }, (results, status) => {
+    if (status === 'OK') {
+      if (results[0]) {
+        const addressComponents = results[0].address_components;
+        const village = addressComponents.find(component =>
+          component.types.includes('locality') || component.types.includes('sublocality')
+        );
+
+        if (village) {
+          reverseGeocodeResult.value = place.place_name;
+        } else {
+          reverseGeocodeResult.value = results[0].formatted_address;
+        }
+
+        latitude.value = place.location.lat();
+        longitude.value = place.location.lng();
+      } else {
+        console.error('No reverse geocode results found');
+      }
+    } else {
+      console.error('Geocoder failed due to: ' + status);
+    }
+  });
+};
+
+const submitBooking = async () => {
+  const userString = localStorage.getItem('user');
+  if (!userString) {
+    console.error('No user found in localStorage');
+    return;
+  }
+
+  const user = JSON.parse(userString);
+  const user_id = user.id;
+  const today = new Date().toISOString().split('T')[0];
+  const isImmediateBooking = bookingDate.value === today;
+
+  const bookingData = {
+    user_id: user_id,
+    service_id: props.service.id,
+    date: bookingDate.value,
+    promotion_id: promotionCode.value || null,
+    message: description.value || null,
+    latitude: latitude.value,
+    longitude: longitude.value
+  };
+
+  try {
+    let response;
+    if (isImmediateBooking) {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_immediatly', bookingData);
+    } else {
+      response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData);
+    }
+    alertMessage.value = 'Booking successful!';
+    alertType.value = 'success';
+    setTimeout(() => {
+      emit('close');
+    }, 2000);
+  } catch (error) {
+    alertMessage.value = 'Booking failed. Please try again.';
+    alertType.value = 'danger';
+    console.error('Error submitting booking:', error);
+  }
+
+  setTimeout(() => {
+    alertMessage.value = '';
+  }, 2000);
+};
+
+const setTodayDate = () => {
+  bookingDate.value = new Date().toISOString().split('T')[0];
+};
 </script>
+
+
+
+
+
 
 <style scoped>
 .modal-mask {
@@ -344,6 +407,15 @@ const selectPlace = (place) => {
   height: 300px;
   background-color: #f0f0f0;
 }
+.map-search{
+  padding: 11px 0;
+}
+.day{
+  background: orange;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+}
 
 .form-group-select {
   display: flex;
@@ -373,7 +445,7 @@ const selectPlace = (place) => {
 .form-group textarea,
 .form-group select {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid orange;
   border-radius: 5px;
   font-size: 1rem;
   width: 100%;
@@ -389,35 +461,41 @@ const selectPlace = (place) => {
   flex: 1;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+    border: 1px solid orange;
+
 }
 
 .input-group-append {
   margin-left: 10px;
+  /* background: #000; */
+  width: 18%;
 }
 
+
 .btn {
-  border-radius: 0 5px 5px 0;
   cursor: pointer;
   font-size: 1rem;
   padding: 11.5px 20px;
   text-align: center;
-}
+} 
 
 .btn-primary {
   background-color: orange;
   color: white;
   border: none;
-}
+} 
 
 .btn-primary:hover {
   background-color: #0056b3;
-}
+} 
 
 .btn-map {
   background-color: orange;
   color: white;
-  /* padding: 5px 0; */
+  padding: 11px 10px;
   border: none;
+  width: 100%;
+  border-radius:0 5px 5px 0;
 }
 
 .btn-map:hover {
@@ -436,7 +514,7 @@ const selectPlace = (place) => {
 .similar-places {
   position: absolute;
   background-color: white;
-  width: calc(100% - 20px);
+  width: calc(100% - 50%);
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
@@ -458,5 +536,9 @@ const selectPlace = (place) => {
 
 .similar-places ul li:hover {
   background-color: #f0f0f0;
+}
+textarea {
+  height: 100px;
+  resize: none;
 }
 </style>
