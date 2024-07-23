@@ -79,17 +79,15 @@
             <p v-if="accountExists" class="text-danger">{{ accountExists }}</p>
             <!--  -->
           </form>
-          <div class="social-login">
-            <h3 class="mb-3">Or Sign Up with:</h3>
-            <button class="btn btn-google w-100" @click="loginWithGoogle">
-              <i class="fab fa-google"></i> Google
-            </button>
-          </div>
+
           <div class="toggle-auth mt-4">
             <p>
               Already Have an Account?
               <router-link to="/login">Login</router-link>
             </p>
+            <p>
+            <router-link to="/">Back to Home</router-link>
+          </p>
           </div>
         </div>
       </div>

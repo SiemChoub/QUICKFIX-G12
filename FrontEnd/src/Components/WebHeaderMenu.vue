@@ -49,17 +49,7 @@
             OFFER
           </button>
         </div>
-          <div class="center1">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target=".bd-example-modal-lg"
-          >
-            <i class="bi bi-cart"></i>
-          </button>
-        </div>
-
+        <div class="center1" v-if="isLoggedIn"></div>
         <div
           class="modal fade custom-slide-modal"
           id="staticBackdrop"
@@ -107,19 +97,20 @@
             </div>
           </div>
         </div>
-        <!-- Large modal -->
 
-         <div
-          class="modal fade bd-example-modal-lg"
+        <!-- Cart Modal -->
+        <div
+          class="modal fade bd-cart-modal"
           tabindex="-1"
           role="dialog"
-          aria-labelledby="myLargeModalLabel"
+          aria-labelledby="cartModalLabel"
           aria-hidden="true"
+          data-bs-backdrop="false"
         >
-          <div class="modal-dialog modal-lg">
+          <div class="modal-dialog modal-fullscreen">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="myLargeModalLabel">Large Modal</h5>
+                <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -128,49 +119,109 @@
                 ></button>
               </div>
               <div class="modal-body">
-                <div class="container mt-5">
-    <h1 class="text-center mb-4">History of Fixer</h1>
-    <table class="table table-bordered table-striped table-hover">
-      <thead>
-        <tr>
-          <th scope="col">ID</th>
-          <th scope="col">Name</th>
-          <th scope="col">Status</th>
-          <th scope="col">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td><span class="badge bg-success">Completed</span></td>
-          <td>2024-07-01</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td><span class="badge bg-warning text-dark">In Progress</span></td>
-          <td>2024-07-15</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry the Bird</td>
-          <td><span class="badge bg-secondary text-light">Pending</span></td>
-          <td>2024-07-19</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="raw">
+                      <table class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Fixer</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody v-if="listBookings !== null && listBookings.length !== 0">
+                          <tr v-for="(booking, index) in listBookings" :key="index">
+                            <td>
+                              {{ booking[0].booking.service ? booking[0].booking.service : 'N/A' }}
+                            </td>
+                            <td>{{ booking[0].booking.date }}</td>
+                            <td>{{ booking[0].fixer ? booking[0].fixer.name : 'N/A' }}</td>
+                            <td>
+                              <button
+                                class="btn btn-danger"
+                                @click="cancelBooking(booking[0].id)"
+                              >
+                                Cancel
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                        <tbody v-else>
+                          <tr>
+                            <td colspan="3">No bookings found.</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="raw">
+                      <div class="card-body">
+                        <div class="mt-5 map" ref="map" style="height: 300px"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col col-1"></div>
+                  <div class="col-4">
+                    <!-- <div class="row"></div> -->
+                    <div class="card row w-100">
+                      <div class="w-100">
+                        <div class="card-header chat-header">
+                          <h5 class="card-title mb-0">Live Chat</h5>
+                        </div>
+                        <div class="card-body chat-body">
+                          <div class="messages">
+                            <div class="message received">
+                              <div class="message-content">Hi there!</div>
+                            </div>
+                            <div class="message sent">
+                              <div class="message-content">Hello!</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-footer chat-footer">
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Type your message..."
+                            />
+                            <div class="input-group-append">
+                              <button class="btn btn-primary">Send</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         <div class="right navbar-nav-right">
+          <button
+            v-if="isLoggedIn && listBookings"
+            type="button"
+            class="btn cart position-relative"
+            data-bs-toggle="modal"
+            data-bs-target=".bd-cart-modal"
+          >
+            <i class="bi bi-cart" style="font-size: 20px"></i>
+            <span
+              v-if="listBookings.length != 0"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            >
+              {{ listBookings.length }}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </button>
+
           <div class="nav-item position-relative" @click="toggleNotifications">
             <i class="bi bi-bell icon" title="Notifications"></i>
             <span class="tooltip-text">Notifications</span>
-            <span class="badge bg-danger rounded-pill notification-badge">1</span>
+            <span v-if="isLoggedIn" class="badge bg-danger rounded-pill notification-badge">1</span>
             <div v-if="showNotifications" class="notification-dropdown">
               <ul>
                 <li v-for="(notification, index) in notifications" :key="index">
@@ -180,17 +231,13 @@
             </div>
           </div>
 
-          <router-link to="/signup"><div v-if="!isLoggedIn" class="nav-item position-relative" @click="goToSignUp">
-            <button class="btn btn-orange" style="padding:6.5px 10px">Register</button>
-          </div>
+          <router-link v-if="!isLoggedIn" to="/signup" class="nav-item position-relative">
+            <button class="btn btn-orange" style="padding: 6.5px 10px">Register</button>
           </router-link>
-          <router-link to="/login">
-          <div v-if="!isLoggedIn" class="nav-item position-relative" @click="goToLogin">
-            <button class="btn btn-danger" >Login</button>
-          </div>
+          <router-link v-if="!isLoggedIn" to="/login" class="nav-item position-relative">
+            <button class="btn btn-danger">Login</button>
           </router-link>
 
-          <!-- Profile Dropdown -->
           <div v-if="isLoggedIn" class="nav-item dropdown position-relative">
             <a
               class="nav-link dropdown-toggle p-0"
@@ -215,7 +262,7 @@
               <li>
                 <router-link to="/profile" class="dropdown-item">
                   <i class="bi bi-eye-fill"></i>
-                  <p>view Profile</p>
+                  <p>View Profile</p>
                 </router-link>
               </li>
               <li>
@@ -236,33 +283,57 @@
       </div>
     </div>
   </nav>
-
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import axios from 'axios'
+import { Loader } from '@googlemaps/js-api-loader'
 
+const apiKey = 'AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0'
+const loader = new Loader({
+  apiKey: apiKey,
+  version: 'beta',
+  libraries: ['places']
+})
 
+const map = ref(null)
+const marker = ref(null)
 const promotions = ref(null)
+const latitude = ref('')
+const longitude = ref('')
+const listBookings = ref(null)
 const authStore = useAuthStore()
 const showNotifications = ref(false)
+const storeLocation = ref({ lat: null, lng: null })
+
 const notifications = ref([
   'New comment on your post',
   'New like on your photo',
   'Friend request received'
 ])
 
+const initializeMap = async () => {
+  await loader.load()
+  map.value = new google.maps.Map(document.querySelector('.map'), {
+    center: { lat: 12.5657, lng: 104.917 },
+    zoom: 8
+  })
+}
+
 const isLoggedIn = computed(() => !!authStore.user)
 
 onMounted(async () => {
   await listPromotion()
+  await listbooking()
+  initializeMap()
+  setInterval(listbooking, 2000)
 })
+
 const logout = async () => {
   try {
     authStore.logout()
-    alert('User logged out successfully!')
     location.reload()
   } catch (error) {
     console.error('Error logging out:', error)
@@ -273,11 +344,41 @@ async function listPromotion() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/promotion/list')
     promotions.value = response.data
+    listBookings.value.forEach((booking) => {
+      const position = { lat: booking.latitude, lng: booking.longitude }
+      new google.maps.Marker({
+        position: position,
+        map: map.value,
+        title: booking.name
+      })
+    })
   } catch (error) {
     console.log('error getting promotion')
   }
 }
 
+async function listbooking() {
+  const user = JSON.parse(localStorage.getItem('user')).id
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/booking/show/' + user)
+    listBookings.value = response.data.bookings
+  } catch (error) {
+    console.log('error getting promotion')
+  }
+}
+const cancelBooking = async (bookingId) => {
+    const user = JSON.parse(localStorage.getItem('user')).id
+
+  try {
+    const response = await axios.delete(`http://127.0.0.1:8000/api/customer/cancel/${bookingId}`,{
+      user_id : user
+    })
+    console.log('Booking cancelled:',bookingId)
+    // Optionally update listBookings or show a message
+  } catch (error) {
+    console.error('Error cancelling booking:', error)
+  }
+}
 const toggleNotifications = () => {
   showNotifications.value = !showNotifications.value
 }
@@ -304,7 +405,7 @@ const toggleNotifications = () => {
   width: 0%;
   height: 2px;
   background-color: #007bff;
-  transition: width 0.3s ease; 
+  transition: width 0.3s ease;
 }
 
 .hoverable:hover::after {
@@ -332,6 +433,7 @@ const toggleNotifications = () => {
   font-size: 1em;
   color: #ffa000;
 }
+
 .card .discount {
   font-size: 1.8em;
   margin: 10px 0;
@@ -341,9 +443,9 @@ const toggleNotifications = () => {
 .card .date {
   font-size: 15px;
 }
-.modal-backdrop{
+.modal-backdrop {
   background: white;
-  position:relative;
+  position: relative;
 }
 /* Logo */
 .logo {
@@ -358,6 +460,58 @@ const toggleNotifications = () => {
   cursor: pointer;
   font-size: 1rem;
   border-radius: 4px;
+}
+.chat-card {
+  width: 100%;
+}
+
+.chat-header {
+  background-color: #0084ff;
+  color: white;
+  padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.chat-body {
+  height: 300px;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  max-width: 70%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.message.received {
+  align-self: flex-start;
+  background-color: #f0f0f0;
+}
+
+.message.sent {
+  align-self: flex-end;
+  background-color: #0084ff;
+  color: white;
+}
+
+.message-content {
+  word-wrap: break-word;
+}
+
+.chat-footer {
+  padding: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.input-group {
+  margin-bottom: 0;
 }
 
 .btn-orange:hover {
@@ -538,6 +692,44 @@ const toggleNotifications = () => {
   .notification-dropdown {
     left: unset;
     right: 10px; /* Adjust notification dropdown position */
+  }
+}
+.popup {
+  position: absolute;
+  z-index: 1; /* Set a high z-index value to ensure it appears on top */
+  background-color: #fff; /* Add a background color to make it visible */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-container {
+  position: relative; /* Set the container to relative positioning */
+}
+.custom-slide-modal .modal-dialog {
+  position: fixed;
+  top: 25px;
+  right: 0;
+  width: 40%; /* Adjust width as per your design */
+  height: 100%;
+  margin: 0;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+  z-index: 1050; /* Ensure modal appears above modal backdrop */
+}
+
+#staticBackdrop.show .modal-dialog {
+  transform: translateX(0%);
+}
+
+.modal-backdrop {
+  z-index: 1040; /* Lower than the modal's z-index */
+}
+
+@media (max-width: 992px) {
+  .custom-slide-modal .modal-dialog {
+    width: 80%; /* Adjust for smaller screens */
   }
 }
 </style>

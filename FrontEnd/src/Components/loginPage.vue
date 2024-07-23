@@ -56,17 +56,6 @@
           </button>
         </form>
         <div class="social-login">
-          <h3 class="mb-3">Or login with:</h3>
-          <google-login
-            :clientId="clientId"
-            :scope="scope"
-            :buttonText="buttonText"
-            class="btn btn-google w-100"
-            @success="handleGoogleLogin"
-            @error="handleGoogleLoginError"
-          >
-            <i class="fab fa-google"></i> Login with Google
-          </google-login>
           <p class="mt-3">
             Don't have an account? <router-link to="/signup">Sign Up</router-link>
           </p>

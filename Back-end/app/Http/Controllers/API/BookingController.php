@@ -4,13 +4,14 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BookingResource;
+use App\Http\Resources\BookingShow;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\Bookin_immediately;
 use App\Models\Bookin_deadline;
 use App\Models\FixingProgress;
-
+use App\Models\Service;
 
 class BookingController extends Controller
 {
@@ -54,14 +55,29 @@ class BookingController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
-        //
+        try {
+            $action = 'request';
+    
+            $bookings = Booking::where('user_id', $id)
+                             ->where('action', $action)
+                             ->with('user') 
+                             ->get();
+    
+            $bookingsData = BookingShow::collection($bookings);
+    
+            return response()->json([
+                'bookings' => $bookingsData,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to fetch bookings.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, int $id)
     {
         //
@@ -93,18 +109,14 @@ class BookingController extends Controller
         $booking = Booking::find($id);
         if($booking['type'] == 'immediately'){
             $bookin_immediately = Bookin_immediately::find($booking->booking_type_id);
-            if($request->user == 'user'){
-                $bookin_immediately->action='cancel';
-            }else{
-                $bookin_immediately->action='unaccept';
+            if($request->user == $bookin_immediately->user_id){
+                $bookin_immediately->delete();
             }
             $bookin_immediately->save();
         }else{
             $bookin_deadline = Bookin_deadline::find($booking->booking_type_id);
-            if($request->user == 'user'){
-                $bookin_deadline->action='cancel';
-            }else{
-                $bookin_deadline->action='unaccept';
+            if($request->user == $bookin_deadline->user_id){
+                $bookin_deadline->delete();
             }
             $bookin_deadline->save();
         }

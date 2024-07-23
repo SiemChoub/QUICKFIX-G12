@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookingDeadlineResource;
 use Illuminate\Http\Request;
 use App\Models\Bookin_deadline;
 use App\Models\Booking;
@@ -17,6 +18,7 @@ class Bookin_deadlineController extends Controller
     {
         //
         $bookin_deadline = Bookin_deadline::all();
+        $bookin_deadline = BookingDeadlineResource::collection($bookin_deadline);
         return response()->json($bookin_deadline);
     }
     public function store(Request $request)

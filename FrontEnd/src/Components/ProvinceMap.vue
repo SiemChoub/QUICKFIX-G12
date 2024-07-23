@@ -18,8 +18,7 @@
   </div>
 </template>
 <style scoped>
-.province {
-}
+
 .text {
   color: orange;
   font-weight: bolder;
