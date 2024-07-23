@@ -60,6 +60,7 @@ Route::resource('/booking', BookingController::class)->middleware('auth:sanctum'
 // ---------------- booking immedetely -------------
 Route::post('/bookin_immediatly', [Bookin_memediatelyController::class, 'store']);
 Route::get('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'show'])->middleware('auth:sanctum');
+Route::get('/bookin_immediatly', [Bookin_memediatelyController::class, 'index']) ;
 Route::put('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('/bookin_immediatly/{id}', [Bookin_memediatelyController::class, 'destroy'])->middleware('auth:sanctum');
 
@@ -100,6 +101,8 @@ Route::delete('/feedback/delete/{id}', [FeedbackController::class, "destroy"]);
 
 // --------------------- chat --------------------
 Route::get('/booking', [BookingController::class, 'index']);
+Route::delete('/customer/cancel/{id}', [BookingController::class, 'destroy']);
+Route::get('/booking/show/{id}', [BookingController::class, 'show']);
 
 // Chat routes
 Route::get('/chat/list', [ChatController::class, 'index']);

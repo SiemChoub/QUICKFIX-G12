@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookingDeadlineResource;
 use Illuminate\Http\Request;
 use App\Models\Bookin_immediately;
 use App\Models\User;
@@ -18,6 +19,8 @@ class Bookin_memediatelyController extends Controller
     {
         //
         $bookin_memediately = Bookin_immediately::all();
+        $bookin_memediately = BookingDeadlineResource::collection($bookin_memediately);
+
         return response()->json($bookin_memediately);
 
     }

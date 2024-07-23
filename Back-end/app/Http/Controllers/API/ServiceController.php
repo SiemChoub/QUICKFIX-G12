@@ -13,12 +13,10 @@ class ServiceController extends Controller
 {
     $services = Service::all();
     $services = ServiceResource::Collection($services);
-    $serviceCount = $services->count();
     $topService = $services->sortByDesc('rating')->take(3);
 
     return response()->json([
         'services' => $services,
-        'service_count' => $serviceCount,
         'topService' => $topService,
     ]);
 }
