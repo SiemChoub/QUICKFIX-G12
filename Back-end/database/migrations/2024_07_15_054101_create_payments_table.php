@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('fixer_id');
-            $table->string('price');
-            $table->date('deadline');
-            $table->string('description');
+            $table->string('amount');
+            $table->string('number_fixed');
+            $table->string('total');
+            $table->date('datepay');
+            $table->date('dateline');
+            $table->string('description')->nullable();
             $table->string('status')->default('no');
             $table->softDeletes();
             $table->timestamps();

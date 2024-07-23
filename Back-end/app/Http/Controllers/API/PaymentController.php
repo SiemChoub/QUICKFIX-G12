@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payments;
@@ -20,11 +20,10 @@ class PaymentController extends Controller
      */
 
     // ------- get payment in laravel ----------------------
-    public function index()
+    public function getpayment(int $id)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-        $payments = Payments::all()->sortByDesc('id');
-        return view('payments.index',['payments'=>$payments]);
+        $payments = Payments::where('fixer_id', $id)->orderBy('id', 'desc')->get();
+        return $payments;
     }
     // ------- get payment in laravel ----------------------
 
@@ -53,9 +52,7 @@ class PaymentController extends Controller
             if($numberfix !=0){
                 $payment = new Payments();
                 $payment->fixer_id = $fixer->fixer_id;
-                $payment->number_fixed = $numberfix;
-                $payment->amount = $request->amount;
-                $payment->total = $request->amount * $numberfix;
+                $payment->amount = $request->amount * $numberfix;
                 $payment->datepay = $request->datepay;
                 $payment->dateline = $request->dateline;
                 $payment->description = $request->description;
@@ -64,36 +61,8 @@ class PaymentController extends Controller
                 ->with('showAlertCreate', true);            }
         }
         return redirect('admin/payments')
-        ->with('showAlertNo', true);
-    }
-
-
-    // public function getPay(Request $request)
-    // {
-    //  // Set your secret key
-    //  Stripe::setApiKey(env('STRIPE_SECRET'));
-
-    //  // dd($request->amount);
-    //  try {
-    //      // Create a PaymentIntent to charge a customer
-    //      $paymentIntent = PaymentIntent::create([
-    //          'amount' => $request->amount, // Example amount in cents
-    //          'currency' => 'usd',
-    //          'payment_method_types' => ['card'],
-    //          'description' => 'Example Payment',
-    //      ]);
-
-    //      // Return client secret to frontend
-    //      return response()->json(['clientSecret' => $paymentIntent->client_secret]);
-    //  } catch (ApiErrorException $e) {
-    //      // Handle error
-    //      return response()->json(['error' => $e->getMessage()], 500);
-    //  }
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+        ->with('showAlertNo', true);}
+  
     public function create()
     {
         return view('payments.new');
@@ -112,13 +81,7 @@ class PaymentController extends Controller
          return view('payments.edit', ['payment'=>$payment]);
      }
     public function update(Request $request, Payments $payment){
-    
-        //
-        // $payment = Payments::find($id);
-        // $payment->price = $request->price;
-        // $payment->deadline = $request->deadline;
-        // $payment->description = $request->description;
-        // $payment->save();
+
         $payment->update($request->all());
         return redirect('admin/payments')->with('showAlertEdit', true);
     }
@@ -130,6 +93,7 @@ class PaymentController extends Controller
 
         // dd($request->amount);
         try {
+            $payments = Payments::all()->where('id', $request->payment_id)->first();
             // Create a PaymentIntent to charge a customer
             $paymentIntent = PaymentIntent::create([
                 'amount' => $request->amount, // Example amount in cents
@@ -137,6 +101,9 @@ class PaymentController extends Controller
                 'payment_method_types' => ['card'],
                 'description' => 'Example Payment',
             ]);
+
+            $payments->status='done';
+            $payments->save();
 
             // Return client secret to frontend
             return response()->json(['clientSecret' => $paymentIntent->client_secret]);
