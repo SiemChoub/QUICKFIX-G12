@@ -1,5 +1,5 @@
 <x-app-layout>
-    <main class="flex-1 bg-gray-200 px-4 py-6 sm:px-6 lg:px-8">
+    <main class="flex-1 bg-gray-200 px-4 py-6 sm:px-6 lg:px-8" style="margin-top:90px">
         <a href="{{ route('admin.payments.index') }}"
             class="btn btn-warning me-2 hover-fade shadow d-flex align-items-center border -mt-3 mb-2 border-none w-20 ">
             <i class="bx bx-arrow-back me-2"></i>
@@ -10,18 +10,23 @@
                 @csrf
                 <div class="d-flex gap-3 w-100">
                     <div class="mb-4 w-50">
-                        <label for="price" class="block text-warning-700 font-medium mb-1">Price</label>
-                        <input id="price" type="text" name="price" value="{{ old('price') }}"
-                            placeholder="Enter Price"
+                        <label for="amount" class="block text-warning-700 font-medium mb-1">Amount</label>
+                        <input id="amount" type="number" name="amount" value="{{ old('amount') }}"
+                            placeholder="Enter Amount"
                             class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500">
                     </div>
                     <div class="mb-4 w-50">
-                         <label for="description" class="block text-warning-700 font-medium mb-1">Deadline</label>
+                        <label for="date" class="block text-warning-700 font-medium mb-1">Date</label>
+                        <input id="date" type="date" name="datepay" 
+                            placeholder="Enter date"
+                            class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500">
+                    </div>
+                    <div class="mb-4 w-50">
+                         <label for="description" class="block text-warning-700 font-medium mb-1">Dateline</label>
                          <input type="date"
-                             name="deadline" 
-                             id="deadline"
-                             class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500"
-                             value="2024-12-02">
+                             name="dateline" 
+                             id="dateline"
+                             class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500">
                          {{-- <textarea name="description" id="description" placeholder="Enter description" class="w-full border border-warning-300 rounded-md py-2 px-3 focus:outline-none focus:border-warning-500 focus:ring-1 focus:ring-warning-500" rows="2">{{ old('description') }}</textarea> --}}
                      </div>
                      
