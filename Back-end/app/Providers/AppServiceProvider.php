@@ -12,6 +12,11 @@ use App\Models\Category;
 use App\Models\Feedback;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\Payments;
+use App\Models\Bookin_immediately;
+use App\Models\Bookin_deadline;
+
+
 
 use Schema;
 
@@ -54,8 +59,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
             
-        if (Schema::hasTable('bookings') && Schema::hasTable('fixing_progress') && Schema::hasTable('categories') && Schema::hasTable('services') && Schema::hasTable('users')&& Schema::hasTable('Chats')&& Schema::hasTable('feedback')){
-            view()->share(['bookings' => Booking::all(), 'FixingProgress' => FixingProgress::all(),'Categories'=>Category::all(),'Service'=> Service::all(),'users'=> User::all() ,'messages' => Chat::all(), 'feedbacks'=>Feedback::all()]);
+        if (Schema::hasTable('bookings') && Schema::hasTable('fixing_progress') && Schema::hasTable('categories') && Schema::hasTable('services') && Schema::hasTable('users')&& Schema::hasTable('Chats')&& Schema::hasTable('feedback') && Schema::hasTable('fixing_progress') && Schema::hasTable('payments') && Schema::hasTable('bookin_immediatelies') && Schema::hasTable('bookin_deadlines')){
+            view()->share(['bookings' => Booking::all(), 'FixingProgress' => FixingProgress::all(),'Categories'=>Category::all(),'Service'=> Service::all(),'users'=> User::all() ,'messages' => Chat::all(), 'feedbacks'=>Feedback::all(),'FixingProgress' => FixingProgress::all(),'payments' => Payments::all(),'bookin_immediatelies'=>Bookin_immediately::all(),'bookin_deadlines'=>Bookin_deadline::all()]);
 
         }
 

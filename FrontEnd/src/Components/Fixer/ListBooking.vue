@@ -10,7 +10,6 @@
           :key="book.id"
           id="list_booking_item"
           class="list-group-item action rounded-2 d-flex w-100 flex-column flex-md-row align-items-center gap-3"
-          @click="handleBookingClick(book.id)"
         >
           <div class="right d-flex align-items-center gap-3">
             <img
@@ -24,31 +23,51 @@
           <div class="left d-flex align-items-center flex-grow-1 mt-2 mt-md-0">
             <p class="mb-0">Date: {{ book.date }}</p>
           </div>
-          <div class="btn-groups d-flex flex-wrap flex-md-nowrap justify-content-end mt-2 mt-md-0 gap-5">
-            <button class="btn" @click="getDetail(book.id)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-      <i class="bi bi-info-circle"></i> Detail
+          <div
+            class="btn-groups d-flex flex-wrap flex-md-nowrap justify-content-end mt-2 mt-md-0 gap-5"
+          >
+            <button
+              class="btn"
+              @click="getDetail(book.id)"
+              data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop"
+            >
+              <i class="bi bi-info-circle"></i> Detail
             </button>
             <button class="btn" @click="acceptBooking(book.id)">
               <i class="bi text-secondary text-25px bi-check2-circle"></i>
             </button>
             <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div>
+            <div
+              class="modal fade"
+              id="staticBackdrop"
+              data-bs-backdrop="static"
+              data-bs-keyboard="false"
+              tabindex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">...</div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </li>
       </ul>
@@ -61,8 +80,9 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const accessToken = localStorage.getItem('access_token');
-const bookings = ref([]);
+const accessToken = localStorage.getItem('access_token')
+const bookings = ref([])
+// const bookID = ref(null)
 
 async function getBooking() {
   try {
@@ -71,60 +91,71 @@ async function getBooking() {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       }
-    });
-    bookings.value = response.data;
+    })
+    bookings.value = response.data
+    console.log(response.data);
   } catch (error) {
     if (error.response) {
-      console.error('Backend error:', error.response.data);
+      console.error('Backend error:', error.response.data)
     }
   }
 }
 
 async function acceptBooking(bookingId) {
+  
   try {
-    const fixer = JSON.parse(localStorage.getItem('user'));
-    const fixer_id = fixer.id;
+    const fixer = JSON.parse(localStorage.getItem('user'))
+    const fixer_id = fixer.id
+    console.log(fixer_id,bookingId);
 
-    // const response = await axios.post('http://127.0.0.1:8000/api/fixer/accept', {
-    //   fixer_id: fixer_id,
-    //   booking_id: bookingId
-    // }, {
-    //   headers: {
-    //     Authorization: `Bearer ${accessToken}`,
-    //     'Content-Type': 'application/json'
-    //   }
-    // });
-    console.log('Booking accepted:', response.data);
-    getBooking(); 
-  } catch (error) {
-    if (error.response) {
-      console.error('Backend error:', error.response.data);
-    }
-  }
-}
-
-async function getDetail(bookingId) {
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/fixer/reject', {
-      booking_id: bookingId
-    }, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
+    const response = await axios.post(
+      'http://127.0.0.1:8000/api/fixer/accept',
+        {
+        fixer_id: fixer_id,
+        booking_id:bookingId
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
       }
-    });
-    console.log('Booking rejected:', response.data);
-    getBooking(); 
+    )
+    console.log('Booking accepted:', response.data)
+    getBooking()
   } catch (error) {
     if (error.response) {
-      console.error('Backend error:', error.response.data);
+      console.error('Backend error:', error.response.data)
     }
   }
 }
+
+
+// async function getDetail(bookingId) {
+//   try {
+//     const response = await axios.post('http://127.0.0.1:8000/api/fixer/reject', {
+//       booking_id: bookingId
+//     }, {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//         'Content-Type': 'application/json'
+//       }
+//     });
+//     console.log('Booking rejected:', response.data);
+//     getBooking();
+//   } catch (error) {
+//     if (error.response) {
+//       console.error('Backend error:', error.response.data);
+//     }
+//   }
+// }
+// async function handleBookingClick(bookingId) {
+//   bookID.value = bookingId
+// }
 
 onMounted(() => {
-  getBooking();
-});
+  getBooking()
+})
 </script>
 
 

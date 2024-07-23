@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fixing_progress', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('fixer_id');
-            $table->unsignedBigInteger('booking_id');        
-            $table->string('action')->default('progress');
+            $table->string('amount');
+            $table->string('number_fixed');
+            $table->string('total');
+            $table->date('datepay');
+            $table->date('dateline');
+            $table->string('description')->nullable();
+            $table->string('status')->default('no');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -25,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fixing_progress');
+        Schema::dropIfExists('payments');
     }
 };

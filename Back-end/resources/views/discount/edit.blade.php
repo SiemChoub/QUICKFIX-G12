@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+    <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100" style="margin-top:70px">
         <div class="container mx-auto px-4 mt-4 py-1 pb-16">
             <div class="flex justify-between items-center mb-3">
                 <a href="{{ route('admin.discounts.index') }}"

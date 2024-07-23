@@ -1,16 +1,4 @@
 <template>
-  <div class="card w-6rem  mt-5 mb-5 color-none m-3 border-0 h-auto">
-    <button
-      type="button"
-      id="btn"
-      class="btn text-16px w-6rem btn-outline-primary"
-      data-bs-toggle="modal"
-      data-bs-target="#update"
-      data-bs-whatever="@mdo"
-    >
-      Add Skill
-    </button>
-  </div>
 
   <!-- ----------------------------------------- -->
   <div class="container mt-lg-5 gap-3 d-flex row-cols-3">

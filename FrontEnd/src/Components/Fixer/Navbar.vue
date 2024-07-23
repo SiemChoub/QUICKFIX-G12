@@ -32,6 +32,13 @@
             Accepted Booking
           </button>
           <button
+            :class="{ 'btn-outline-secondary active': currentView === 'Payment' }"
+            @click="setCurrentView('Payment')"
+            class="btn w-100 mb-2"
+          >
+            Payment
+          </button>
+          <button
             :class="{ 'btn-outline-secondary active': currentView === 'Skill' }"
             @click="setCurrentView('Skill')"
             class="btn w-100 mb-2"
@@ -114,6 +121,7 @@ import Skill from './CardSkill.vue';
 import ChatView from './ChatView.vue';
 import HistoryView from './HistoryView.vue';
 import AcceptBooking from './AcceptBooking.vue';
+import Payment from './Payment.vue';
 
 export default {
   name: 'NavBar',
@@ -123,7 +131,8 @@ export default {
     Skill,
     ChatView,
     HistoryView,
-    AcceptBooking
+    AcceptBooking,
+    Payment
   },
   data() {
     return {
