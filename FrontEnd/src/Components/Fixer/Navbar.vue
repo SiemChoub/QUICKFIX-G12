@@ -34,10 +34,10 @@
           <button
             :class="{ 'btn-outline-secondary active': currentView === 'Payment' }"
             @click="setCurrentView('Payment')"
-            class="btn w-100 mb-2"
-          >
-            Payment
+            class="btn w-100 mb-1"
+          ><div class="d-flex gap-2"><p>Payment</p><span class="text-warning text-5 -mt-2" v-if="payments.length>0"><i  class='bx bxs-bell-ring bx-tada' ></i></span></div> 
           </button>
+
           <button
             :class="{ 'btn-outline-secondary active': currentView === 'Skill' }"
             @click="setCurrentView('Skill')"
@@ -111,8 +111,8 @@
       </div>
     </div>
   </div>
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </template>
-
 <script>
 import axios from 'axios';
 import Dashboard from './DashBoard.vue';
@@ -138,6 +138,7 @@ export default {
     return {
       users: {},
       currentView: 'Dashboard',
+      payments: [],
     };
   },
   methods: {
@@ -161,11 +162,23 @@ export default {
     },
     getUserData() {
       this.users = JSON.parse(localStorage.getItem('user')) || {};
-    }
+    } ,
+    async getPayments() {
+      const fixer = JSON.parse(localStorage.getItem('user'));
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/getlistpay/${fixer.id}`);
+        // Assuming response.data is an array of payment objects
+        this.payments = response.data.filter(payment => payment.status === 'no');
+      } catch (error) {
+        console.error('Error fetching payment list:', error);
+      }
+    },
   },
   mounted() {
     this.getUserData();
-  }
+    this.getPayments();
+  },
+ 
 };
 </script>
 
