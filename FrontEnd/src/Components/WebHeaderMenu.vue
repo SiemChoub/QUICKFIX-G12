@@ -26,7 +26,6 @@
           <li class="nav-item">
             <router-link to="/" class="nav-link">
               <i class="bi bi-house-door icon"></i>
-              <span class="tooltip-text">Home</span>
             </router-link>
           </li>
 
@@ -38,7 +37,6 @@
                 alt="Fixer Icon"
                 style="width: 35px; border-radius: 50%"
               />
-              <span class="tooltip-text">Fixer List</span>
             </router-link>
           </li>
 
@@ -71,27 +69,25 @@
               </div>
               <div class="modal-body">
                 <form>
-                  <div class="mb-3 hello d-flex align-items-center">
-                    <input
-                      type="email"
-                      class="form-control me-2"
-                      id="exampleFormControlInput"
-                      placeholder="Search"
-                    />
-                  </div>
-                  <div
-                    class="mb-3 card d-flex align-items-center"
-                    v-for="promotion in promotions"
-                    :key="promotion.id"
-                  >
-                    <div class="discount">Promotion {{ promotion.discount }}%</div>
-                    <div class="text-truncate" style="max-width: 200px">
-                      <!-- Adjust max-width as needed -->
-                      🎉{{ promotion.description }}💛
-                    </div>
-                    <div class="date">Promotion {{ promotion.start_date }}</div>
-                    <div class="date">Promotion {{ promotion.end_date }}</div>
-                  </div>
+                  <div class="mb-3 hello d-flex align-items-center"></div>
+    <div v-if="promotions && promotions.length != 0">
+      <div
+        class="mb-3 card d-flex align-items-center"
+        v-for="promotion in promotions"
+        :key="promotion.id"
+      >
+        <div class="discount">Promotion {{ promotion.discount }}%</div>
+        <div class="text-truncate" style="max-width: 200px">
+          <!-- Adjust max-width as needed -->
+          🎉{{ promotion.description }}💛
+        </div>
+        <div class="date">Start Date: {{ promotion.start_date }}</div>
+        <div class="date">End Date: {{ promotion.end_date }}</div>
+      </div>
+    </div>
+    <div v-else>
+      <span>No promotions available.</span>
+    </div>
                 </form>
               </div>
             </div>
@@ -128,6 +124,7 @@
                             <th scope="col">Item</th>
                             <th scope="col">Date</th>
                             <th scope="col">Fixer</th>
+                            <th scope="col">Booking</th>
                             <th scope="col">Action</th>
                           </tr>
                         </thead>
@@ -138,11 +135,9 @@
                             </td>
                             <td>{{ booking[0].booking.date }}</td>
                             <td>{{ booking[0].fixer ? booking[0].fixer.name : 'N/A' }}</td>
+                            <td>{{booking[0].action}}</td>
                             <td>
-                              <button
-                                class="btn btn-danger"
-                                @click="cancelBooking(booking[0].id)"
-                              >
+                              <button class="btn btn-danger" @click="cancelBooking(booking[0].id)">
                                 Cancel
                               </button>
                             </td>
@@ -155,27 +150,22 @@
                         </tbody>
                       </table>
                     </div>
-                    <div class="raw">
-                      <div class="card-body">
-                        <div class="mt-5 map" ref="map" style="height: 300px"></div>
-                      </div>
-                    </div>
                   </div>
                   <div class="col col-1"></div>
                   <div class="col-4">
                     <!-- <div class="row"></div> -->
                     <div class="card row w-100">
                       <div class="w-100">
-                        <div class="card-header chat-header">
+                        <div class="card-header chat-header" style="background: orange">
                           <h5 class="card-title mb-0">Live Chat</h5>
                         </div>
                         <div class="card-body chat-body">
                           <div class="messages">
                             <div class="message received">
-                              <div class="message-content">Hi there!</div>
+                              <div class="message-content"></div>
                             </div>
-                            <div class="message sent">
-                              <div class="message-content">Hello!</div>
+                            <div class="message sent" style="background: gray">
+                              <div class="message-content"></div>
                             </div>
                           </div>
                         </div>
@@ -187,7 +177,7 @@
                               placeholder="Type your message..."
                             />
                             <div class="input-group-append">
-                              <button class="btn btn-primary">Send</button>
+                              <button class="btn btn-orange">Send</button>
                             </div>
                           </div>
                         </div>
@@ -221,11 +211,11 @@
           <div class="nav-item position-relative" @click="toggleNotifications">
             <i class="bi bi-bell icon" title="Notifications"></i>
             <span class="tooltip-text">Notifications</span>
-            <span v-if="isLoggedIn" class="badge bg-danger rounded-pill notification-badge">1</span>
+            <span v-if="isLoggedIn && notifications && notifications.length != 0" class="badge bg-danger rounded-pill notification-badge">{{notifications.length}}</span>
             <div v-if="showNotifications" class="notification-dropdown">
-              <ul>
-                <li v-for="(notification, index) in notifications" :key="index">
-                  {{ notification }}
+              <ul style="width:300px">
+                <li v-for="(notification, index) in notifications" :key="index"> 
+                  {{ notification.message }}
                 </li>
               </ul>
             </div>
@@ -304,15 +294,21 @@ const promotions = ref(null)
 const latitude = ref('')
 const longitude = ref('')
 const listBookings = ref(null)
+    const notifications = ref();
 const authStore = useAuthStore()
 const showNotifications = ref(false)
 const storeLocation = ref({ lat: null, lng: null })
 
-const notifications = ref([
-  'New comment on your post',
-  'New like on your photo',
-  'Friend request received'
-])
+const fetchNotifications = async () => {
+      try {
+        const userId = JSON.parse(localStorage.getItem('user')).id; // Replace with dynamic user ID if necessary
+        const response = await axios.get(`http://127.0.0.1:8000/api/notification/customer/${userId}`);
+        notifications.value = response.data.data;
+        console.log(response.data.data);
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    };
 
 const initializeMap = async () => {
   await loader.load()
@@ -327,6 +323,7 @@ const isLoggedIn = computed(() => !!authStore.user)
 onMounted(async () => {
   await listPromotion()
   await listbooking()
+  await fetchNotifications()
   initializeMap()
   setInterval(listbooking, 2000)
 })
@@ -344,14 +341,6 @@ async function listPromotion() {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/promotion/list')
     promotions.value = response.data
-    listBookings.value.forEach((booking) => {
-      const position = { lat: booking.latitude, lng: booking.longitude }
-      new google.maps.Marker({
-        position: position,
-        map: map.value,
-        title: booking.name
-      })
-    })
   } catch (error) {
     console.log('error getting promotion')
   }
@@ -367,13 +356,13 @@ async function listbooking() {
   }
 }
 const cancelBooking = async (bookingId) => {
-    const user = JSON.parse(localStorage.getItem('user')).id
+  const user = JSON.parse(localStorage.getItem('user')).id
 
   try {
-    const response = await axios.delete(`http://127.0.0.1:8000/api/customer/cancel/${bookingId}`,{
-      user_id : user
+    const response = await axios.delete(`http://127.0.0.1:8000/api/customer/cancel/${bookingId}`, {
+      user_id: user
     })
-    console.log('Booking cancelled:',bookingId)
+    console.log('Booking cancelled:', bookingId)
     // Optionally update listBookings or show a message
   } catch (error) {
     console.error('Error cancelling booking:', error)

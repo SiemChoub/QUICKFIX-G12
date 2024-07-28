@@ -21,82 +21,32 @@
       <div class="dropdown ms-3">
         <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bx bx-bell"></i>
-          <span class="badge bg-danger rounded-pill">18+</span>
-        </a>
+          @if(count($feedbacks) !=0)
+          <span class="badge bg-danger rounded-pill">{{count($feedbacks)}}</span>
+          @endif
+          </a>
         <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="notificationsDropdown" style="width: 400px; max-height: 400px; overflow-y: auto;">
           <div class="notification-list space-y-2" style="height: 300px; overflow-y: scroll;">
+          @if(count($feedbacks) !=0)
+          @foreach ($feedbacks as $feedback)
+            @php 
+            $user = $users->where('id',$feedback->user_id)->first();
+            @endphp
+            {{-- ----------------------------------- --}}
             <a href="#" class="dropdown-item d-flex border border-warning justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
               <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 1</h5>
-                <p class="text-600 fw-bold text-sm truncate" style="font-size:10px;">This is the first notification.</p>
+                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">{{$user->name}}</h5>
+                <p class="text-600 fw-bold text-sm truncate" style="font-size:10px;">{{$feedback->created_at->format('Y-m-d')}}
+                </p>
               </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;">
-                  <i class="bx bx-info-circle"></i>
-                  View Details
-                </button>
+              <div class="text-2">
+                {{$feedback->content}}
               </div>
             </a>
-            <a href="#" class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 2</h5>
-                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the second notification.</p>
-              </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;">
-                  <i class="bx bx-info-circle"></i>
-                  View Details
-                </button>
-              </div>
-            </a>
-            <a class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 3</h5>
-                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the third notification.</p>
-              </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;">
-                  <i class="bx bx-info-circle"></i>
-                  View Details
-                </button>
-              </div>
-            </a>
-            <a class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 3</h5>
-                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the third notification.</p>
-              </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;">
-                  <i class="bx bx-info-circle"></i>
-                  View Details
-                </button>
-              </div>
-            </a>
-            <a href="#" class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 3</h5>
-                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the third notification.</p>
-              </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;">
-                  <i class="bx bx-info-circle"></i>
-                  View Details
-                </button>
-              </div>
-            </a>
-            <a href="#" class="dropdown-item d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">Notification 3</h5>
-                <p class="text-gray-600 text-sm truncate" style="font-size:10px;">This is the third notification.</p>
-              </div>
-              <div class="evaluation">
-                <button class="btn btn-outline-warning btn-sm text-center" style="font-size:10px;">
-                  <i class="bx bx-info-circle"></i>
-                  View Details
-                </button>
-              </div>
-            </a>
+            {{-- --------------------------- --}}
+            @endforeach
+            @endif
+            
           </div>
         </ul>
       </div>
@@ -137,7 +87,7 @@
   </nav>
 </header>
 <!-- ---------------------top service detail------------------ -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
 
 <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-fullscreen">

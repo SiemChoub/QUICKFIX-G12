@@ -21,6 +21,7 @@ use App\Http\Controllers\API\PromotionController;
 use App\Http\Controllers\API\StripePaymentHandlerController;
 
  use App\Http\Controllers\API\MailController;
+use App\Http\Controllers\API\NotificationController;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -117,6 +118,7 @@ Route::post('/fixer/accept', [FixingProgressController::class, 'store']);
 Route::get('/fixer/accepted/{id}', [FixingProgressController::class, 'show']);
 Route::delete('/fixer/cancel/{id}', [FixingProgressController::class, 'cancelAccept']);
 Route::put('/fixer/start/{id}', [FixingProgressController::class, 'startFixer']);
+Route::put('/fixer/done/{id}', [FixingProgressController::class, 'doneFixer']);
 Route::get('/chats/{sender_id}/{receiver_id}', [ChatController::class, 'getChatsBySenderAndReceiver']);
 Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
@@ -132,3 +134,7 @@ Route::post('/payment/create',[PaymentController::class,'store']);
 Route::post('/stripe/payment',[PaymentController::class,'makePayment']);
 
 // Route::post('/stripe/payment', [PaymentController::class, 'makePayment']);
+Route::get('/notification/show/{id}',[NotificationController::class,'show']);
+Route::get('/notification/customer/{id}',[NotificationController::class,'customerNotification']);
+Route::put('/notification/update/{id}',[NotificationController::class,'update']);
+Route::delete('/notification/delete/{id}',[NotificationController::class,'destroy']);

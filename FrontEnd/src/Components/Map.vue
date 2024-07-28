@@ -3,48 +3,34 @@
     <div class="sidebar">
       <div class="sidebar-header">
         <i class="bi bi-chevron-left"></i>
-        <router-link to="/" class="back">Back</router-link>
+        <router-link to="/HomeFixer" class="back">Back</router-link>
       </div>
       <div class="sidebar-image">
         <h2>Information</h2>
       </div>
       <div class="info-container">
         <div class="info">
-          <p>Name Repair</p>
-          <p>{{ phone }}</p>
-          <p>Repair</p>
-          <p>Customer</p>
           <p>Duration</p>
           <p>Distance</p>
         </div>
         <div class="info-details">
-          <p>Chandamunineat</p>
-          <p>0978907237</p>
-          <p>Kampong Cham</p>
-          <p>Kampong Thom</p>
           <p>{{ duration }} mn</p>
-          <p>{{ distance }} km</p>
+          <p>Fixing...</p>
         </div>
       </div>
       <div class="icon">
-        <div class="right">
-          <i class="bi bi-telephone-fill"></i>
-        </div>
-        <div class="center">
-          <router-link to="/messanger">
-            <i class="bi bi-chat-dots"></i>
-          </router-link>
-        </div>
-        <div class="left">
-          <i class="bi bi-x-circle-fill"></i>
-        </div>
-      </div>
+  <div class="center d-flex justify-content-center align-items-center" @click="doneFixing">
+    Done
+  </div>
+</div>
+
     </div>
     <div ref="map" class="map-container"></div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'DeliveryMap',
   data() {
@@ -52,7 +38,7 @@ export default {
       map: null,
       destination: null,
       distance: 0,
-      duration: 0,
+      duration: 40,
       userLocation: null,
       userMarker: null,
       deliveryMarker: null,
@@ -60,111 +46,99 @@ export default {
       directionsRenderer: null,
       phone: null,
       bookingLocationWatchId: null,
-      bookingLocation: null
-    }
+      bookingLocation: null,
+      routePolyline: null 
+    };
   },
   mounted() {
-    // Load Google Maps API asynchronously
-    const googleMapsScript = document.createElement('script')
-    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0&libraries=places`
-    googleMapsScript.async = true
-    googleMapsScript.defer = true
+    const googleMapsScript = document.createElement('script');
+    googleMapsScript.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0&libraries=places`;
+    googleMapsScript.async = true;
+    googleMapsScript.defer = true;
     googleMapsScript.onload = () => {
-      this.initMap()
-    }
-    document.head.appendChild(googleMapsScript)
+      this.initMap();
+    };
+    document.head.appendChild(googleMapsScript);
 
-    const user = JSON.parse(localStorage.getItem('user'))
+    const user = JSON.parse(localStorage.getItem('user'));
     if (user && user.phone) {
-      this.phone = user.phone
+      this.phone = user.phone;
     }
   },
   methods: {
+    doneFixing() {
+      const id = localStorage.getItem('id');
+      try {
+        const response = axios.put(`http://127.0.0.1:8000/api/fixer/done/${id}`);
+        localStorage.removeItem('id');
+        localStorage.removeItem('latitude');
+        localStorage.removeItem('longitude');
+        this.$router.push('/HomeFixer');
+      } catch {
+        console.log('error');
+      }
+    },
     initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
         center: { lat: 12.5657, lng: 105 },
-        zoom: 17,
-      })
+        zoom: 17
+      });
 
-      this.directionsService = new google.maps.DirectionsService()
+      this.directionsService = new google.maps.DirectionsService();
       this.directionsRenderer = new google.maps.DirectionsRenderer({
         map: this.map,
         suppressMarkers: true,
-      })
+        polylineOptions: {
+          strokeColor: '#1a73e8', 
+          strokeOpacity: 0.8,
+          strokeWeight: 5
+        }
+      });
 
-      this.getCurrentLocation()
-      // Uncomment the line below to start tracking when the map loads
-      // this.trackBookingLocation()
+      this.getCurrentLocation();
+      this.trackBookingLocation();
     },
     getCurrentLocation() {
       if (navigator.geolocation) {
-        const options = {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        }
-
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords
-            this.userLocation = { lat: latitude, lng: longitude }
-            console.log('Current location:', this.userLocation)
-            this.updateMap()
+          position => {
+            const { latitude, longitude } = position.coords;
+            this.userLocation = { lat: latitude, lng: longitude };
+            this.updateMap();
           },
-          (error) => {
-            console.error('Error getting current location:', error)
-            let errorMessage = 'Please enable location services for accurate map positioning.'
-
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                errorMessage = 'Location access denied. Please enable location services.'
-                break
-              case error.POSITION_UNAVAILABLE:
-                errorMessage = 'Location unavailable. Please try again later.'
-                break
-              case error.TIMEOUT:
-                errorMessage = 'Location request timed out. Please try again.'
-                break
-              default:
-                errorMessage = 'An unknown error occurred.'
-                break
-            }
-
-            alert(errorMessage)
-          },
-          options
-        )
+          error => {
+            console.error('Error getting current location:', error);
+          }
+        );
       } else {
-        alert('Geolocation is not supported by this browser.')
+        alert('Geolocation is not supported by this browser.');
       }
     },
     trackBookingLocation() {
-      // Fetch initial booking location
-      this.getCustomerLocation()
-
-      // Set interval to continuously update booking location
+      this.getCustomerLocation();
       this.bookingLocationWatchId = setInterval(() => {
-        this.getCustomerLocation()
-      }, 5000) // Update every 5 seconds (adjust as needed)
+        this.getCustomerLocation();
+      }, 5000); // Update every 5 seconds (adjust as needed)
     },
     getCustomerLocation() {
-      const customerLongitude = parseFloat(localStorage.getItem('longitude'))
-      const customerLatitude = parseFloat(localStorage.getItem('latitude'))
+      // Retrieve booking location from localStorage
+      const customerLongitude = parseFloat(localStorage.getItem('longitude'));
+      const customerLatitude = parseFloat(localStorage.getItem('latitude'));
 
       if (customerLongitude && customerLatitude) {
-        this.destination = { lat: customerLatitude, lng: customerLongitude }
-        this.bookingLocation = { lat: customerLatitude, lng: customerLongitude }
-        this.addDeliveryMarker()
-        this.calculateRoute()
+        this.destination = { lat: customerLatitude, lng: customerLongitude };
+        this.bookingLocation = { lat: customerLatitude, lng: customerLongitude };
+        this.addDeliveryMarker();
+        this.calculateRoute();
       } else {
-        console.error('Customer location not found in localStorage')
+        console.error('Customer location not found in localStorage');
       }
     },
     updateMap() {
-      if (!this.userLocation) return
+      if (!this.userLocation) return;
 
-      this.map.setCenter(this.userLocation)
-      this.map.setZoom(13)
+      this.map.setCenter(this.userLocation);
+      this.map.setZoom(13);
 
       if (!this.userMarker) {
         this.userMarker = new google.maps.Marker({
@@ -177,14 +151,15 @@ export default {
             strokeWeight: 0,
             scale: 10
           }
-        })
+        });
       } else {
-        this.userMarker.setPosition(this.userLocation)
+        this.userMarker.setPosition(this.userLocation);
       }
 
-      this.calculateRoute()
+      this.calculateRoute();
     },
     addDeliveryMarker() {
+      // Add or update delivery marker position
       if (this.destination && !this.deliveryMarker) {
         this.deliveryMarker = new google.maps.Marker({
           position: this.destination,
@@ -196,41 +171,55 @@ export default {
             strokeWeight: 0,
             scale: 10
           }
-        })
+        });
       } else {
-        this.deliveryMarker.setPosition(this.destination)
+        this.deliveryMarker.setPosition(this.destination);
       }
     },
     calculateRoute() {
-      if (!this.userLocation || !this.destination) return
+      // Calculate route between user location and destination
+      if (!this.userLocation || !this.destination) return;
 
       const request = {
         origin: this.userLocation,
         destination: this.destination,
         travelMode: 'DRIVING'
-      }
+      };
 
       this.directionsService.route(request, (result, status) => {
         if (status === 'OK') {
-          this.directionsRenderer.setDirections(result)
-          const route = result.routes[0]
-          this.distance = (route.legs[0].distance.value / 1000).toFixed(1)
-          this.duration = Math.floor(route.legs[0].duration.value / 60)
+          this.directionsRenderer.setDirections(result);
+          const route = result.routes[0];
+          this.distance = (route.legs[0].distance.value / 1000).toFixed(1);
+          this.duration = Math.floor(route.legs[0].duration.value / 60);
+
+          // Draw polyline for the route
+          if (this.routePolyline) {
+            this.routePolyline.setMap(null); // Clear previous polyline
+          }
+          this.routePolyline = new google.maps.Polyline({
+            path: route.overview_path,
+            strokeColor: '#1a73e8', // Blue color for polyline
+            strokeOpacity: 0.8,
+            strokeWeight: 5
+          });
+          this.routePolyline.setMap(this.map);
         } else {
-          console.error('Directions request failed due to ' + status)
+          console.error('Directions request failed due to ' + status);
         }
-      })
+      });
     }
   },
   beforeDestroy() {
+    // Cleanup before component destruction
     if (navigator.geolocation && this.locationWatchId) {
-      navigator.geolocation.clearWatch(this.locationWatchId)
+      navigator.geolocation.clearWatch(this.locationWatchId);
     }
     if (this.bookingLocationWatchId) {
-      clearInterval(this.bookingLocationWatchId)
+      clearInterval(this.bookingLocationWatchId);
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -314,13 +303,15 @@ export default {
 }
 
 .icon > div {
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
+  width: 100px;
   height: 50px;
+  margin: auto;
   background-color: #f57c00;
-  border-radius: 50%;
+  border-radius: 1px;
   transition: background-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
 }

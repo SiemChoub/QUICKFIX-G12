@@ -110,8 +110,7 @@
       <!-- Additional Content -->
       <div class="content">
         <button id="feedbackBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                      <i class="bi bi-chat-dots icon"> Feedback</i>
-
+<i class='bx bxs-message-rounded-dots bx-tada' style='color:#ffffff;font-size:30px'  ></i>
         </button>
         <div
           class="modal fade"
@@ -165,6 +164,7 @@
       </div>
     </div>
   </WebLayout>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </template>
 
 <script setup lang="ts">

@@ -31,23 +31,23 @@
               {{ repairer.name }}
             </h3>
             <p class="career">
-              Career: <span>{{ repairer.career }}</span>
+              Career: <span>Computer</span>
             </p>
             <p class="place">
-              Place: <span>{{ repairer.place }}</span>
+              <span style="color:red">Phnom Penh</span>
             </p>
           </div>
-          <div class="repairer-icons">
-            
-              <i class="bi bi-messenger"></i> 
-            <button
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#bookingModal"
-              @click="openBookingModal(repairer.id)"
-            >Book
-            </button>
-          </div>
+          <div class="repairer-icons d-flex justify-content-end">
+  <button
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#bookingModal"
+    @click="openBookingModal(repairer.id)"
+  >
+    Book
+  </button>
+</div>
+
         </div>
       </div>
     </div>
@@ -264,7 +264,7 @@ const submitBooking = async (event) => {
       response = await axios.post('http://127.0.0.1:8000/api/bookin_deadline', bookingData)
       console.log(response.data)
     }
-    // Handle response if needed
+    
   } catch (error) {
     console.error('Error submitting booking:', error)
   }
