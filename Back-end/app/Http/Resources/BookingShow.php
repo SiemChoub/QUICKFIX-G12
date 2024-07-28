@@ -17,7 +17,7 @@ class BookingShow extends JsonResource
         $bookings = [];
 
         // Check for immediately bookings
-        if ($this->type === 'immediately' && $this->action === 'request') {
+        if ($this->type === 'immediately' && ($this->action === 'request' || $this->action === 'progress')) {
             $bookingResource = new BookingImmedatelyResource($this->booking_immedately);
             $bookings[] = [
                 'id' => $this->id,
@@ -37,7 +37,7 @@ class BookingShow extends JsonResource
         }
 
         // Check for deadline bookings
-        elseif ($this->type === 'deadline' && $this->action === 'request') {
+        elseif ($this->type === 'deadline' && ($this->action === 'request' || $this->action === 'progress')) {
             $bookingResource = new BookingDeadlineResource($this->booking_deadline);
             $bookings[] = [
                 'id' => $this->id,

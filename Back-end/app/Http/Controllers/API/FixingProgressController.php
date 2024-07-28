@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookingShow;
+use App\Http\Resources\FixingProgressResource;
 use App\Models\Bookin_deadline;
 use App\Models\Bookin_immediately;
 use App\Models\Booking;
@@ -91,9 +93,9 @@ class FixingProgressController extends Controller
     {
         try {
             $acceptedBookings = FixingProgress::where('fixer_id', $id)
+            ->where('action','progress')
                 ->get();
                 $count = $acceptedBookings->count();
-
             return response()->json([
                 'success' => true,
                 'accepted_bookings' => $acceptedBookings,
@@ -139,15 +141,14 @@ class FixingProgressController extends Controller
 
         try {
             // Update the action status for both fixing progress and booking
-            $fixingProgress->action = 'started';
+            $fixingProgress->action = 'progress';
             $fixingProgress->save();
 
-            $booking->action = 'started';
+            $booking->action = 'progress';
             $booking->save();
 
             DB::commit();
 
-            // Return a success response with the required data
             return response()->json([
                 'message' => 'Fixing process started successfully',
                 'fixingProgress' => $fixingProgress,
@@ -159,6 +160,36 @@ class FixingProgressController extends Controller
             return response()->json(['error' => 'An error occurred while starting the fixing process', 'details' => $e->getMessage()], 500);
         }
     }
+
+    public function doneFixer(string $id)
+{
+    $fixingProgress = FixingProgress::find($id);
+    if (!$fixingProgress) {
+        return response()->json(['error' => 'Fixing progress not found'], 404);
+    }
+
+    DB::beginTransaction();
+
+    try {
+        $fixingProgress->action = 'done';
+        $fixingProgress->save();
+
+        $booking = Booking::findOrFail($fixingProgress->booking_id);
+        $booking->action = 'done';
+        $booking->save();
+
+        DB::commit();
+
+        return response()->json([
+            'message' => 'Fixing process marked as done successfully',
+            'fixingProgress' => $fixingProgress,
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['error' => 'An error occurred while marking the fixing process as done', 'details' => $e->getMessage()], 500);
+    }
+}
+
 
 
 }

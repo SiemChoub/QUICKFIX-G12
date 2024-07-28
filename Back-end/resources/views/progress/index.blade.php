@@ -27,8 +27,9 @@
                     @endphp
                     @foreach($fixpro as $ha)
                         @php 
-                            $booking=$bookings->where('id',$ha->booking_id)->first();
+                            $booking= $bookings->where('id',$ha->booking_id)->first();
                         @endphp
+                        @if (!empty($booking))
                         <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
                             <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
                                 <img src="{{ $users->where('id', $booking->user_id)->pluck('profile')->first() }}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
@@ -134,6 +135,7 @@
                                 @endcan
                             </div>
                         </div> 
+                        @endif
                     @endforeach
                 @endcan
             </div>
@@ -245,10 +247,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Include Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @if(session('showAlertDelete'))

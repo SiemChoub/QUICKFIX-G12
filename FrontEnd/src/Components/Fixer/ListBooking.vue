@@ -11,7 +11,7 @@
               </div>
               <div class="profile-info-overlay p-3 d-flex align-items-center">
                 <img
-                  src="/src/assets/img/cat.jpeg"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                   class="rounded-circle profile-image mr-3"
                   style="width: 50px; height: 50px;"
                   alt="Profile"
@@ -112,13 +112,11 @@ function loadGoogleMapsScript() {
 }
 
 function getServiceName(serviceId) {
-  // Replace with your logic to get service name based on serviceId
-  // Example implementation:
   switch (serviceId) {
     case 1:
-      return 'Service A';
+      return 'Mouse';
     case 2:
-      return 'Service B';
+      return 'Car';
     default:
       return 'Unknown Service';
   }
@@ -132,17 +130,13 @@ onMounted(() => {
 
 <style scoped>
 .list-booking-item {
-  width: 100%;
+  width: 30%;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: s; */
   }
-.list-booking-item{
-  background: #000;
-  display: flex;
-}
 
 .card {
-  width: 40%;
+  width: 100%;
   height: 400px;
   transition: transform 0.3s ease-in-out;
   /* background-color: #fff; */

@@ -26,10 +26,11 @@
             class="btn w-100 mb-2 position-relative"
           >
             Booking List
-            <span v-if="request !==0"
+            <span
+              v-if="request !== 0"
               class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
             >
-              {{request}}
+              {{ request }}
               <span class="visually-hidden">unread messages</span>
             </span>
           </button>
@@ -42,18 +43,53 @@
             class="btn w-100 mb-2 position-relative"
           >
             Accepted
-            <span v-if="accepted !==0"
+            <span
+              v-if="accepted !== 0"
               class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
             >
-              {{accepted}}
+              {{ accepted }}
               <span class="visually-hidden">unread messages</span>
             </span>
           </button>
           <button
+            :class="{ 'btn-outline-secondary active': currentView === 'Notification' }"
+            @click="setCurrentView('Notification')"
+            class="btn w-100 mb-2 position-relative"
+          >
+            Notification
+            <span
+              v-if="notificationCount !== 0"
+              class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
+            >
+              {{ notificationCount }}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </button>
+          <!-- <button
+            :class="{ 'btn-outline-secondary active': currentView === 'Messanger' }"
+            @click="setCurrentView('Messanger')"
+            class="btn w-100 mb-2 position-relative"
+          >
+            Message
+            <span
+              v-if="accepted !== 0"
+              class="position-absolute top-50 start-40 translate-middle badge rounded-pill bg-danger"
+            >
+              {{ accepted }}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </button> -->
+          <button
             :class="{ 'btn-outline-secondary active': currentView === 'Payment' }"
             @click="setCurrentView('Payment')"
             class="btn w-100 mb-1"
-          ><div class="d-flex gap-2"><p>Payment</p><span class="text-warning text-5 -mt-2" v-if="payments.length>0"><i  class='bx bxs-bell-ring bx-tada' ></i></span></div> 
+          >
+            <div class="d-flex gap-2">
+              <p>Payment</p>
+              <span class="text-warning text-5 -mt-2" v-if="payments.length > 0">
+                <i class="bx bxs-bell-ring bx-tada"></i>
+              </span>
+            </div>
           </button>
 
           <button
@@ -72,7 +108,6 @@
           </button>
         </div>
       </aside>
-
       <div class="main-content flex-grow-1">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <div class="container-fluid">
@@ -133,19 +168,22 @@
       </div>
     </div>
   </div>
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 </template>
-<script>
-import axios from 'axios';
-import Dashboard from './DashBoard.vue';
-import Booking from './ListBooking.vue';
-import Skill from './CardSkill.vue';
-import ChatView from './ChatView.vue';
-import HistoryView from './HistoryView.vue';
-import AcceptBooking from './AcceptBooking.vue';
-import Payment from './Payment.vue';
-import HistoryFixer from './HistoryFixer.vue';
 
+<script>
+import axios from 'axios'
+import Dashboard from './DashBoard.vue'
+import Booking from './ListBooking.vue'
+import Skill from './CardSkill.vue'
+import ChatView from './ChatView.vue'
+import HistoryView from './HistoryView.vue'
+import AcceptBooking from './AcceptBooking.vue'
+import Payment from './Payment.vue'
+import HistoryFixer from './HistoryFixer.vue'
+import Notification from './Notification.vue'
+import Messanger from '@/Components/Messanger.vue'
+import MapFixer from '@/Components/Map.vue'
 export default {
   name: 'NavBar',
   components: {
@@ -153,23 +191,28 @@ export default {
     Booking,
     Skill,
     ChatView,
+    Notification,
     HistoryView,
     AcceptBooking,
     Payment,
-    HistoryFixer
+    HistoryFixer,
+    Messanger,
+    MapFixer
   },
   data() {
     return {
       users: {},
       currentView: 'Dashboard',
       payments: [],
-      request:null,
-      accepted:null,
+      request: null,
+      accepted: null,
+      notificationCount: null
     }
   },
   methods: {
     setCurrentView(view) {
       this.currentView = view
+      localStorage.setItem('currentView', view) 
     },
     async logout() {
       try {
@@ -183,59 +226,78 @@ export default {
             }
           }
         )
-        localStorage.removeItem('user')
-        localStorage.removeItem('access_token')
+        localStorage.clear()
         this.$router.push('/')
+       setTimeout(() => {
+  location.reload(); // Reload the page after a short delay
+}, 100);
       } catch (error) {
         console.error('Logout failed:', error)
       }
     },
     async countRequest() {
       try {
-        const respone = await axios.get(
-          'http://127.0.0.1:8000/api/booking'
-          
-        )
-        this.request =  respone.data.count
+        const response = await axios.get('http://127.0.0.1:8000/api/booking')
+        this.request = response.data.count
       } catch (error) {
-        console.error('Logout failed:', error)
+        console.error('Error counting requests:', error)
       }
     },
     async countAccepted() {
-      const fixer = JSON.parse(localStorage.getItem('user')).id
+      const fixerId = JSON.parse(localStorage.getItem('user')).id
+      console.log(fixerId);
       try {
-        const respone = await axios.get(
-            `http://127.0.0.1:8000/api/fixer/accepted/${fixer}`
-          
-        )
-        this.accepted =  respone.data.count
+        const response = await axios.get(`http://127.0.0.1:8000/api/fixer/accepted/${fixerId}`)
+        this.accepted = response.data.count
       } catch (error) {
-        console.error('Logout failed:', error)
+        console.error('Error counting accepted bookings:', error)
       }
     },
     getUserData() {
-      this.users = JSON.parse(localStorage.getItem('user')) || {};
-    } ,
+      this.users = JSON.parse(localStorage.getItem('user')) || {}
+    },
     async getPayments() {
-      const fixer = JSON.parse(localStorage.getItem('user'));
+      const fixer = JSON.parse(localStorage.getItem('user'))
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/getlistpay/${fixer.id}`);
-        // Assuming response.data is an array of payment objects
-        this.payments = response.data.filter(payment => payment.status === 'no');
+        const response = await axios.get(`http://127.0.0.1:8000/api/getlistpay/${fixer.id}`)
+        this.payments = response.data.filter((payment) => payment.status === 'no')
       } catch (error) {
-        console.error('Error fetching payment list:', error);
-        this.users = JSON.parse(localStorage.getItem('user')) || {}
+        console.error('Error fetching payment list:', error)
       }
     },
-    },
-
-
-  mounted() {
-    this.getUserData();
-    this.getPayments();
-    this.countRequest();
-    this.countAccepted();
+    async getCountNotification() {
+  try {
+    const fixer = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.get(`http://127.0.0.1:8000/api/notification/show/${fixer.id}`);
+    
+    if (response.data && response.data.data) {
+      this.notificationCount = response.data.data.length;
+    } else {
+      this.notificationCount = 0; 
+    }
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    this.notificationCount = 0;  // Set to 0 in case of error
+  }
 }
+
+  },
+  mounted() {
+    this.getUserData()
+      this.getPayments()
+      this.countRequest()
+      this.countAccepted()
+
+    setInterval(() => {
+      this.getCountNotification();
+
+  }, 2500);
+
+    const storedView = localStorage.getItem('currentView')
+    if (storedView) {
+      this.currentView = storedView 
+    }
+  }
 }
 
 </script>
@@ -295,7 +357,6 @@ export default {
   padding-left: 40px;
   border: 0px;
 }
-
 .main-content {
   width: calc(100% - 250px); /* Adjust for sidebar width */
   min-height: 100vh; /* Ensure main content stretches to full height */

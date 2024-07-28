@@ -89,7 +89,6 @@
 <script>
 import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -249,7 +248,6 @@ label {
   font-weight: 600;
   color: #333;
 }
-
 input.form-control,
 .card-element {
   border: 1px solid #ced4da;

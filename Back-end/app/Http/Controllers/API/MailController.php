@@ -33,9 +33,8 @@ class MailController extends Controller
             'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
-        $test = ['from' => 'no-reply@example.com'];
 
-        Mail::send('front.auth.forgot-password', $test, function ($message) use ($test) {
+        Mail::raw('message', function ($message) {
             $message->from('no-reply@example.com')
                 ->to('siem.choub@student.passerellesnumeriques.org')
                 ->subject('no-reply@example.com');

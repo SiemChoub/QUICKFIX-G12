@@ -13,7 +13,7 @@
                 <h5
                   class="card-title rounded-3 d-flex border-1 p-2 w-auto align-items-center justify-content-center shadow"
                 >
-                  23
+                  1
                 </h5>
               </div>
               <div
@@ -23,7 +23,7 @@
                 <h5
                   class="card-title rounded-3 d-flex border-1 p-2 w-auto align-items-center justify-content-center shadow"
                 >
-                  23
+                  1
                 </h5>
               </div>
               <div
@@ -33,7 +33,7 @@
                 <h5
                   class="card-title rounded-3 d-flex border-1 p-2 w-auto align-items-center justify-content-center shadow"
                 >
-                  23
+                  0
                 </h5>
               </div>
             </div>

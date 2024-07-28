@@ -8,12 +8,11 @@ use Illuminate\Http\Request;
 use App\Models\Bookin_deadline;
 use App\Models\Booking;
 use App\Models\FixingProgress;
+use App\Models\Notification;
 
 class Bookin_deadlineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         //
@@ -67,12 +66,21 @@ class Bookin_deadlineController extends Controller
             FixingProgress::create([
                'fixer_id' => $request->fixer_id,
                'booking_id' => $booking->id,
-               'action' => 'progress',
+               'action' => 'request',
            ]);
            $booking = Booking::findOrFail($booking->id);
-           $booking->action = 'progress';
+           $booking->action = 'request';
            $booking->fixer_id = $request->fixer_id;
            $booking->save();
+
+           Notification::create([
+            'user_id'=>$request->user_id,
+            'fixer_id'=>$request->fixer_id,
+            'booking_id'=>$booking->id,
+            'message'=> "You have booking from customer"
+
+
+           ]);
 
         }
     
@@ -82,25 +90,16 @@ class Bookin_deadlineController extends Controller
 
 
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
