@@ -1,6 +1,25 @@
 @import './base.css';
 
+:root {
+  --qf-bone: #F2EFE6;
+  --qf-bone-deep: #EAE6DB;
+  --qf-ink: #0F1011;
+  --qf-steel: #1C1C1F;
+  --qf-orange: #FF5B1F;
+  --qf-orange-deep: #D8460B;
+  --qf-fog: #9C998F;
+  --qf-rule: rgba(15, 16, 17, 0.12);
+  --qf-rule-strong: rgba(15, 16, 17, 0.22);
+  --qf-font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --qf-font-body: 'DM Sans', system-ui, sans-serif;
+  --qf-font-mono: 'IBM Plex Mono', 'Menlo', monospace;
+}
+
 body {
-  background: rgb(238, 237, 237);
+  background: var(--qf-bone);
+  color: var(--qf-ink);
+  font-family: var(--qf-font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   height: 100%;
 }
