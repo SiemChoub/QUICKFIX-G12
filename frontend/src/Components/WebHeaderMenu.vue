@@ -1,273 +1,228 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container-fluid">
-      <!-- Brand logo -->
-      <router-link to="/" class="navbar-brand d-flex align-items-center">
-        <img src="../assets/images/logo.png" alt="Logo" class="logo" />
+  <nav class="qf-nav" :class="{ 'qf-nav--scrolled': scrolled }">
+    <div class="qf-nav__inner">
+      <!-- Brand -->
+      <router-link to="/" class="qf-brand" aria-label="QUICKFIX home">
+        <span class="qf-brand__mark">Q</span>
+        <span class="qf-brand__word">QUICKFIX</span>
+        <span class="qf-brand__tag">/svc</span>
       </router-link>
 
-      <!-- Navbar Toggler -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- Navbar Items -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav navbar-nav-left me-auto mb-2 mb-lg-0">
-          <!-- Home -->
-          <li class="nav-item">
-            <router-link to="/" class="nav-link">
-              <i class="bi bi-house-door icon"></i>
-            </router-link>
-          </li>
-
-          <!-- Fixer List -->
-          <li class="nav-item">
-            <router-link to="/fixer" class="nav-link">
-              <img
-                src="https://media.istockphoto.com/id/1445981943/vector/repair-service-man-worker-logo-mechanic-workshop-vector-illustration.jpg?s=612x612&w=0&k=20&c=vizyPckB7zfeO0HYpJaj6uSm1jiZ9ozqlFWwWeFPCy4="
-                alt="Fixer Icon"
-                style="width: 35px; border-radius: 50%"
-              />
-            </router-link>
-          </li>
-
-          <!-- Offer Button -->
-        </ul>
-        <div class="center">
-          <button class="btn offer-btn" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            OFFER
+      <!-- Desktop nav -->
+      <ul class="qf-nav__links">
+        <li>
+          <router-link to="/" class="qf-link" active-class="qf-link--active" exact-active-class="qf-link--active">
+            <i class="bi bi-house-door"></i><span>Home</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/fixer" class="qf-link" active-class="qf-link--active">
+            <i class="bi bi-wrench-adjustable"></i><span>Fixers</span>
+          </router-link>
+        </li>
+        <li>
+          <button class="qf-link qf-link--offer" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <i class="bi bi-tag"></i><span>Offers</span>
           </button>
-        </div>
-        <div class="center1" v-if="isLoggedIn"></div>
-        <div
-          class="modal fade custom-slide-modal"
-          id="staticBackdrop"
-          tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-          data-bs-backdrop="false"
-          style="margin-top: 40px"
+        </li>
+      </ul>
+
+      <!-- Actions -->
+      <div class="qf-nav__actions">
+        <button
+          v-if="isLoggedIn && listBookings"
+          type="button"
+          class="qf-icon-btn"
+          data-bs-toggle="modal"
+          data-bs-target=".bd-cart-modal"
+          aria-label="Bookings"
         >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="mb-3 hello d-flex align-items-center"></div>
-    <div v-if="promotions && promotions.length != 0">
-      <div
-        class="mb-3 card d-flex align-items-center"
-        v-for="promotion in promotions"
-        :key="promotion.id"
-      >
-        <div class="discount">Promotion {{ promotion.discount }}%</div>
-        <div class="text-truncate" style="max-width: 200px">
-          <!-- Adjust max-width as needed -->
-          🎉{{ promotion.description }}💛
-        </div>
-        <div class="date">Start Date: {{ promotion.start_date }}</div>
-        <div class="date">End Date: {{ promotion.end_date }}</div>
-      </div>
-    </div>
-    <div v-else>
-      <span>No promotions available.</span>
-    </div>
-                </form>
-              </div>
-            </div>
+          <i class="bi bi-cart"></i>
+          <span v-if="listBookings.length" class="qf-badge">{{ listBookings.length }}</span>
+        </button>
+
+        <div class="qf-icon-btn qf-icon-btn--rel" @click="toggleNotifications">
+          <i class="bi bi-bell"></i>
+          <span v-if="isLoggedIn && notifications && notifications.length" class="qf-badge">{{ notifications.length }}</span>
+          <div v-if="showNotifications" class="qf-notif">
+            <div class="qf-notif__head">Notifications</div>
+            <ul>
+              <li v-for="(n, i) in notifications" :key="i">{{ n.message }}</li>
+              <li v-if="!notifications || !notifications.length" class="qf-notif__empty">No notifications</li>
+            </ul>
           </div>
         </div>
 
-        <!-- Cart Modal -->
-        <div
-          class="modal fade bd-cart-modal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="cartModalLabel"
-          aria-hidden="true"
-          data-bs-backdrop="false"
+        <template v-if="!isLoggedIn">
+          <router-link to="/signup" class="qf-btn qf-btn--ghost">Register</router-link>
+          <router-link to="/login" class="qf-btn qf-btn--primary">Login</router-link>
+        </template>
+
+        <div v-if="isLoggedIn" class="qf-profile dropdown">
+          <a
+            class="qf-profile__trigger"
+            href="#"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              :src="authStore.user?.profile || 'https://st3.depositphotos.com/1767687/17621/v/450/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg'"
+              alt="Profile"
+            />
+          </a>
+          <ul class="dropdown-menu qf-dropdown">
+            <li>
+              <router-link to="/profile" class="dropdown-item">
+                <i class="bi bi-person-circle"></i><span>View profile</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link to="#" class="dropdown-item">
+                <i class="bi bi-clock-history"></i><span>History</span>
+              </router-link>
+            </li>
+            <li>
+              <a href="#" class="dropdown-item" @click.prevent="logout">
+                <i class="bi bi-box-arrow-right"></i><span>Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Mobile toggle -->
+        <button
+          class="qf-burger"
+          :class="{ 'qf-burger--open': drawerOpen }"
+          @click="drawerOpen = !drawerOpen"
+          aria-label="Menu"
         >
-          <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-6">
-                    <div class="raw">
-                      <table class="table table-bordered table-striped">
-                        <thead>
-                          <tr>
-                            <th scope="col">Item</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Fixer</th>
-                            <th scope="col">Booking</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody v-if="listBookings !== null && listBookings.length !== 0">
-                          <tr v-for="(booking, index) in listBookings" :key="index">
-                            <td>
-                              {{ booking[0].booking.service ? booking[0].booking.service : 'N/A' }}
-                            </td>
-                            <td>{{ booking[0].booking.date }}</td>
-                            <td>{{ booking[0].fixer ? booking[0].fixer.name : 'N/A' }}</td>
-                            <td>{{booking[0].action}}</td>
-                            <td>
-                              <button class="btn btn-danger" @click="cancelBooking(booking[0].id)">
-                                Cancel
-                              </button>
-                            </td>
-                          </tr>
-                        </tbody>
-                        <tbody v-else>
-                          <tr>
-                            <td colspan="3">No bookings found.</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div class="col col-1"></div>
-                  <div class="col-4">
-                    <!-- <div class="row"></div> -->
-                    <div class="card row w-100">
-                      <div class="w-100">
-                        <div class="card-header chat-header" style="background: orange">
-                          <h5 class="card-title mb-0">Live Chat</h5>
-                        </div>
-                        <div class="card-body chat-body">
-                          <div class="messages">
-                            <div class="message received">
-                              <div class="message-content"></div>
-                            </div>
-                            <div class="message sent" style="background: gray">
-                              <div class="message-content"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card-footer chat-footer">
-                          <div class="input-group">
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Type your message..."
-                            />
-                            <div class="input-group-append">
-                              <button class="btn btn-orange">Send</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="qf-drawer" :class="{ 'qf-drawer--open': drawerOpen }" @click.self="drawerOpen = false">
+      <div class="qf-drawer__panel">
+        <div class="qf-drawer__head">
+          <span class="qf-mono">/menu</span>
+          <button class="qf-icon-btn" @click="drawerOpen = false" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <ul class="qf-drawer__links">
+          <li><router-link to="/" @click="drawerOpen = false"><span>01</span>Home</router-link></li>
+          <li><router-link to="/fixer" @click="drawerOpen = false"><span>02</span>Fixers</router-link></li>
+          <li>
+            <button @click="openOffers">
+              <span>03</span>Offers
+            </button>
+          </li>
+          <li v-if="isLoggedIn">
+            <router-link to="/profile" @click="drawerOpen = false"><span>04</span>Profile</router-link>
+          </li>
+        </ul>
+        <div class="qf-drawer__foot">
+          <template v-if="!isLoggedIn">
+            <router-link to="/signup" class="qf-btn qf-btn--ghost qf-btn--full" @click="drawerOpen = false">Register</router-link>
+            <router-link to="/login" class="qf-btn qf-btn--primary qf-btn--full" @click="drawerOpen = false">Login</router-link>
+          </template>
+          <button v-else class="qf-btn qf-btn--ghost qf-btn--full" @click="logout">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offers modal (unchanged behavior) -->
+    <div
+      class="modal fade custom-slide-modal"
+      id="staticBackdrop"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+      data-bs-backdrop="false"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content qf-modal">
+          <div class="modal-header qf-modal__head">
+            <div>
+              <div class="qf-mono">/promotions</div>
+              <h3>Current Offers</h3>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body qf-modal__body">
+            <div v-if="promotions && promotions.length" class="qf-promo-list">
+              <div class="qf-promo" v-for="p in promotions" :key="p.id">
+                <div class="qf-promo__pct">
+                  <span class="qf-promo__num">{{ p.discount }}</span><span class="qf-promo__sym">%</span>
+                </div>
+                <div class="qf-promo__body">
+                  <div class="qf-promo__desc">{{ p.description }}</div>
+                  <div class="qf-mono qf-promo__dates">
+                    {{ p.start_date }} → {{ p.end_date }}
                   </div>
                 </div>
               </div>
             </div>
+            <div v-else class="qf-empty">No promotions available.</div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="right navbar-nav-right">
-          <button
-            v-if="isLoggedIn && listBookings"
-            type="button"
-            class="btn cart position-relative"
-            data-bs-toggle="modal"
-            data-bs-target=".bd-cart-modal"
-          >
-            <i class="bi bi-cart" style="font-size: 20px"></i>
-            <span
-              v-if="listBookings.length != 0"
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            >
-              {{ listBookings.length }}
-              <span class="visually-hidden">unread messages</span>
-            </span>
-          </button>
-
-          <div class="nav-item position-relative" @click="toggleNotifications">
-            <i class="bi bi-bell icon" title="Notifications"></i>
-            <span class="tooltip-text">Notifications</span>
-            <span v-if="isLoggedIn && notifications && notifications.length != 0" class="badge bg-danger rounded-pill notification-badge">{{notifications.length}}</span>
-            <div v-if="showNotifications" class="notification-dropdown">
-              <ul style="width:300px">
-                <li v-for="(notification, index) in notifications" :key="index"> 
-                  {{ notification.message }}
-                </li>
-              </ul>
+    <!-- Cart modal (unchanged behavior) -->
+    <div
+      class="modal fade bd-cart-modal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="cartModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="false"
+    >
+      <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content qf-modal">
+          <div class="modal-header qf-modal__head">
+            <div>
+              <div class="qf-mono">/cart</div>
+              <h3 id="cartModalLabel">Your Bookings</h3>
             </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-
-          <router-link v-if="!isLoggedIn" to="/signup" class="nav-item position-relative">
-            <button class="btn btn-orange" style="padding: 6.5px 10px">Register</button>
-          </router-link>
-          <router-link v-if="!isLoggedIn" to="/login" class="nav-item position-relative">
-            <button class="btn btn-danger">Login</button>
-          </router-link>
-
-          <div v-if="isLoggedIn" class="nav-item dropdown position-relative">
-            <a
-              class="nav-link dropdown-toggle p-0"
-              href="#"
-              id="navbarDropdown"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                :src="
-                  authStore.user?.profile ||
-                  'https://st3.depositphotos.com/1767687/17621/v/450/depositphotos_176214104-stock-illustration-default-avatar-profile-icon.jpg'
-                "
-                alt="Profile"
-                title="Profile"
-                class="profile-image"
-              />
-              <span class="tooltip-text">Profile</span>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li>
-                <router-link to="/profile" class="dropdown-item">
-                  <i class="bi bi-eye-fill"></i>
-                  <p>View Profile</p>
-                </router-link>
-              </li>
-              <li>
-                <router-link to="#" class="dropdown-item">
-                  <i class="bi bi-clock-history"></i>
-                  <p>History</p>
-                </router-link>
-              </li>
-              <li>
-                <a href="#" class="dropdown-item" @click="logout">
-                  <i class="bi bi-box-arrow-right"></i>
-                  <p>Logout</p>
-                </a>
-              </li>
-            </ul>
+          <div class="modal-body qf-modal__body qf-cart">
+            <div class="qf-cart__list">
+              <table class="qf-table">
+                <thead>
+                  <tr>
+                    <th>Item</th><th>Date</th><th>Fixer</th><th>Status</th><th></th>
+                  </tr>
+                </thead>
+                <tbody v-if="listBookings && listBookings.length">
+                  <tr v-for="(booking, i) in listBookings" :key="i">
+                    <td>{{ booking[0].booking.service || 'N/A' }}</td>
+                    <td class="qf-mono">{{ booking[0].booking.date }}</td>
+                    <td>{{ booking[0].fixer ? booking[0].fixer.name : 'N/A' }}</td>
+                    <td><span class="qf-chip">{{ booking[0].action }}</span></td>
+                    <td>
+                      <button class="qf-btn qf-btn--danger qf-btn--sm" @click="cancelBooking(booking[0].id)">Cancel</button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody v-else>
+                  <tr><td colspan="5" class="qf-empty">No bookings found.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="qf-cart__chat">
+              <div class="qf-cart__chat-head">Live Chat</div>
+              <div class="qf-cart__chat-body">
+                <div class="qf-empty qf-mono">/awaiting messages</div>
+              </div>
+              <div class="qf-cart__chat-foot">
+                <input type="text" placeholder="Type your message..." />
+                <button class="qf-btn qf-btn--primary qf-btn--sm">Send</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -276,64 +231,29 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useAuthStore } from '@/stores/auth-store'
 import axios from 'axios'
-import { Loader } from '@googlemaps/js-api-loader'
 
-const apiKey = 'AIzaSyAEkPs2AFjaazwiQaO25lkaHp-nlX00sK0'
-const loader = new Loader({
-  apiKey: apiKey,
-  version: 'beta',
-  libraries: ['places']
-})
-
-const map = ref(null)
-const marker = ref(null)
 const promotions = ref(null)
-const latitude = ref('')
-const longitude = ref('')
 const listBookings = ref(null)
-    const notifications = ref();
+const notifications = ref()
 const authStore = useAuthStore()
 const showNotifications = ref(false)
-const storeLocation = ref({ lat: null, lng: null })
-
-const fetchNotifications = async () => {
-      try {
-        const userId = JSON.parse(localStorage.getItem('user')).id; // Replace with dynamic user ID if necessary
-        const response = await axios.get(`http://127.0.0.1:8000/api/notification/customer/${userId}`);
-        notifications.value = response.data.data;
-        console.log(response.data.data);
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-
-const initializeMap = async () => {
-  await loader.load()
-  map.value = new google.maps.Map(document.querySelector('.map'), {
-    center: { lat: 12.5657, lng: 104.917 },
-    zoom: 8
-  })
-}
+const drawerOpen = ref(false)
+const scrolled = ref(false)
 
 const isLoggedIn = computed(() => !!authStore.user)
 
-onMounted(async () => {
-  await listPromotion()
-  await listbooking()
-  await fetchNotifications()
-  initializeMap()
-  setInterval(listbooking, 2000)
-})
-
-const logout = async () => {
+const fetchNotifications = async () => {
   try {
-    authStore.logout()
-    location.reload()
+    const stored = localStorage.getItem('user')
+    if (!stored) return
+    const userId = JSON.parse(stored).id
+    const response = await axios.get(`http://127.0.0.1:8000/api/notification/customer/${userId}`)
+    notifications.value = response.data.data
   } catch (error) {
-    console.error('Error logging out:', error)
+    console.error('Error fetching notifications:', error)
   }
 }
 
@@ -347,378 +267,565 @@ async function listPromotion() {
 }
 
 async function listbooking() {
-  const user = JSON.parse(localStorage.getItem('user')).id
+  const stored = localStorage.getItem('user')
+  if (!stored) return
+  const user = JSON.parse(stored).id
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/booking/show/' + user)
     listBookings.value = response.data.bookings
   } catch (error) {
-    console.log('error getting promotion')
+    console.log('error getting bookings')
   }
 }
-const cancelBooking = async (bookingId) => {
-  const user = JSON.parse(localStorage.getItem('user')).id
 
+const cancelBooking = async (bookingId) => {
+  const stored = localStorage.getItem('user')
+  if (!stored) return
+  const user = JSON.parse(stored).id
   try {
-    const response = await axios.delete(`http://127.0.0.1:8000/api/customer/cancel/${bookingId}`, {
-      user_id: user
-    })
-    console.log('Booking cancelled:', bookingId)
-    // Optionally update listBookings or show a message
+    await axios.delete(`http://127.0.0.1:8000/api/customer/cancel/${bookingId}`, { user_id: user })
   } catch (error) {
     console.error('Error cancelling booking:', error)
   }
 }
+
 const toggleNotifications = () => {
   showNotifications.value = !showNotifications.value
 }
+
+const logout = async () => {
+  try {
+    authStore.logout()
+    location.reload()
+  } catch (error) {
+    console.error('Error logging out:', error)
+  }
+}
+
+const openOffers = () => {
+  drawerOpen.value = false
+  // trigger bootstrap modal
+  setTimeout(() => {
+    const el = document.getElementById('staticBackdrop')
+    if (el && window.bootstrap) {
+      const m = window.bootstrap.Modal.getOrCreateInstance(el)
+      m.show()
+    }
+  }, 200)
+}
+
+const onScroll = () => {
+  scrolled.value = window.scrollY > 12
+}
+
+let bookingTimer = null
+
+onMounted(async () => {
+  await listPromotion()
+  await listbooking()
+  await fetchNotifications()
+  bookingTimer = setInterval(listbooking, 2000)
+  window.addEventListener('scroll', onScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  if (bookingTimer) clearInterval(bookingTimer)
+  window.removeEventListener('scroll', onScroll)
+})
 </script>
 
 <style scoped>
-/* Navbar Styles */
-.custom-slide-modal .modal-dialog {
-  margin: 0;
-  transform: translateX(100%);
-  transition: transform 0.3s ease-out;
-  z-index: 1050; /* Ensure modal appears above modal backdrop */
-}
-.modal-body {
-  overflow-y: scroll;
-  height: 450px;
-}
-
-.hoverable::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0%;
-  height: 2px;
-  background-color: #007bff;
-  transition: width 0.3s ease;
-}
-
-.hoverable:hover::after {
-  width: 100%;
-}
-#staticBackdrop {
+.qf-nav {
   position: fixed;
-  top: 30px;
+  top: 0;
   left: 0;
-  width: 140%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1040;
+  right: 0;
+  z-index: 1030;
+  background: rgba(242, 239, 230, 0.85);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid var(--qf-rule);
+  transition: padding 0.3s ease, background 0.3s ease;
 }
-.card {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  max-width: 350px;
-  text-align: center;
-  margin-left: 6%;
+.qf-nav--scrolled {
+  background: rgba(242, 239, 230, 0.96);
+  border-bottom-color: rgba(15, 16, 17, 0.16);
 }
-.card .title {
-  font-size: 1em;
-  color: #ffa000;
+.qf-nav__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 18px 28px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+  transition: padding 0.3s ease;
+}
+.qf-nav--scrolled .qf-nav__inner { padding: 12px 28px; }
+
+/* Brand */
+.qf-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--qf-ink);
+  font-family: var(--qf-font-display);
+  letter-spacing: -0.02em;
+}
+.qf-brand__mark {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  background: var(--qf-orange);
+  color: var(--qf-bone);
+  font-weight: 800;
+  font-size: 22px;
+  border-radius: 6px;
+  margin-right: 6px;
+  transform: rotate(-4deg);
+  transition: transform 0.4s cubic-bezier(.2,.9,.3,1.1);
+}
+.qf-brand:hover .qf-brand__mark { transform: rotate(2deg) scale(1.04); }
+.qf-brand__word {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.qf-brand__tag {
+  font-family: var(--qf-font-mono);
+  font-size: 11px;
+  color: var(--qf-orange);
+  margin-left: 2px;
+  letter-spacing: 0.04em;
 }
 
-.card .discount {
-  font-size: 1.8em;
-  margin: 10px 0;
-  color: #000;
-  font-weight: bold;
+/* Links */
+.qf-nav__links {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: center;
 }
-.card .date {
-  font-size: 15px;
+.qf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  color: var(--qf-steel);
+  font-family: var(--qf-font-body);
+  font-weight: 500;
+  font-size: 14.5px;
+  letter-spacing: -0.005em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
 }
-.modal-backdrop {
-  background: white;
+.qf-link i { font-size: 16px; opacity: 0.75; }
+.qf-link:hover { background: rgba(15,16,17,0.06); color: var(--qf-ink); }
+.qf-link--active { background: var(--qf-ink); color: var(--qf-bone); }
+.qf-link--active i { opacity: 1; }
+.qf-link--offer { color: var(--qf-orange); font-weight: 600; }
+.qf-link--offer:hover { background: rgba(255, 91, 31, 0.1); color: var(--qf-orange); }
+
+/* Actions */
+.qf-nav__actions { display: flex; align-items: center; gap: 10px; }
+.qf-icon-btn {
   position: relative;
-}
-/* Logo */
-.logo {
-  width: 150px;
-  height: auto;
-}
-.btn-orange {
-  background-color: orange;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-size: 1rem;
-  border-radius: 4px;
-}
-.chat-card {
-  width: 100%;
-}
-
-.chat-header {
-  background-color: #0084ff;
-  color: white;
-  padding: 10px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.chat-body {
-  height: 300px;
-  overflow-y: auto;
-  padding: 15px;
-}
-
-.messages {
-  display: flex;
-  flex-direction: column;
-}
-
-.message {
-  max-width: 70%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-}
-
-.message.received {
-  align-self: flex-start;
-  background-color: #f0f0f0;
-}
-
-.message.sent {
-  align-self: flex-end;
-  background-color: #0084ff;
-  color: white;
-}
-
-.message-content {
-  word-wrap: break-word;
-}
-
-.chat-footer {
-  padding: 10px;
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.input-group {
-  margin-bottom: 0;
-}
-
-.btn-orange:hover {
-  background-color: darkorange;
-}
-.navbarSupportedContent {
-  display: flex;
-  background: #000;
-  flex: 0.5;
-}
-
-/* Offer Button */
-.offer-btn {
-  padding: 7px 20px;
-  background-color: orange;
-  color: white;
-  width: 100%;
-  border: none;
-  cursor: pointer;
-}
-
-.offer-btn:hover {
-  background-color: #ff7f50; /* Lighter shade of orange on hover */
-}
-
-/* Profile Image */
-.profile-image {
+  display: inline-grid;
+  place-items: center;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--qf-steel);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.qf-icon-btn:hover { background: rgba(15,16,17,0.06); border-color: var(--qf-rule); color: var(--qf-ink); }
+.qf-icon-btn--rel { position: relative; }
+.qf-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--qf-orange);
+  color: white;
+  font-family: var(--qf-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
 }
 
-/* Navbar Toggler */
-.navbar-toggler {
-  border-color: rgba(0, 0, 0, 0.1);
+/* Buttons */
+.qf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 18px;
+  font-family: var(--qf-font-body);
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.2s ease, color 0.2s ease;
 }
+.qf-btn:hover { transform: translateY(-1px); }
+.qf-btn:active { transform: translateY(0); }
+.qf-btn--primary { background: var(--qf-ink); color: var(--qf-bone); }
+.qf-btn--primary:hover { background: var(--qf-orange); }
+.qf-btn--ghost { background: transparent; color: var(--qf-ink); border-color: var(--qf-ink); }
+.qf-btn--ghost:hover { background: var(--qf-ink); color: var(--qf-bone); }
+.qf-btn--danger { background: #d12c2c; color: white; }
+.qf-btn--sm { padding: 6px 12px; font-size: 12.5px; }
+.qf-btn--full { width: 100%; }
 
-/* Notification Badge */
-.notification-badge {
+/* Profile */
+.qf-profile__trigger {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid var(--qf-ink);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.qf-profile__trigger:hover { transform: rotate(-4deg); border-color: var(--qf-orange); }
+.qf-profile__trigger img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.qf-dropdown {
+  background: var(--qf-bone);
+  border: 1px solid var(--qf-rule);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 20px 50px -16px rgba(15,16,17,0.18);
+  min-width: 200px;
+}
+.qf-dropdown .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--qf-steel);
+}
+.qf-dropdown .dropdown-item i { color: var(--qf-orange); font-size: 15px; }
+.qf-dropdown .dropdown-item:hover { background: var(--qf-ink); color: var(--qf-bone); }
+.qf-dropdown .dropdown-item:hover i { color: var(--qf-orange); }
+
+/* Notifications */
+.qf-notif {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  background: var(--qf-bone);
+  border: 1px solid var(--qf-rule);
+  border-radius: 12px;
+  box-shadow: 0 24px 60px -20px rgba(15,16,17,0.22);
+  z-index: 10;
+  overflow: hidden;
+}
+.qf-notif__head {
+  padding: 12px 14px;
+  font-family: var(--qf-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--qf-rule);
+  color: var(--qf-steel);
+}
+.qf-notif ul { list-style: none; margin: 0; padding: 4px; max-height: 340px; overflow-y: auto; }
+.qf-notif ul li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--qf-ink);
+  line-height: 1.5;
+}
+.qf-notif ul li:hover { background: rgba(15,16,17,0.06); }
+.qf-notif__empty { font-family: var(--qf-font-mono); font-size: 12px; color: var(--qf-fog); }
+
+/* Burger */
+.qf-burger {
+  display: none;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--qf-rule);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.qf-burger span {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background: var(--qf-ink);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease;
+}
+.qf-burger span:nth-child(1) { top: 14px; }
+.qf-burger span:nth-child(2) { top: 19px; }
+.qf-burger span:nth-child(3) { top: 24px; }
+.qf-burger--open span:nth-child(1) { top: 19px; transform: rotate(45deg); }
+.qf-burger--open span:nth-child(2) { opacity: 0; }
+.qf-burger--open span:nth-child(3) { top: 19px; transform: rotate(-45deg); }
+
+/* Drawer */
+.qf-drawer {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 16, 17, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.qf-drawer--open { opacity: 1; pointer-events: auto; }
+.qf-drawer__panel {
   position: absolute;
   top: 0;
-  right: 11px;
-  z-index: 1;
-  font-size: 0.8rem;
-}
-
-/* Icon Styles */
-.icon {
-  font-size: 24px;
-  margin: 0 1.5rem;
-  cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-  color: #343a40;
-}
-
-.icon:hover {
-  transform: scale(1.3);
-  color: #ff7f50;
-}
-.navbar-nav-right {
-  display: flex;
-  justify-content: end;
-  gap: 3rem;
-  flex: 0.5;
-}
-.dropdown-item {
-  display: flex;
-  gap: 5px;
-}
-.center {
-  display: flex;
-  flex: 0.2;
-  justify-content: center;
-}
-.center1 {
-  display: flex;
-  margin-left: 4%;
-  flex: 0.2;
-  justify-content: center;
-}
-.navbar-nav-left {
-  display: flex;
-  justify-content: center;
-  flex: 0.5;
-  gap: 2rem;
-}
-/* Tooltip Text */
-.tooltip-text {
-  visibility: hidden;
-  width: 120px;
-  background-color: #0a0a0a88;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  position: absolute;
-  z-index: 1;
-  bottom: -55%;
-  left: 50%;
-  margin-left: -30px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 15px;
-}
-
-.nav-item:hover .tooltip-text {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Dropdown Menu */
-.dropdown-menu {
-  position: absolute;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border: none;
-  border-radius: 5px;
-  padding: 10px;
-  left: -90px; /* Adjust dropdown position */
-}
-
-.dropdown-menu .dropdown-item {
-  padding: 8px 20px;
-  color: #343a40;
-}
-
-.dropdown-menu .dropdown-item:hover {
-  background-color: orange;
-  color: #fff;
-}
-
-.dropdown-toggle::after {
-  display: none;
-}
-
-/* Notification Dropdown */
-.notification-dropdown {
-  position: absolute;
-  top: 100%;
   right: 0;
-  background-color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
-  z-index: 10;
-  padding: 5px 0;
-  min-width: 200px;
-  text-align: left;
-}
-
-.notification-dropdown ul {
-  list-style: none;
-  padding: 0;
-}
-
-.notification-dropdown ul li {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.notification-dropdown ul li:hover {
-  background-color: #f1f1f1;
-}
-
-/* Responsive Styles */
-@media (max-width: 992px) {
-  .navbar-toggler {
-    border-color: #ff7f50; /* Orange color for toggler on smaller screens */
-  }
-
-  .navbar-collapse {
-    background-color: #fff;
-  }
-
-  .dropdown-menu {
-    left: -60px; /* Adjust dropdown position */
-  }
-
-  .notification-dropdown {
-    left: unset;
-    right: 10px; /* Adjust notification dropdown position */
-  }
-}
-.popup {
-  position: absolute;
-  z-index: 1; /* Set a high z-index value to ensure it appears on top */
-  background-color: #fff; /* Add a background color to make it visible */
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.popup-container {
-  position: relative; /* Set the container to relative positioning */
-}
-.custom-slide-modal .modal-dialog {
-  position: fixed;
-  top: 25px;
-  right: 0;
-  width: 40%; /* Adjust width as per your design */
-  height: 100%;
-  margin: 0;
+  bottom: 0;
+  width: min(440px, 86vw);
+  background: var(--qf-bone);
+  border-left: 1px solid var(--qf-rule);
+  display: flex;
+  flex-direction: column;
   transform: translateX(100%);
-  transition: transform 0.3s ease-out;
-  z-index: 1050; /* Ensure modal appears above modal backdrop */
+  transition: transform 0.4s cubic-bezier(.2,.9,.3,1.05);
+}
+.qf-drawer--open .qf-drawer__panel { transform: translateX(0); }
+.qf-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--qf-rule);
+}
+.qf-drawer__head .qf-mono {
+  font-family: var(--qf-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--qf-fog);
+}
+.qf-drawer__links {
+  list-style: none;
+  margin: 0;
+  padding: 24px 0;
+  flex: 1;
+}
+.qf-drawer__links li a,
+.qf-drawer__links li button {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 30px;
+  font-family: var(--qf-font-display);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--qf-ink);
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  transition: padding 0.3s ease, background 0.2s ease;
+}
+.qf-drawer__links li a span,
+.qf-drawer__links li button span {
+  font-family: var(--qf-font-mono);
+  font-size: 12px;
+  color: var(--qf-orange);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.qf-drawer__links li a:hover,
+.qf-drawer__links li button:hover {
+  background: rgba(255, 91, 31, 0.08);
+  padding-left: 36px;
+}
+.qf-drawer__foot {
+  padding: 26px;
+  border-top: 1px solid var(--qf-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-#staticBackdrop.show .modal-dialog {
-  transform: translateX(0%);
+/* Modal styling */
+.qf-modal {
+  background: var(--qf-bone);
+  border: 1px solid var(--qf-rule);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.qf-modal__head {
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--qf-rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.qf-modal__head .qf-mono {
+  font-family: var(--qf-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--qf-fog);
+  text-transform: uppercase;
+}
+.qf-modal__head h3 {
+  font-family: var(--qf-font-display);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 4px 0 0;
+  letter-spacing: -0.02em;
+  color: var(--qf-ink);
+}
+.qf-modal__body { padding: 26px; max-height: 70vh; overflow-y: auto; }
+
+.qf-promo-list { display: flex; flex-direction: column; gap: 14px; }
+.qf-promo {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 20px;
+  padding: 20px;
+  background: var(--qf-ink);
+  color: var(--qf-bone);
+  border-radius: 12px;
+  align-items: center;
+}
+.qf-promo__pct {
+  display: flex;
+  align-items: baseline;
+  color: var(--qf-orange);
+  font-family: var(--qf-font-display);
+}
+.qf-promo__num { font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -0.04em; }
+.qf-promo__sym { font-size: 24px; font-weight: 600; margin-left: 2px; }
+.qf-promo__desc { font-size: 15px; line-height: 1.5; margin-bottom: 6px; }
+.qf-promo__dates {
+  font-family: var(--qf-font-mono);
+  font-size: 11px;
+  color: var(--qf-fog);
+  letter-spacing: 0.04em;
+}
+.qf-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--qf-fog);
+  font-family: var(--qf-font-mono);
+  font-size: 13px;
 }
 
-.modal-backdrop {
-  z-index: 1040; /* Lower than the modal's z-index */
+/* Cart */
+.qf-cart {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 26px;
 }
+.qf-cart__list { overflow-x: auto; }
+.qf-table { width: 100%; border-collapse: collapse; font-family: var(--qf-font-body); font-size: 14px; }
+.qf-table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-family: var(--qf-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--qf-fog);
+  border-bottom: 1px solid var(--qf-rule);
+}
+.qf-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--qf-rule);
+  color: var(--qf-ink);
+  vertical-align: middle;
+}
+.qf-chip {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(255, 91, 31, 0.12);
+  color: var(--qf-orange);
+  font-family: var(--qf-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.qf-cart__chat {
+  background: var(--qf-ink);
+  color: var(--qf-bone);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+.qf-cart__chat-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-family: var(--qf-font-display);
+  font-size: 18px;
+  font-weight: 600;
+}
+.qf-cart__chat-body { flex: 1; padding: 20px; }
+.qf-cart__chat-foot {
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  gap: 8px;
+}
+.qf-cart__chat-foot input {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--qf-bone);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: var(--qf-font-body);
+  font-size: 14px;
+  outline: none;
+}
+.qf-cart__chat-foot input::placeholder { color: rgba(255,255,255,0.4); }
 
-@media (max-width: 992px) {
-  .custom-slide-modal .modal-dialog {
-    width: 80%; /* Adjust for smaller screens */
-  }
+/* Responsive */
+@media (max-width: 1100px) {
+  .qf-nav__links { display: none; }
+  .qf-nav__inner { grid-template-columns: auto 1fr; gap: 16px; padding: 14px 20px; }
+}
+@media (max-width: 720px) {
+  .qf-nav__actions .qf-btn,
+  .qf-nav__actions .qf-profile,
+  .qf-nav__actions .qf-icon-btn:not(.qf-burger) { display: none; }
+  .qf-burger { display: block; }
+  .qf-brand__tag { display: none; }
+  .qf-brand__word { font-size: 19px; }
+  .qf-brand__mark { width: 32px; height: 32px; font-size: 19px; }
+  .qf-cart { grid-template-columns: 1fr; }
+  .qf-modal__head h3 { font-size: 22px; }
+}
+@media (min-width: 721px) {
+  .qf-burger { display: none; }
 }
 </style>
