@@ -10,8 +10,8 @@ use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\BookingController; 
 use App\Http\Controllers\API\Bookin_memediatelyController;
 use App\Http\Controllers\API\Bookin_deadlineController;
-use App\Http\Controllers\Api\PromotionService;
-use App\Http\Controllers\Api\FixingProgressController;
+use App\Http\Controllers\API\PromotionService;
+use App\Http\Controllers\API\FixingProgressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\FeedbackController;
@@ -125,7 +125,7 @@ Route::post('/fixer/register', [AuthController::class, 'fixerRegister']);
 
 
 Route::post('/mail', [MailController::class, 'store']);
-Route::post('/process-payment', 'PaymentController@processPayment');
+Route::post('/process-payment', [PaymentController::class, 'processPayment']);
 // --------------------- admin routes -------------------------------
 Route::post('/payment',[PaymentController::class,'store']);
 Route::get('/getlistpay/{id}',[PaymentController::class,'getpayment']);

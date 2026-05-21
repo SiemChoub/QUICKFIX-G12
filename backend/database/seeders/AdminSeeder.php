@@ -44,6 +44,11 @@ class AdminSeeder extends Seeder
         $writer_role = Role::create(['name' => 'customer']);
         $fixer_role  = Role::create(['name' => 'fixer']);
 
+        $permission = Permission::create(['name' => 'Post access']);
+        $permission = Permission::create(['name' => 'Post edit']);
+        $permission = Permission::create(['name' => 'Post create']);
+        $permission = Permission::create(['name' => 'Post delete']);
+
         $permission = Permission::create(['name' => 'Discount access']);
         $permission = Permission::create(['name' => 'Discount edit']);
         $permission = Permission::create(['name' => 'Discount create']);

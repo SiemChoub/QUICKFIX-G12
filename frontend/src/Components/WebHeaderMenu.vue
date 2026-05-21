@@ -102,7 +102,8 @@
       </div>
     </div>
 
-    <!-- Mobile drawer -->
+    <!-- Mobile drawer (teleported to body so nav's backdrop-filter doesn't trap it) -->
+    <Teleport to="body">
     <div class="qf-drawer" :class="{ 'qf-drawer--open': drawerOpen }" @click.self="drawerOpen = false">
       <div class="qf-drawer__panel">
         <div class="qf-drawer__head">
@@ -132,6 +133,7 @@
         </div>
       </div>
     </div>
+    </Teleport>
 
     <!-- Offers modal (unchanged behavior) -->
     <div
