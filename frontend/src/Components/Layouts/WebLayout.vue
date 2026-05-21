@@ -3,10 +3,8 @@ import WebHeaderMenu from '@/Components/WebHeaderMenu.vue'
 </script>
 <template>
   <WebHeaderMenu />
-  <div class="md:px-15 h-full">
-    <div class="h-full">
-      <slot />
-    </div>
+  <div class="h-full">
+    <slot />
   </div>
 </template>
 
