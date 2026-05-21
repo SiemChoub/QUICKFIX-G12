@@ -120,11 +120,6 @@
         <WebService />
       </section>
 
-      <!-- ============ MAP SECTION ============ -->
-      <section class="qf-section qf-section--ink">
-        <ProvinceMap />
-      </section>
-
       <!-- ============ ABOUT ============ -->
       <section class="qf-section">
         <AboutPage />
@@ -176,7 +171,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import WebLayout from '@/Components/Layouts/WebLayout.vue'
-import ProvinceMap from '@/Components/ProvinceMap.vue'
 import AboutPage from '@/Components/AboutPage.vue'
 import FooterPage from '@/Components/FooterPage.vue'
 import WebService from '@/Components/WebServiceCustomer.vue'
