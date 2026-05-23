@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payments;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Faker\Provider\ar_EG\Payment;
 use App\Models\FixingProgress;
@@ -25,9 +26,34 @@ class PaymentController extends Controller
 
         $perPage = (int) request('per_page', 20);
         $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
-        $payments = Payments::orderByDesc('id')->paginate($perPage);
 
-        // Accurate totals (across all rows, not just the current page) for the summary chips & month filter
+        $status = request('status');            // 'done' | 'no' | null (all)
+        $month  = request('month');             // 'Y-M'  | null (all)
+        $search = trim((string) request('q', ''));
+
+        // Server-side filtering so each "group" paginates correctly
+        $query = Payments::query();
+
+        if ($status === 'no') {                 // Incomplete
+            $query->where('status', 'no');
+        } elseif ($status === 'done') {         // Succeeded = anything that isn't 'no' (incl. null)
+            $query->where(fn ($q) => $q->whereNull('status')->orWhere('status', '!=', 'no'));
+        }
+
+        if ($month) {                           // matches the 'Y-M' label in the dropdown
+            $query->whereRaw("DATE_FORMAT(datepay, '%Y-%b') = ?", [$month]);
+        }
+
+        if ($search !== '') {                   // by customer (fixer) name or total
+            $matchIds = User::where('name', 'like', "%{$search}%")->pluck('id');
+            $query->where(function ($q) use ($matchIds, $search) {
+                $q->whereIn('fixer_id', $matchIds)->orWhere('total', 'like', "%{$search}%");
+            });
+        }
+
+        $payments = $query->orderByDesc('id')->paginate($perPage)->withQueryString();
+
+        // Totals across the whole table (independent of filters) for the summary chips & month list
         $allCount  = Payments::count();
         $noCount   = Payments::where('status', 'no')->count();
         $doneCount = $allCount - $noCount;
@@ -35,11 +61,14 @@ class PaymentController extends Controller
             ->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-M'))->unique()->values();
 
         return view('payments.index', [
-            'payments'  => $payments,
-            'allCount'  => $allCount,
-            'noCount'   => $noCount,
-            'doneCount' => $doneCount,
-            'months'    => $months,
+            'payments'     => $payments,
+            'allCount'     => $allCount,
+            'noCount'      => $noCount,
+            'doneCount'    => $doneCount,
+            'months'       => $months,
+            'activeStatus' => $status,
+            'activeMonth'  => $month,
+            'searchQ'      => $search,
         ]);
     }
     // ------- get payment in laravel ----------------------
