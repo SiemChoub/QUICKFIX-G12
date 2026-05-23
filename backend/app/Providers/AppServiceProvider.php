@@ -18,7 +18,6 @@ use App\Models\Bookin_deadline;
 use Illuminate\Pagination\Paginator;
 
 
-
 use Schema;
 
 class AppServiceProvider extends ServiceProvider
