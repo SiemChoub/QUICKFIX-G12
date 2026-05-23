@@ -4,6 +4,7 @@
 
     <div class="container-fluid px-4 py-4">
         @include('booking._tabs')
+        @include('booking._card_styles')
         <div class="mb-2 d-flex gap-3 align-items-center">
             <button id="immediately" class="btn btn-warning d-flex align-items-center gap-2 shadow-sm" style="padding: 10px 20px; font-size: 1.1rem; border-radius: 10px; transition: all 0.3s ease;">
                 <i class='bx bxs-user-voice me-2' style='font-size: 1.5rem;'></i>
@@ -18,128 +19,157 @@
 
         <!-- Customer feedback section -->
         <div class="customer-feedback bg-white p-3 rounded-lg shadow">
-            <div class="title">
-                <h6 class="text-lg font-medium text-gray-800 mb-1">Booking in Progress</h6>
+            <div class="title d-flex align-items-center justify-content-between mb-3">
+                <h6 class="qf-list-title"><i class='bx bx-loader-circle'></i> Booking in Progress</h6>
+                <span class="qf-count-pill">{{ $items->total() }} {{ \Illuminate\Support\Str::plural('booking', $items->total()) }}</span>
             </div>
-            <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2">
+            <div class="customer-feedback-info d-flex flex-column gap-3 pt-2">
                 @can('Progress access')
-                    @php 
-                        $fixpro = $fixing_progress->where('action', 'progress');
-                    @endphp
-                    @foreach($fixpro as $ha)
-                        @php 
-                            $booking= $bookings->where('id',$ha->booking_id)->first();
+                    @foreach($items as $ha)
+                        @php
+                            $booking = $bookings->where('id', $ha->booking_id)->first();
                         @endphp
                         @if (!empty($booking))
-                        <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
-                            <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                <img src="{{ $users->where('id', $booking->user_id)->pluck('profile')->first() }}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                    <h5 class="card-title fw-bold mb-0" style="font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $users->where('id', $booking->user_id)->pluck('name')->first() }}</h5>
-                                    <p class="text-gray-600 text-sm" style="font-size: 10px;">
-                                    @php
-                                        $service_name = 'No Service selected';
-                                        $customer = $users->where('id', $booking->user_id)->first();
-                                        $fixer = $users->where('id', $booking->fixer_id)->first();
-                                        if($booking->fixer_id !=null){
-                                            $fixer_id = $booking->fixer_id;
-                                            $fixer_name = $users->where('id', $fixer_id)->pluck('name')->first();
-                                        }else{
-                                            $fixer_name = 'No Fixer selected';
-                                        }
+                            @php
+                                $service_name = 'No Service selected';
+                                $customer = $users->where('id', $booking->user_id)->first();
+                                $fixer = $users->where('id', $booking->fixer_id)->first();
+                                if($booking->fixer_id != null){
+                                    $fixer_id = $booking->fixer_id;
+                                    $fixer_name = $users->where('id', $fixer_id)->pluck('name')->first();
+                                }else{
+                                    $fixer_name = 'No Fixer selected';
+                                }
 
-                                        if ($booking->type == 'immediately') {
-                                            $deadline = 'Fix now';
-                                            $customer_message = $immediatelys->where('id', $booking->booking_type_id)->pluck('message')->first();
-                                            $customer_imagesend = $immediatelys->where('id', $booking->booking_type_id)->pluck('image')->first();
-                                            $service_id = $immediatelys->where('id', $booking->booking_type_id)->pluck('service_id')->first();
-                                        } elseif ($booking->type == 'deadline') {
-                                            $customer_message = $deadlines->where('id', $booking->booking_type_id)->pluck('message')->first();
-                                            $customer_imagesend = $deadlines->where('id', $booking->booking_type_id)->pluck('image')->first();
-                                            $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date')->first();
-                                            $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
-                                        }
-                                        $booking_date = $booking->created_at;
-                                        if (isset($service_id) && $service_id!=null) {
-                                            $service_name = $services->where('id', $service_id)->pluck('name')->first();
-                                        }
-                                    @endphp
-                                    {{ $service_name }}
-                                    </p>
-                                </div>
-                          
-                                <i class='bx bxs-wrench bx-tada text-yellow-400 text-3xl' ></i>
-                                <div class="evaluation">
-                                <button class="btn btn-outline-warning btn-sm text-center"
-                                    data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
-                                    @if(isset($customer->profile))
-                                        data-booking-image="{{$customer->profile}}"
-                                    @endif
-                                    data-booking-stars="{{$service_name}}"
-                                    data-booking-type="{{$booking->type}}"
-                                    data-booking-date="{{$booking_date}}"
-                                    data-booking-deadline="{{$deadline}}"
-                                    data-booking-fixname="{{$fixer_name}}"
-                                    data-booking-customername="{{$customer->name}}"
-                                    data-booking-customeremail="{{$customer->email}}"
-                                    data-booking-customerphone="{{$customer->phone}}"
-                                    data-booking-customeraddress="{{$customer->address}}"
-                                    @if($fixer) 
-                                        data-booking-fixername="{{$fixer->name}}"
-                                        data-booking-fixeremail="{{$fixer->email}}"
-                                        data-booking-fixerphone="{{$fixer->phone}}"
-                                        data-booking-fixeraddress="{{$fixer->address}}"
-                                    @else
-                                        data-booking-fixername="No fixer selected !!"
-                                        data-booking-fixeremail="none"
-                                        data-booking-fixerphone="none"
-                                        data-booking-fixeraddress="none"
-                                    @endif
-                                    @if($customer_message  || $customer_imagesend)
-                                        data-booking-customermessage="{{$customer_message}}"
-                                        data-booking-customerimage="{{$customer_imagesend}}"
-                                        data-booking-nomessage="There are message!!"
-                                    @else
-                                        data-booking-nomessage="No message!!"
-                                    @endif
-                                    data-booking-additional-info="This is additional information about the booking.">
-                                    <i class="bx bx-love"></i> Detail
-                                </button>
-
-                                </div>
-                                @can('Request delete')
-                                    <div>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $booking->id }})">Delete</button>
-                                        <script>
-                                            function confirmDelete(id) {
-                                                Swal.fire({
-                                                    title: 'Are you sure?',
-                                                    text: "You won't be able to revert this!",
-                                                    icon: 'warning',
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: '#d33',
-                                                    cancelButtonColor: '#3085d6',
-                                                    confirmButtonText: 'Yes, delete it!'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        // Perform the delete action
-                                                        document.getElementById(`delete-form-${id}`).submit();
-                                                    }
-                                                });
-                                            }
-                                        </script>
-                                        <form id="delete-form-{{ $booking->id }}" action="{{ route('admin.progresss.destroy', $booking->id) }}" method="POST" class="d-none">
-                                            @csrf
-                                            @method('delete')
-                                        </form>
+                                if ($booking->type == 'immediately') {
+                                    $deadline = 'Fix now';
+                                    $customer_message = $immediatelys->where('id', $booking->booking_type_id)->pluck('message')->first();
+                                    $customer_imagesend = $immediatelys->where('id', $booking->booking_type_id)->pluck('image')->first();
+                                    $service_id = $immediatelys->where('id', $booking->booking_type_id)->pluck('service_id')->first();
+                                } elseif ($booking->type == 'deadline') {
+                                    $customer_message = $deadlines->where('id', $booking->booking_type_id)->pluck('message')->first();
+                                    $customer_imagesend = $deadlines->where('id', $booking->booking_type_id)->pluck('image')->first();
+                                    $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date')->first();
+                                    $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
+                                }
+                                $booking_date = $booking->created_at;
+                                if (isset($service_id) && $service_id != null) {
+                                    $service_name = $services->where('id', $service_id)->pluck('name')->first();
+                                }
+                            @endphp
+                            <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}" class="qf-booking-item">
+                                <div class="qf-booking-card">
+                                    {{-- Customer --}}
+                                    <div class="qf-bk-customer">
+                                        <img src="{{ $customer->profile ?? '' }}"
+                                             onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($customer->name ?? 'User') }}&background=f59e0b&color=fff&bold=true'"
+                                             class="qf-bk-avatar" alt="{{ $customer->name ?? '' }}">
+                                        <div class="qf-bk-customer-meta">
+                                            <span class="qf-bk-name">{{ $customer->name ?? 'Unknown user' }}</span>
+                                            <span class="qf-bk-service"><i class='bx bx-wrench'></i> {{ $service_name }}</span>
+                                        </div>
                                     </div>
-                                @endcan
+
+                                    {{-- Type --}}
+                                    <div class="qf-bk-type">
+                                        @if ($booking->type == 'immediately')
+                                            <span class="qf-tag qf-tag-now"><i class='bx bxs-user-voice'></i> Immediately</span>
+                                        @else
+                                            <span class="qf-tag qf-tag-deadline"><i class='bx bxs-calendar'></i> Deadline</span>
+                                        @endif
+                                    </div>
+
+                                    {{-- Fixer --}}
+                                    <div class="qf-bk-fixer">
+                                        @if ($fixer)
+                                            <img src="{{ $fixer->profile ?? '' }}"
+                                                 onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($fixer->name ?? 'Fixer') }}&background=0ea5e9&color=fff&bold=true'"
+                                                 class="qf-bk-avatar-sm" alt="{{ $fixer->name }}">
+                                        @else
+                                            <span class="qf-bk-fixer-icon"><i class='bx bx-user'></i></span>
+                                        @endif
+                                        <div class="qf-bk-fixer-meta">
+                                            <span class="qf-bk-fixer-label">Fixer</span>
+                                            <span class="qf-bk-fixer-name">{{ $fixer_name }}</span>
+                                        </div>
+                                    </div>
+
+                                    {{-- Date --}}
+                                    <div class="qf-bk-date">
+                                        <i class='bx bx-calendar-event'></i>
+                                        <span class="qf-bk-date-text">
+                                            <span class="qf-bk-date-label">Started</span>
+                                            <span class="qf-bk-date-value">{{ $booking_date ? \Illuminate\Support\Carbon::parse($booking_date)->format('d M Y') : '—' }}</span>
+                                        </span>
+                                    </div>
+
+                                    {{-- Status --}}
+                                    <div>
+                                        <span class="qf-status qf-status-progress"><i class='bx bx-loader-circle bx-spin'></i> In progress</span>
+                                    </div>
+
+                                    {{-- Actions --}}
+                                    <div class="qf-bk-actions">
+                                        <button class="btn btn-outline-warning btn-sm qf-bk-btn"
+                                            data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
+                                            @if(isset($customer->profile))
+                                                data-booking-image="{{$customer->profile}}"
+                                            @endif
+                                            data-booking-stars="{{$service_name}}"
+                                            data-booking-type="{{$booking->type}}"
+                                            data-booking-date="{{$booking_date}}"
+                                            data-booking-deadline="{{$deadline}}"
+                                            data-booking-fixname="{{$fixer_name}}"
+                                            data-booking-customername="{{$customer->name}}"
+                                            data-booking-customeremail="{{$customer->email}}"
+                                            data-booking-customerphone="{{$customer->phone}}"
+                                            data-booking-customeraddress="{{$customer->address}}"
+                                            @if($fixer)
+                                                data-booking-fixername="{{$fixer->name}}"
+                                                data-booking-fixeremail="{{$fixer->email}}"
+                                                data-booking-fixerphone="{{$fixer->phone}}"
+                                                data-booking-fixeraddress="{{$fixer->address}}"
+                                            @else
+                                                data-booking-fixername="No fixer selected !!"
+                                                data-booking-fixeremail="none"
+                                                data-booking-fixerphone="none"
+                                                data-booking-fixeraddress="none"
+                                            @endif
+                                            @if($customer_message  || $customer_imagesend)
+                                                data-booking-customermessage="{{$customer_message}}"
+                                                data-booking-customerimage="{{$customer_imagesend}}"
+                                                data-booking-nomessage="There are message!!"
+                                            @else
+                                                data-booking-nomessage="No message!!"
+                                            @endif
+                                            data-booking-additional-info="This is additional information about the booking.">
+                                            <i class="bx bx-show"></i> Detail
+                                        </button>
+                                        @can('Request delete')
+                                            <button type="button" class="btn btn-danger btn-sm qf-bk-btn" onclick="confirmDelete({{ $booking->id }})">
+                                                <i class="bx bx-trash"></i> Delete
+                                            </button>
+                                            <form id="delete-form-{{ $booking->id }}" action="{{ route('admin.progresss.destroy', $booking->id) }}" method="POST" class="d-none">
+                                                @csrf
+                                                @method('delete')
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </div>
                             </div>
-                        </div> 
                         @endif
                     @endforeach
+
+                    @if ($items->total() === 0)
+                        <div class="qf-bk-empty">
+                            <i class='bx bx-loader-circle'></i>
+                            <div>No bookings in progress</div>
+                        </div>
+                    @endif
                 @endcan
             </div>
+
+            @include('booking._pagination', ['paginator' => $items])
         </div>
     </div>
 
@@ -250,6 +280,24 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                }
+            });
+        }
+    </script>
+
     @if(session('showAlertDelete'))
         <script>
             Swal.fire({
@@ -263,16 +311,6 @@
         </script>
     @endif
 
-    <style>
-        .btn:hover {
-            background-color: #ffc107;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .show-all:hover {
-            color: #ffc107;
-        }
-    </style>
 
     <script>
         let immediatelyButton = document.querySelector('#immediately');

@@ -81,8 +81,7 @@
         display: grid;
         grid-template-columns: 250px minmax(0, 1fr);
         gap: 1.5rem;
-        max-width: 1280px;
-        margin: 0 auto;
+        width: 100%;
         align-items: start;
     }
 

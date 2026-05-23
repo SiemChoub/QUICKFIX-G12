@@ -16,15 +16,31 @@ class DoneController extends Controller
     //
     public function index()
     {
-        //
+        $perPage = (int) request('per_page', 10);
+        if (!in_array($perPage, [5, 10, 20, 50, 100])) {
+            $perPage = 10;
+        }
+
         $user = User::all();
         $Bookin_immediately = Bookin_immediately::all();
         $Bookin_deadline = Bookin_deadline::all();
         $service = Service::all();
         $bookings = Booking::all();
         $fixing_progress = FixingProgress::all();
-        return view('done.index',['bookings'=>$bookings,'users'=>$user,'deadlines'=>$Bookin_deadline,'immediatelys'=>$Bookin_immediately,'services'=>$service,'fixing_progress'=>$fixing_progress]);
+        $items = FixingProgress::where('action', 'done')
+            ->orderByDesc('id')
+            ->paginate($perPage)
+            ->withQueryString();
 
+        return view('done.index', [
+            'bookings'      => $bookings,
+            'items'         => $items,
+            'users'         => $user,
+            'deadlines'     => $Bookin_deadline,
+            'immediatelys'  => $Bookin_immediately,
+            'services'      => $service,
+            'fixing_progress' => $fixing_progress,
+        ]);
     }
 
     public function destroy(int $id)
