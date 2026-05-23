@@ -77,7 +77,6 @@
         </div>
 
         <div class="qperm__footer">
-            <span class="qperm__results">Showing {{ $permissions->firstItem() }}–{{ $permissions->lastItem() }} of {{ $permissions->total() }}</span>
             <div class="qperm__pagination">{{ $permissions->links() }}</div>
         </div>
     </div>
@@ -185,10 +184,8 @@
         .qperm__empty p { margin: .5rem 0 0; font-size: .9rem; }
 
         .qperm__footer {
-            display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem;
             margin-top: 1.4rem; padding-top: 1.1rem; border-top: 1px solid #f1f3f7;
         }
-        .qperm__results { font-size: .82rem; color: #6b7280; }
         .qperm__pagination nav { margin: 0; }
         .qperm__pagination .pagination { margin: 0; gap: 4px; }
 

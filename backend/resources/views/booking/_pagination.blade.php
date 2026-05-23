@@ -25,7 +25,17 @@
     </form>
 
     <div class="qf-pager__links">
-        {{ $paginator->onEachSide(1)->links() }}
+        <a href="{{ $paginator->previousPageUrl() ?? '#' }}"
+           class="btn btn-sm btn-outline-warning qf-pager__btn {{ $paginator->onFirstPage() ? 'disabled' : '' }}"
+           @if ($paginator->onFirstPage()) tabindex="-1" aria-disabled="true" @endif>
+            <i class='bx bx-chevron-left'></i> Back
+        </a>
+        <span class="qf-pager__page">Page {{ $paginator->currentPage() }} of {{ $paginator->lastPage() }}</span>
+        <a href="{{ $paginator->nextPageUrl() ?? '#' }}"
+           class="btn btn-sm btn-outline-warning qf-pager__btn {{ $paginator->hasMorePages() ? '' : 'disabled' }}"
+           @if (!$paginator->hasMorePages()) tabindex="-1" aria-disabled="true" @endif>
+            Next <i class='bx bx-chevron-right'></i>
+        </a>
     </div>
 </div>
 @endif
@@ -40,12 +50,12 @@
     .qf-pager__perpage label { font-size: .82rem; color: #6b7280; margin: 0; font-weight: 600; }
     .qf-pager__perpage .form-select { width: auto; min-width: 72px; }
     .qf-pager__info { font-size: .8rem; color: #9aa1ab; margin-left: .25rem; }
-    .qf-pager__links nav, .qf-pager__links .pagination { margin: 0; }
-    /* Amber active page to match the QUICKFIX theme */
-    .qf-pager__links .page-item.active .page-link {
-        background-color: #f59e0b; border-color: #f59e0b; color: #1b1f24;
+    .qf-pager__links { display: flex; align-items: center; gap: .6rem; }
+    .qf-pager__btn {
+        display: inline-flex; align-items: center; gap: .25rem;
+        font-weight: 600; border-radius: 8px; padding: .35rem .8rem;
     }
-    .qf-pager__links .page-link { color: #b45309; }
-    .qf-pager__links .page-link:focus { box-shadow: 0 0 0 .2rem rgba(245, 158, 11, .25); }
+    .qf-pager__btn i { font-size: 1.05rem; }
+    .qf-pager__page { font-size: .82rem; font-weight: 600; color: #6b7280; white-space: nowrap; }
     @media (max-width: 575px) { .qf-pager { justify-content: center; } }
 </style>
