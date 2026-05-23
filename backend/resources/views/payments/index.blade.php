@@ -126,8 +126,11 @@
             display: flex; flex-direction: column; align-items: flex-start; gap: .15rem;
             background: #fff; border: 1.5px solid #eef0f4; border-radius: 14px;
             padding: .7rem 1.1rem; cursor: pointer; min-width: 120px;
+            text-decoration: none; color: inherit;
             transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
         }
+        .qpay-stat:hover { color: inherit; }
+        .qpay-month__menu .dropdown-item.active { background: #f59e0b; color: #fff; }
         .qpay-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(17,24,39,.07); }
         .qpay-stat__num { font-size: 1.5rem; font-weight: 800; color: #111827; line-height: 1; }
         .qpay-stat__lbl { display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem; font-weight: 600; color: #6b7280; }

@@ -44,8 +44,13 @@
 <style>
     .qf-pager {
         display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 1rem; padding-top: 1rem; margin-top: .5rem;
-        border-top: 1px solid #eef0f3;
+        flex-wrap: wrap; gap: 1rem;
+        background: #fff;
+        border: 1px solid #eef0f4;
+        border-radius: 14px;
+        padding: .85rem 1.25rem;
+        margin-top: 1.1rem;
+        box-shadow: 0 4px 14px rgba(17, 24, 39, .05);
     }
     .qf-pager__perpage { display: flex; align-items: center; gap: .5rem; margin: 0; }
     .qf-pager__perpage label { font-size: .82rem; color: #6b7280; margin: 0; font-weight: 600; }
