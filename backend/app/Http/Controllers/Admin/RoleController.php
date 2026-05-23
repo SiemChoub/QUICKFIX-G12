@@ -82,7 +82,9 @@ class RoleController extends Controller
     public function update(Request $request, Role $role)
     {
         $role->update(['name'=>$request->name]);
-        $role->syncPermissions($request->permissions);
+        $role->syncPermissions(
+            Permission::whereIn('id', (array) $request->permissions)->get()
+        );
         return redirect('admin/roles')->with('showAlertEdit', true);
     }
 
