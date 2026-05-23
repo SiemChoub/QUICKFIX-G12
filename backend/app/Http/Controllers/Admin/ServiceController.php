@@ -32,8 +32,9 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $Service= Service::paginate(5);
-        $services = Service::with('category')->get();
+        $perPage = (int) request('per_page', 20);
+        $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
+        $Service = Service::with('category')->paginate($perPage);
         return view('service.index',['services'=>$Service]);
     }
 
@@ -120,10 +121,21 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service)
     {
-        $service->update($request->all());
-        return redirect('admin/services')->with('showAlertEdit', true);
-        
+        $request->validate([
+            'image' => 'nullable|image|max:2048',
+        ]);
 
+        $data = $request->except('image');
+
+        // Replace the image only when a new one is uploaded (base64, same as store()).
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data['image'] = 'data:' . $image->getMimeType() . ';base64,'
+                . base64_encode(file_get_contents($image->getRealPath()));
+        }
+
+        $service->update($data);
+        return redirect('admin/services')->with('showAlertEdit', true);
     }
 
     /**

@@ -2,8 +2,9 @@
      Usage: @include('booking._pagination', ['paginator' => $somePaginator]) --}}
 @php
     $allowed = [5, 10, 20, 50, 100];
-    $perPage = (int) request('per_page', 10);
-    if (!in_array($perPage, $allowed)) { $perPage = 10; }
+    $default = (isset($default) && in_array((int) $default, $allowed)) ? (int) $default : 10;
+    $perPage = (int) request('per_page', $default);
+    if (!in_array($perPage, $allowed)) { $perPage = $default; }
 @endphp
 
 @if ($paginator->total() > 0)

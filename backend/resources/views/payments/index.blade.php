@@ -3,13 +3,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     @include('partials.list-chrome')
 
-    @php
-        $allCount  = $payments->count();
-        $noCount   = $payments->where('status', 'no')->count();
-        $doneCount = $allCount - $noCount;
-        $months    = $payments->pluck('datepay')->filter()->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-M'))->unique()->values();
-    @endphp
-
     <div class="qlist-page">
         <header class="qlist-head">
             <div class="qlist-head__title">
@@ -116,6 +109,8 @@
             <i class='bx bx-search-alt'></i>
             <p>No payments match your filters.</p>
         </div>
+
+        @include('booking._pagination', ['paginator' => $payments, 'default' => 20])
         @endcan
     </div>
 

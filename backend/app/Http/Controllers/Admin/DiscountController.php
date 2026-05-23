@@ -28,7 +28,9 @@ class DiscountController extends Controller
      */
     public function index()
     {
-        $discount= Discount::paginate(5);
+        $perPage = (int) request('per_page', 20);
+        $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
+        $discount = Discount::paginate($perPage);
 
         return view('discount.index',['discounts'=>$discount]);
     }

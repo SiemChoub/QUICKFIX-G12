@@ -97,7 +97,7 @@
             <p>No users match your search.</p>
         </div>
 
-        <div class="qlist-footer">{{ $users->links() }}</div>
+        @include('booking._pagination', ['paginator' => $users, 'default' => 20])
         @endcan
     </div>
 

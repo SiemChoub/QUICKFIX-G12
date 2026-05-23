@@ -1,79 +1,59 @@
 <x-app-layout>
-  <main class="flex-1 bg-gray-100 px-4 py-4 sm:px-6 lg:px-8" style="margin-top:90px">
-    <div class="flex justify-between items-center mb-3">
-      <a href="{{ route('admin.services.index') }}" class="btn btn-warning shadow flex items-center border -mt-2 mb-1 border-none hover:bg-warning-600 transition-colors">
-        <i class="bx bx-arrow-back mr-2 animate-pulse"></i>
-        Back
-      </a>
-      <h1 class="text-xl text-warning shadow p-1 ">CREATE SERVICE</h1>
-    </div>
-    <div class="shadow-sm rounded-md p-3 pt-2">
-    <form method="POST" action="{{ route('admin.services.store') }}" enctype="multipart/form-data">
-    @csrf
-        <div class='shadow bg-white p-8 border around mb-4' >
-        <div class="mb-2">
-          <label for="name" class="block text-gray-700 font-medium mb-1">Name</label>
-          <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Enter name" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent" required>
-        </div>
-        <div>
-          <label for="description" class="block text-gray-700 font-medium mb-1">Description</label>
-          <textarea name="description" id="description" placeholder="Enter description" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent" rows="2">{{ old('description') }}</textarea>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          <div>
-            <label for="price" class="block text-gray-700 font-medium mb-1">Price</label>
-            <input id="price" type="number" name="price" value="{{ old('price') }}" placeholder="Enter price" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent">
-          </div>
-          <div>
-            <label for="image" class="block text-gray-700 font-medium mb-1">Image</label>
-            <input id="image" type="file" name="image" value="{{ old('image') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent">          
-          </div>
-        @if (count($categories) > 0)
-        <div>
-          <label for="category_id" class="block text-gray-700 font-medium mb-1">Category</label>
-          <div class="relative">
-            <select class="w-full border border-gray-300 rounded-md py-1 px-2 pr-6 text-gray-700 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:border-transparent appearance-none" name="category_id" required>
-              <option value="">Select a category</option>
-              @foreach ($categories as $category)
-                <option value="{{ $category->id }}">{{ $category->name }}</option>
-              @endforeach
-            </select>
-          </div>
-        </div>
-        @else
-        <div class="text-gray-700">
-          No categories available. Please create a category first.
-        </div>
-        @endif
-        </div>
-        </div>
-        <div class="text-center">
-          <button type="submit" class=" bg-warning shadow hover:bg-warning-600 font-medium py-1 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-opacity-50 transition-colors">
-            <svg class="animate-pulse w-4 h-4 mr-2 inline-block" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-            </svg>
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  </main>
-  
-  <!-- Include Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  <style>
-    @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-}
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  @include('partials._form-styles')
 
-.animate-pulse {
-  animation: pulse 1s ease-in-out infinite;
-}
-  </style>
+  <div class="qf-form-page">
+    <div class="qf-form-head">
+      <a href="{{ route('admin.services.index') }}" class="qf-back-btn">
+        <i class="bx bx-arrow-back"></i> Back
+      </a>
+      <h1 class="qf-form-head__title"><i class='bx bx-briefcase'></i> Create service</h1>
+    </div>
+
+    <form method="POST" action="{{ route('admin.services.store') }}" enctype="multipart/form-data" class="qf-card">
+      @csrf
+      <div class="qf-fields">
+        @include('partials.image-field', ['current' => null, 'name' => 'image', 'label' => 'Service image'])
+
+        <div class="qf-field">
+          <label for="name" class="qf-label">Name</label>
+          <input id="name" type="text" name="name" value="{{ old('name') }}" placeholder="Enter service name" class="qf-input" required>
+          @error('name')<span class="qf-field__error">{{ $message }}</span>@enderror
+        </div>
+
+        <div class="qf-field">
+          <label for="description" class="qf-label">Description</label>
+          <textarea id="description" name="description" rows="3" placeholder="Enter description" class="qf-input">{{ old('description') }}</textarea>
+          @error('description')<span class="qf-field__error">{{ $message }}</span>@enderror
+        </div>
+
+        <div class="qf-grid">
+          <div class="qf-field">
+            <label for="price" class="qf-label">Price</label>
+            <input id="price" type="number" step="0.01" name="price" value="{{ old('price') }}" placeholder="0.00" class="qf-input">
+            @error('price')<span class="qf-field__error">{{ $message }}</span>@enderror
+          </div>
+
+          <div class="qf-field">
+            <label for="category_id" class="qf-label">Category</label>
+            @if (count($categories) > 0)
+              <select id="category_id" name="category_id" class="qf-input" required>
+                <option value="">Select a category</option>
+                @foreach ($categories as $category)
+                  <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                @endforeach
+              </select>
+            @else
+              <p class="text-sm text-gray-500 m-0">No categories yet — <a href="{{ route('admin.categories.create') }}" class="text-warning">create one first</a>.</p>
+            @endif
+            @error('category_id')<span class="qf-field__error">{{ $message }}</span>@enderror
+          </div>
+        </div>
+      </div>
+
+      <div class="qf-form-actions">
+        <button type="submit" class="qf-submit-btn">Save service <i class='bx bx-right-arrow-alt'></i></button>
+      </div>
+    </form>
+  </div>
 </x-app-layout>

@@ -80,7 +80,7 @@
             <p>No services match your search.</p>
         </div>
 
-        <div class="qlist-footer">{{ $services->links() }}</div>
+        @include('booking._pagination', ['paginator' => $services, 'default' => 20])
         @endcan
     </div>
 

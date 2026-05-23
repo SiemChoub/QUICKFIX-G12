@@ -66,7 +66,7 @@
             <p>No categories match your search.</p>
         </div>
 
-        <div class="qlist-footer">{{ $categories->links() }}</div>
+        @include('booking._pagination', ['paginator' => $categories, 'default' => 20])
         @endcan
     </div>
 

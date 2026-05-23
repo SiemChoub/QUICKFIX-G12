@@ -158,7 +158,7 @@
                 @endcan
             </div>
 
-            @include('booking._pagination', ['paginator' => $items])
+            @include('booking._pagination', ['paginator' => $items, 'default' => 20])
         </div>
     </div>
 
