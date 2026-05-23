@@ -22,8 +22,25 @@ class PaymentController extends Controller
     public function index()
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
-        $payments = Payments::all()->sortByDesc('id');
-        return view('payments.index',['payments'=>$payments]);
+
+        $perPage = (int) request('per_page', 20);
+        $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
+        $payments = Payments::orderByDesc('id')->paginate($perPage);
+
+        // Accurate totals (across all rows, not just the current page) for the summary chips & month filter
+        $allCount  = Payments::count();
+        $noCount   = Payments::where('status', 'no')->count();
+        $doneCount = $allCount - $noCount;
+        $months    = Payments::whereNotNull('datepay')->pluck('datepay')
+            ->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-M'))->unique()->values();
+
+        return view('payments.index', [
+            'payments'  => $payments,
+            'allCount'  => $allCount,
+            'noCount'   => $noCount,
+            'doneCount' => $doneCount,
+            'months'    => $months,
+        ]);
     }
     // ------- get payment in laravel ----------------------
 

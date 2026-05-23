@@ -21,7 +21,9 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::paginate(5);
+        $perPage = (int) request('per_page', 20);
+        $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
+        $users = User::paginate($perPage);
 
         return view('setting.user.index', ['users' => $users]);
     }
@@ -80,12 +82,22 @@ class UserController extends Controller
         $request->validate([
             'role' => 'required',
             'name' => 'required',
-            'phone' => 'required',
+            'phone' => 'nullable',
             'email' => 'required|email',
-            'address' => 'required',
+            'address' => 'nullable',
+            'profile' => 'nullable|image|max:2048',
         ]);
 
-        $user->update($request->all());
+        $data = $request->except('profile');
+
+        // Store the uploaded photo as a base64 data URI (same convention as store()/updateProfile()).
+        if ($request->hasFile('profile')) {
+            $image = $request->file('profile');
+            $data['profile'] = 'data:' . $image->getMimeType() . ';base64,'
+                . base64_encode(file_get_contents($image->getRealPath()));
+        }
+
+        $user->update($data);
         return redirect('admin/users')
             ->with('showAlertEdit', true);
     }

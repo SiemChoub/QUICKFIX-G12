@@ -4,8 +4,7 @@
             @foreach($roles as $i => $role)
                 @php
                     $perms = $role->permissions;
-                    $shown = $perms->take(12);
-                    $extra = $perms->count() - $shown->count();
+                    $extra = max(0, $perms->count() - 12);
                 @endphp
                 <div class="qrole-card" style="animation-delay: {{ $i * 55 }}ms">
                     <div class="qrole-head">
@@ -22,13 +21,14 @@
                     </div>
 
                     <div class="qrole-perms">
-                        @forelse($shown as $permission)
-                            <span class="qrole-chip">{{ $permission->name }}</span>
+                        @forelse($perms as $j => $permission)
+                            <span class="qrole-chip {{ $j >= 12 ? 'qrole-chip--hidden' : '' }}">{{ $permission->name }}</span>
                         @empty
                             <span class="qrole-empty">No permissions assigned</span>
                         @endforelse
                         @if($extra > 0)
-                            <span class="qrole-chip qrole-chip--more">+{{ $extra }} more</span>
+                            <button type="button" class="qrole-chip qrole-chip--more"
+                                    data-extra="{{ $extra }}" onclick="toggleRolePerms(this)">+{{ $extra }} more</button>
                         @endif
                     </div>
                 </div>
@@ -70,9 +70,23 @@
             font-size: .73rem; font-weight: 600; color: #4f46e5; background: #eef2ff;
             padding: .25rem .65rem; border-radius: 8px;
         }
-        .qrole-chip--more { color: #6b7280; background: #f1f5f9; }
+        .qrole-chip--more {
+            color: #6b7280; background: #f1f5f9; cursor: pointer; border: none;
+            font-family: inherit; transition: background .15s ease, color .15s ease;
+        }
+        .qrole-chip--more:hover { background: #e2e8f0; color: #4f46e5; }
+        .qrole-chip--hidden { display: none; }
+        .qrole-perms.is-expanded .qrole-chip--hidden { display: inline-block; }
         .qrole-empty { font-size: .82rem; color: #9ca3af; font-style: italic; }
     </style>
+
+    <script>
+        function toggleRolePerms(btn) {
+            const perms = btn.closest('.qrole-perms');
+            const expanded = perms.classList.toggle('is-expanded');
+            btn.textContent = expanded ? 'Show less' : ('+' + btn.dataset.extra + ' more');
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if(session('showAlertEdit'))

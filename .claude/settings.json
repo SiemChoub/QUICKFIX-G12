@@ -5,7 +5,10 @@
       "Bash(awk '{print \"ahead: \"$1\"  behind: \"$2}')",
       "Bash(php -r '$d=json_decode\\(file_get_contents\\(\"php://stdin\"\\),true\\); if\\($d&&isset\\($d[\"tables\"]\\)\\){foreach\\($d[\"tables\"] as $t\\){echo $t[\"name\"].\" \\(\".$t[\"rows\"].\" rows\\)\\\\n\";}} else { echo \"db:show unavailable\\\\n\"; }')",
       "Bash(grep -aviE \"Deprecation|Implicitly|Psy Shell|^>>>|^\\\\.\\\\.\\\\.|INFO|^$\")",
-      "Bash(rm -f /tmp/verify_all.py /tmp/verify_pay.py /tmp/all_*.png /tmp/pay2.png; echo cleaned)"
+      "Bash(rm -f /tmp/verify_all.py /tmp/verify_pay.py /tmp/all_*.png /tmp/pay2.png; echo cleaned)",
+      "Bash(awk '/function index/{f=1} f{print} f&&/return view/{exit}' app/Http/Controllers/Admin/RequestController.php)",
+      "Bash(find resources/views -path '*user*' -name '*.blade.php')",
+      "Bash(grep -rln \"EDIT USER\\\\|Enter phone\\\\|Enter address\" resources/views)"
     ],
     "additionalDirectories": [
       "/tmp"

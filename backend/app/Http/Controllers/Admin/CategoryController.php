@@ -27,8 +27,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $Category= Category::paginate(5);
-        // $services = Category::with('category')->get();
+        $perPage = (int) request('per_page', 20);
+        $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
+        $Category = Category::paginate($perPage);
         return view('category.index',['categories'=>$Category]);
     }
 

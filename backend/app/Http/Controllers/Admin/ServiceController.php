@@ -32,8 +32,9 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $Service= Service::paginate(5);
-        $services = Service::with('category')->get();
+        $perPage = (int) request('per_page', 20);
+        $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
+        $Service = Service::with('category')->paginate($perPage);
         return view('service.index',['services'=>$Service]);
     }
 

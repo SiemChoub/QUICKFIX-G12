@@ -101,9 +101,7 @@
             <p>No discounts match your search.</p>
         </div>
 
-        <div class="qdisc-footer">
-            {{ $discounts->links() }}
-        </div>
+        @include('booking._pagination', ['paginator' => $discounts, 'default' => 20])
         @endcan
     </div>
 

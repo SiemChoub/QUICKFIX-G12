@@ -9,11 +9,23 @@
         <h1 class="text-xl text-warning shadow p-1 ">EDIT USER</h1>
       </div>
       <div class=" shadow-md rounded p-3 pt-2">
-        <form method="POST" action="{{ route('admin.users.update', $user->id) }}">
+        <form method="POST" action="{{ route('admin.users.update', $user->id) }}" enctype="multipart/form-data">
           @csrf
           @method('put')
           <div class='shadow bg-white p-7 border around mb-4'>
             <div class="space-y-3">
+              <div class="qf-profile-upload">
+                <img id="profilePreview"
+                     src="{{ $user->profile ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=f59e0b&color=fff&bold=true' }}"
+                     onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=f59e0b&color=fff&bold=true'"
+                     alt="Profile photo" class="qf-profile-upload__img">
+                <div class="qf-profile-upload__body">
+                  <label for="profile" class="text-gray-700 font-medium text-sm">Profile photo</label>
+                  <input id="profile" type="file" name="profile" accept="image/*" class="qf-profile-upload__input">
+                  <p class="qf-profile-upload__hint">JPG or PNG, up to 2 MB. Leave empty to keep the current photo.</p>
+                  @error('profile')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
+                </div>
+              </div>
               <div>
                 <label for="name" class="text-gray-700 font-medium text-sm">Name</label>
                 <input id="name" type="text" name="name" value="{{ old('name', $user->name) }}" placeholder="Enter name" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
@@ -31,10 +43,6 @@
                 <label for="address" class="text-gray-700 font-medium text-sm">address</label>
                 <input id="address" type="text" name="address" value="{{ old('address', $user->address) }}" placeholder="Enter address" class="w-full px-3 py-1 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm" />
               </div>
-                {{-- <div class="">
-                  <label for="profile" class="block text-gray-700 font-medium mb-1 text-sm">Image</label>
-                  <input id="profile" type="file" name="profile" value="{{ old('profile') }}" placeholder="Enter image" class="w-full border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 text-sm">
-                </div> --}}
                 <div class="form-group">
                 <label for="role" class="block text-gray-700 font-medium mb-1 text-sm">Role</label>
                 <select class="form-control" id="role" name="role">
@@ -64,7 +72,34 @@
   <!-- Include Bootstrap JS and Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+<script>
+  (function () {
+    const input = document.getElementById('profile');
+    const preview = document.getElementById('profilePreview');
+    if (input && preview) {
+      input.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) preview.src = URL.createObjectURL(file);
+      });
+    }
+  })();
+</script>
   <style>
+    .qf-profile-upload { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .qf-profile-upload__img {
+      width: 84px; height: 84px; border-radius: 50%; object-fit: cover;
+      border: 3px solid #ffc107; box-shadow: 0 4px 12px rgba(0, 0, 0, .1); background: #f3f4f6;
+    }
+    .qf-profile-upload__body { display: flex; flex-direction: column; gap: .25rem; }
+    .qf-profile-upload__input { font-size: .85rem; color: #4b5563; }
+    .qf-profile-upload__input::file-selector-button {
+      margin-right: .6rem; padding: .4rem .8rem; border: 0; border-radius: 8px;
+      background: #ffc107; color: #1b1f24; font-weight: 600; font-size: .82rem; cursor: pointer;
+      transition: filter .15s ease;
+    }
+    .qf-profile-upload__input::file-selector-button:hover { filter: brightness(.95); }
+    .qf-profile-upload__hint { font-size: .72rem; color: #9ca3af; margin: 0; }
+
     @keyframes pulse {
       0%, 100% {
         transform: scale(1);
