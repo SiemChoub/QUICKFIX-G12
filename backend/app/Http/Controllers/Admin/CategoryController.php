@@ -51,8 +51,19 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $category = Category::create($data);
+        $request->validate([
+            'image' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data['image'] = 'data:' . $image->getMimeType() . ';base64,'
+                . base64_encode(file_get_contents($image->getRealPath()));
+        }
+
+        Category::create($data);
         return redirect('admin/categories')->with('showAlertCreate', true);
     }
 
@@ -87,9 +98,20 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $category->update($request->all());
-        return redirect('admin/categories')->with('showAlertEdit', true);
+        $request->validate([
+            'image' => 'nullable|image|max:2048',
+        ]);
 
+        $data = $request->except('image');
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data['image'] = 'data:' . $image->getMimeType() . ';base64,'
+                . base64_encode(file_get_contents($image->getRealPath()));
+        }
+
+        $category->update($data);
+        return redirect('admin/categories')->with('showAlertEdit', true);
     }
 
     /**

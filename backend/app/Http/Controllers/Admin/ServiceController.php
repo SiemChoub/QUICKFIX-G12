@@ -121,10 +121,21 @@ class ServiceController extends Controller
      */
     public function update(Request $request, Service $service)
     {
-        $service->update($request->all());
-        return redirect('admin/services')->with('showAlertEdit', true);
-        
+        $request->validate([
+            'image' => 'nullable|image|max:2048',
+        ]);
 
+        $data = $request->except('image');
+
+        // Replace the image only when a new one is uploaded (base64, same as store()).
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $data['image'] = 'data:' . $image->getMimeType() . ';base64,'
+                . base64_encode(file_get_contents($image->getRealPath()));
+        }
+
+        $service->update($data);
+        return redirect('admin/services')->with('showAlertEdit', true);
     }
 
     /**
