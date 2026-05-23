@@ -2,7 +2,7 @@
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-<div class="container" style="margin-top:120px">
+<div class="container-fluid px-4" style="margin-top:120px">
     <div class="d-flex justify-content-between -mt-5 mb-3">
         <div class="mb-2 shadow">
             @can('Payment create')
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <div class="container mt-3 d-flex gap-6">
+    <div class="container-fluid px-0 mt-3 d-flex gap-6">
         <div class="dropdown">
             <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 Select date
