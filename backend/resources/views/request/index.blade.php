@@ -2,7 +2,7 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <div class="container " style="margin-top:90px">
+    <div class="container py-4">
         <div class="mb-2 d-flex gap-3 align-items-center">
             <button id="immediately" class="btn btn-warning d-flex align-items-center gap-2 shadow-sm" style="padding: 10px 20px; font-size: 1.1rem; border-radius: 10px; transition: all 0.3s ease;">
                 <i class='bx bxs-user-voice me-2' style='font-size: 1.5rem;'></i>
@@ -17,123 +17,131 @@
 
         <!-- Customer feedback section -->
         <div class="customer-feedback bg-white p-3 rounded-lg shadow">
-            <div class="title">
-                <h6 class="text-lg font-medium text-gray-800 mb-1">Booking in Request</h6>
+            @php $requestCount = $bookings->where('action', 'request')->count(); @endphp
+            <div class="title d-flex align-items-center justify-content-between mb-3">
+                <h6 class="qf-list-title"><i class='bx bxs-inbox'></i> Booking in Request</h6>
+                <span class="qf-count-pill">{{ $requestCount }} {{ \Illuminate\Support\Str::plural('request', $requestCount) }}</span>
             </div>
-            <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2">
+            <div class="customer-feedback-info d-flex flex-column gap-3 pt-2">
                 @can('Request access')
                     @foreach ($bookings->filter(function($booking) {
                         return $booking->action === 'request';
                     }) as $booking)
-                        <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}">
-                            <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                                <img src="{{ $users->where('id', $booking->user_id)->pluck('profile')->first() }}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                                <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                                    <h5 class="card-title fw-bold mb-0" style="font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $users->where('id', $booking->user_id)->pluck('name')->first() }}</h5>
-                                    <p class="text-gray-600 text-sm" style="font-size: 10px;">
-                                    @php
-                                        $service_name = 'No Service selected';
-                                        $customer = $users->where('id', $booking->user_id)->first();
-                                        $fixer = $users->where('id', $booking->fixer_id)->first();
-                                        if($booking->fixer_id !=null){
-                                            $fixer_id = $booking->fixer_id;
-                                            $fixer_name = $users->where('id', $fixer_id)->pluck('name')->first();
-                                        }else{
-                                            $fixer_name = 'No Fixer selected';
-                                        }
+                        @php
+                            $service_name = 'No Service selected';
+                            $customer = $users->where('id', $booking->user_id)->first();
+                            $fixer = $users->where('id', $booking->fixer_id)->first();
+                            if($booking->fixer_id != null){
+                                $fixer_id = $booking->fixer_id;
+                                $fixer_name = $users->where('id', $fixer_id)->pluck('name')->first();
+                            }else{
+                                $fixer_name = 'No Fixer selected';
+                            }
 
-                                        if ($booking->type == 'immediately') {
-                                            $booking_date = $immediatelys->where('id', $booking->booking_type_id)->pluck('created_at')->first();
-                                            $deadline = 'Fix now';
-                                            $customer_message = $immediatelys->where('id', $booking->booking_type_id)->pluck('message')->first();
-                                            $customer_imagesend = $immediatelys->where('id', $booking->booking_type_id)->pluck('image')->first();
-                                            $service_id = $immediatelys->where('id', $booking->booking_type_id)->pluck('service_id')->first();
-                                        } elseif ($booking->type == 'deadline') {
-                                            $customer_message = $deadlines->where('id', $booking->booking_type_id)->pluck('message')->first();
-                                            $customer_imagesend = $deadlines->where('id', $booking->booking_type_id)->pluck('image')->first();
-                                            $booking_date = $deadlines->where('id', $booking->booking_type_id)->pluck('created_at')->first();
-                                            $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date_todo')->first();
-                                            $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
-                                        }
+                            if ($booking->type == 'immediately') {
+                                $booking_date = $immediatelys->where('id', $booking->booking_type_id)->pluck('created_at')->first();
+                                $deadline = 'Fix now';
+                                $customer_message = $immediatelys->where('id', $booking->booking_type_id)->pluck('message')->first();
+                                $customer_imagesend = $immediatelys->where('id', $booking->booking_type_id)->pluck('image')->first();
+                                $service_id = $immediatelys->where('id', $booking->booking_type_id)->pluck('service_id')->first();
+                            } elseif ($booking->type == 'deadline') {
+                                $customer_message = $deadlines->where('id', $booking->booking_type_id)->pluck('message')->first();
+                                $customer_imagesend = $deadlines->where('id', $booking->booking_type_id)->pluck('image')->first();
+                                $booking_date = $deadlines->where('id', $booking->booking_type_id)->pluck('created_at')->first();
+                                $deadline = $deadlines->where('id', $booking->booking_type_id)->pluck('date_todo')->first();
+                                $service_id = $deadlines->where('id', $booking->booking_type_id)->pluck('service_id')->first();
+                            }
 
-                                        if (isset($service_id) && $service_id != null) {
-                                            $service_name = $services->where('id', $service_id)->pluck('name')->first();
-                                        }
-                                    @endphp
-                                    {{ $service_name }}
-                                    </p>
+                            if (isset($service_id) && $service_id != null) {
+                                $service_name = $services->where('id', $service_id)->pluck('name')->first();
+                            }
+                        @endphp
+                        <div id="{{ $booking->type == 'immediately' ? 'immediate' : 'deadline' }}" class="qf-booking-item">
+                            <div class="qf-booking-card">
+                                {{-- Customer --}}
+                                <div class="qf-bk-customer">
+                                    <img src="{{ $customer->profile }}"
+                                         onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($customer->name ?? 'User') }}&background=f59e0b&color=fff&bold=true'"
+                                         class="qf-bk-avatar" alt="{{ $customer->name }}">
+                                    <div class="qf-bk-customer-meta">
+                                        <span class="qf-bk-name">{{ $customer->name ?? 'Unknown user' }}</span>
+                                        <span class="qf-bk-service"><i class='bx bx-wrench'></i> {{ $service_name }}</span>
+                                    </div>
                                 </div>
-                                @if ($booking->type == 'immediately')
-                                    <i class='bx bxs-user-voice bx-burst text-green-700 text-3xl'></i>
-                                @else
-                                    <i class='bx bxs-calendar text-green-700 text-3xl'></i>
-                                @endif
-                                <div class="evaluation">
-                                <button class="btn btn-outline-warning btn-sm text-center"
-                                    data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
-                                    data-booking-image="{{$customer->profile}}"
-                                    data-booking-stars="{{$service_name}}"
-                                    data-booking-type="{{$booking->type}}"
-                                    data-booking-date="{{$booking_date}}"
-                                    data-booking-deadline="{{$deadline}}"
-                                    data-booking-fixname="{{$fixer_name}}"
-                                    data-booking-customername="{{$customer->name}}"
-                                    data-booking-customeremail="{{$customer->email}}"
-                                    data-booking-customerphone="{{$customer->phone}}"
-                                    data-booking-customeraddress="{{$customer->address}}"
-                                    @if($fixer) 
-                                        data-booking-fixername="{{$fixer->name}}"
-                                        data-booking-fixeremail="{{$fixer->email}}"
-                                        data-booking-fixerphone="{{$fixer->phone}}"
-                                        data-booking-fixeraddress="{{$fixer->address}}"
-                                    @else
-                                        data-booking-fixername="No fixer selected !!"
-                                        data-booking-fixeremail="none"
-                                        data-booking-fixerphone="none"
-                                        data-booking-fixeraddress="none"
-                                    @endif
-                                    @if($customer_message  || $customer_imagesend)
-                                        data-booking-customermessage="{{$customer_message}}"
-                                        data-booking-customerimage="{{$customer_imagesend}}"
-                                        data-booking-nomessage="There are message!!"
-                                    @else
-                                        data-booking-nomessage="No message!!"
-                                    @endif
-                                    data-booking-additional-info="This is additional information about the booking.">
-                                    <i class="bx bx-love"></i> Detail
-                                </button>
 
+                                {{-- Type --}}
+                                <div class="qf-bk-type">
+                                    @if ($booking->type == 'immediately')
+                                        <span class="qf-tag qf-tag-now"><i class='bx bxs-user-voice'></i> Immediately</span>
+                                    @else
+                                        <span class="qf-tag qf-tag-deadline"><i class='bx bxs-calendar'></i> Deadline</span>
+                                    @endif
                                 </div>
-                                @can('Request delete')
-                                    <div>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $booking->id }})">Delete</button>
-                                        <script>
-                                            function confirmDelete(id) {
-                                                Swal.fire({
-                                                    title: 'Are you sure?',
-                                                    text: "You won't be able to revert this!",
-                                                    icon: 'warning',
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: '#d33',
-                                                    cancelButtonColor: '#3085d6',
-                                                    confirmButtonText: 'Yes, delete it!'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        // Perform the delete action
-                                                        document.getElementById(`delete-form-${id}`).submit();
-                                                    }
-                                                });
-                                            }
-                                        </script>
+
+                                {{-- Requested date --}}
+                                <div class="qf-bk-date">
+                                    <i class='bx bx-calendar-event'></i>
+                                    <span class="qf-bk-date-text">
+                                        <span class="qf-bk-date-label">Requested</span>
+                                        <span class="qf-bk-date-value">{{ $booking_date ? \Illuminate\Support\Carbon::parse($booking_date)->format('d M Y') : '—' }}</span>
+                                    </span>
+                                </div>
+
+                                {{-- Actions --}}
+                                <div class="qf-bk-actions">
+                                    <button class="btn btn-outline-warning btn-sm qf-bk-btn"
+                                        data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
+                                        data-booking-image="{{$customer->profile}}"
+                                        data-booking-stars="{{$service_name}}"
+                                        data-booking-type="{{$booking->type}}"
+                                        data-booking-date="{{$booking_date}}"
+                                        data-booking-deadline="{{$deadline}}"
+                                        data-booking-fixname="{{$fixer_name}}"
+                                        data-booking-customername="{{$customer->name}}"
+                                        data-booking-customeremail="{{$customer->email}}"
+                                        data-booking-customerphone="{{$customer->phone}}"
+                                        data-booking-customeraddress="{{$customer->address}}"
+                                        @if($fixer)
+                                            data-booking-fixername="{{$fixer->name}}"
+                                            data-booking-fixeremail="{{$fixer->email}}"
+                                            data-booking-fixerphone="{{$fixer->phone}}"
+                                            data-booking-fixeraddress="{{$fixer->address}}"
+                                        @else
+                                            data-booking-fixername="No fixer selected !!"
+                                            data-booking-fixeremail="none"
+                                            data-booking-fixerphone="none"
+                                            data-booking-fixeraddress="none"
+                                        @endif
+                                        @if($customer_message  || $customer_imagesend)
+                                            data-booking-customermessage="{{$customer_message}}"
+                                            data-booking-customerimage="{{$customer_imagesend}}"
+                                            data-booking-nomessage="There are message!!"
+                                        @else
+                                            data-booking-nomessage="No message!!"
+                                        @endif
+                                        data-booking-additional-info="This is additional information about the booking.">
+                                        <i class="bx bx-show"></i> Detail
+                                    </button>
+                                    @can('Request delete')
+                                        <button type="button" class="btn btn-danger btn-sm qf-bk-btn" onclick="confirmDelete({{ $booking->id }})">
+                                            <i class="bx bx-trash"></i> Delete
+                                        </button>
                                         <form id="delete-form-{{ $booking->id }}" action="{{ route('admin.requests.destroy', $booking->id) }}" method="POST" class="d-none">
                                             @csrf
                                             @method('delete')
                                         </form>
-                                    </div>
-                                @endcan
+                                    @endcan
+                                </div>
                             </div>
                         </div>
                     @endforeach
+
+                    @if ($requestCount === 0)
+                        <div class="qf-bk-empty">
+                            <i class='bx bx-calendar-x'></i>
+                            <div>No booking requests right now</div>
+                        </div>
+                    @endif
                 @endcan
             </div>
         </div>
@@ -248,6 +256,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`delete-form-${id}`).submit();
+                }
+            });
+        }
+    </script>
+
     @if(session('showAlertDelete'))
         <script>
             Swal.fire({
@@ -262,13 +288,58 @@
     @endif
 
     <style>
-        .btn:hover {
-            background-color: #ffc107;
+        /* Tab buttons lift (scoped so it doesn't recolor Detail / Delete) */
+        #immediately:hover, #dead:hover {
+            background-color: #ffca2c;
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
-        .show-all:hover {
-            color: #ffc107;
+        .show-all { padding: 8px 14px; border-radius: 10px; transition: all .25s ease; }
+        .show-all:hover { color: #b45309; background: #fff7e6; }
+
+        /* List header */
+        .qf-list-title { font-size: 1rem; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: .4rem; margin: 0; }
+        .qf-list-title i { color: #f59e0b; }
+        .qf-count-pill { background: rgba(245,158,11,.13); color: #b45309; font-weight: 700; font-size: .75rem; padding: .25rem .7rem; border-radius: 999px; }
+
+        /* Booking rows */
+        .qf-booking-card {
+            display: flex; align-items: center; gap: 1rem;
+            background: #fff; border: 1px solid #eef0f3; border-left: 4px solid #e5e7eb;
+            border-radius: 12px; padding: .8rem 1.1rem;
+            transition: box-shadow .2s ease, transform .15s ease, border-color .2s ease;
+        }
+        .qf-booking-card:hover { box-shadow: 0 8px 22px rgba(0,0,0,.08); transform: translateY(-1px); }
+        #immediate .qf-booking-card { border-left-color: #f59e0b; }
+        #deadline  .qf-booking-card { border-left-color: #3b82f6; }
+
+        .qf-bk-customer { display: flex; align-items: center; gap: .75rem; flex: 1 1 auto; min-width: 0; }
+        .qf-bk-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #f1f1f1; flex: 0 0 auto; }
+        .qf-bk-customer-meta { display: flex; flex-direction: column; min-width: 0; }
+        .qf-bk-name { font-weight: 700; font-size: .9rem; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qf-bk-service { font-size: .76rem; color: #6b7280; display: flex; align-items: center; gap: .3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qf-bk-service i { color: #f59e0b; }
+
+        .qf-bk-type { flex: 0 0 150px; }
+        .qf-tag { display: inline-flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 700; padding: .32rem .7rem; border-radius: 999px; }
+        .qf-tag-now { background: rgba(245,158,11,.13); color: #b45309; }
+        .qf-tag-deadline { background: rgba(59,130,246,.12); color: #1d4ed8; }
+
+        .qf-bk-date { flex: 0 0 160px; display: flex; align-items: center; gap: .55rem; color: #374151; }
+        .qf-bk-date > i { font-size: 1.4rem; color: #9aa1ab; }
+        .qf-bk-date-text { display: flex; flex-direction: column; line-height: 1.2; }
+        .qf-bk-date-label { font-size: .65rem; color: #9aa1ab; text-transform: uppercase; letter-spacing: .4px; }
+        .qf-bk-date-value { font-weight: 600; font-size: .82rem; }
+
+        .qf-bk-actions { flex: 0 0 auto; display: flex; gap: .5rem; }
+        .qf-bk-btn { display: inline-flex; align-items: center; gap: .3rem; border-radius: 8px; font-size: .78rem; font-weight: 600; padding: .35rem .75rem; }
+
+        .qf-bk-empty { text-align: center; padding: 3rem 1rem; color: #9aa1ab; font-size: .9rem; }
+        .qf-bk-empty i { font-size: 2.6rem; display: block; margin-bottom: .5rem; color: #d1d5db; }
+
+        @media (max-width: 768px) {
+            .qf-booking-card { flex-wrap: wrap; }
+            .qf-bk-type, .qf-bk-date { flex-basis: auto; }
         }
     </style>
 
