@@ -1,246 +1,165 @@
 <x-app-layout>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">       
-<div class="container-fluid px-4" style="margin-top:120px">
-    <div class="d-flex justify-content-between -mt-5 mb-3">
-        <div class=" mb-2 shadow">
-            @can('Category create')
-                <a href="{{ route('admin.categories.create') }}" class="btn btn-warning d-flex align-items-center">
-                    <i class='bx bxs-plus-circle' style='font-size:30px'></i>
-                    Create New
-                </a>
-            @endcan
-        </div>
-            <h4 class='shadow text-center p-2 border around-50'><i class='bx bx-category'></i> CATEGORY MANAGEMENT</h4> 
-            <div class="w-60 bg-white rounded d-flex align-items-center shadow" style="height: 40px;">
-            <div class="input-group h-100">
-                <input type="text" id="search-input" class="form-control border-0 shadow-none h-100" placeholder="Search" aria-label="Search">
-                <div class="input-group-append h-100">
-                    <div class="btn bg-warning pt-2 h-100">
-                        <i class='bx bx-search-alt'></i>
-                    </div>
-                </div>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    @include('partials.list-chrome')
+
+    <div class="qlist-page">
+        <header class="qlist-head">
+            <div class="qlist-head__title">
+                <span class="qlist-head__icon"><i class='bx bxs-category'></i></span>
+                <span>
+                    <h1>Category Management</h1>
+                    <p>{{ $categories->total() }} {{ \Illuminate\Support\Str::plural('category', $categories->total()) }}</p>
+                </span>
             </div>
-        </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead class="bg-warning">
-                <tr>
-                    <th scope="col" class='text-center'>Category Name</th>
-                    <th scope="col" class='text-center'>Description</th>
-                    <th scope="col" class='text-center'>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="category-table-body">
-                <!-- Example row, replace with dynamic content -->
-                @can('Category access')
-                @foreach ($categories as $category)
-                <tr>
-                    <td class='text-center'>{{ $category->name }}</td>
-                    <td class='text-center'>{{ $category->description }}</td>
-                    <td class="table-actions d-flex justify-content-around text-center">
-                        <a class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#categoryDetailsModal"
-                            data-category-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg"
-                            data-category-title="{{$category->name}}"
-                            data-category-description="{{$category->description}}"
-                            data-category-stars="999">
-                            Details
-                        </a>
+            <div class="qlist-head__actions">
+                <div class="qlist-search">
+                    <i class='bx bx-search-alt'></i>
+                    <input type="text" id="search-input" placeholder="Search categories…" aria-label="Search categories">
+                </div>
+                @can('Category create')
+                    <a href="{{ route('admin.categories.create') }}" class="qlist-create">
+                        <i class='bx bx-plus'></i><span>Create New</span>
+                    </a>
+                @endcan
+            </div>
+        </header>
+
+        @can('Category access')
+        <div class="qcat-grid" id="category-list">
+            @foreach ($categories as $i => $category)
+                <article class="qcat-card" style="animation-delay: {{ $i * 55 }}ms"
+                         data-search="{{ strtolower($category->name . ' ' . $category->description) }}">
+                    <div class="qcat-card__head">
+                        <span class="qcat-icon"><i class='bx bxs-category-alt'></i></span>
+                        <h3 class="qcat-name">{{ $category->name }}</h3>
+                    </div>
+                    <p class="qcat-desc">{{ $category->description ?: 'No description provided.' }}</p>
+                    <div class="qcat-actions">
+                        <button type="button" class="qlist-act qlist-act--info"
+                            data-bs-toggle="modal" data-bs-target="#categoryDetailsModal"
+                            data-category-title="{{ $category->name }}"
+                            data-category-description="{{ $category->description }}">
+                            <i class='bx bx-detail'></i><span>Details</span>
+                        </button>
                         @can('Category edit')
-                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="qlist-act qlist-act--edit">
+                                <i class='bx bx-edit-alt'></i><span>Edit</span>
+                            </a>
                         @endcan
                         @can('Category delete')
-                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $category->id }})">Delete</button>
-
-                        <script>
-                        function confirmDelete(id) {
-                            Swal.fire({
-                                title: 'Are you sure?',
-                                text: "You won't be able to revert this!",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#d33',
-                                cancelButtonColor: '#3085d6',
-                                confirmButtonText: 'Yes, delete it!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    // Perform the delete action
-                                    document.getElementById(`delete-form-${id}`).submit();
-                                }
-                            });
-                        }
-                        </script>
-
-                        <form id="delete-form-{{ $category->id }}" action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-none">
-                            @csrf
-                            @method('delete')
-                        </form>
+                            <button type="button" class="qlist-act qlist-act--del" onclick="confirmDelete({{ $category->id }})">
+                                <i class='bx bx-trash'></i><span>Delete</span>
+                            </button>
+                            <form id="delete-form-{{ $category->id }}" action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="d-none">
+                                @csrf
+                                @method('delete')
+                            </form>
                         @endcan
-                    </td>
-                </tr>
-                @endforeach
-                @endcan
-                <!-- Add more rows here -->
-            </tbody>
-        </table>
-    </div>
-    @can('Category access')
-    <div class="text-right mt-6">
-        {{ $categories->links() }}
-    </div>
-    @endcan
-</div>
+                    </div>
+                </article>
+            @endforeach
+        </div>
 
-<!-- -----------category detail------ -->
-<div class="modal fade" id="categoryDetailsModal" tabindex="-1" aria-labelledby="categoryDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="categoryDetailsModalLabel">Category Detail</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="category-image-container">
-                            <img src="" class="img-fluid rounded" alt="Category Image" id="category-image">
-                        </div>
+        <div class="qlist-empty" id="category-empty" hidden>
+            <i class='bx bx-search-alt'></i>
+            <p>No categories match your search.</p>
+        </div>
+
+        <div class="qlist-footer">{{ $categories->links() }}</div>
+        @endcan
+    </div>
+
+    {{-- Details modal --}}
+    <div class="modal fade" id="categoryDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class='bx bxs-category'></i> Category Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="qcat-modal__hero">
+                        <span class="qcat-icon qcat-icon--lg"><i class='bx bxs-category-alt'></i></span>
+                        <h4 id="category-title">—</h4>
                     </div>
-                    <div class="col-md-7">
-                        <h4 class="text-warning" id="category-title"><i class='bx bxs-category'></i> Premium Category</h4>
-                        <p id="category-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
-                    </div>
+                    <p class="qcat-modal__desc" id="category-description">—</p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<!-- Include Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-<!-- Include Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-@if(session('showAlertCreate'))
-<script>
-    Swal.fire({
-        title: 'Category created Success!',
-        text: '{{ session("success") }}',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#ff9800',
-        showCloseButton: true,
-    });
-</script>
-@endif
-@if(session('showAlertEdit'))
-<script>
-    Swal.fire({
-        title: 'Category edited Success!',
-        text: '{{ session("success") }}',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#ff9800',
-        showCloseButton: true,
-    });
-</script>
-@endif
-@if(session('showAlertDelete'))
-<script>
-    Swal.fire({
-        title: 'Category deleted Success!',
-        text: '{{ session("success") }}',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#ff9800',
-        showCloseButton: true,
-    });
-</script>
-@endif
-<style>
-    .modal-content {
-        animation: fadeIn 0.5s;
-    }
-
-    .modal-header {
-        position: relative;
-    }
-
-    .modal-header .btn-close {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-    }
-
-    .modal-header .modal-title {
-        font-weight: bold;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
-
-    .category-image-container {
-        overflow: hidden;
-        border-radius: 10px;
-    }
-
-    .category-image-container img {
-        transition: transform 0.3s ease;
-    }
-
-    .category-image-container img:hover {
-        transform: scale(1.1);
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
+    <style>
+        .qcat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.1rem; }
+        .qcat-card {
+            background: #fff; border: 1px solid #eef0f4; border-radius: 16px; padding: 1.25rem;
+            display: flex; flex-direction: column; gap: .85rem; position: relative; overflow: hidden;
+            transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+            opacity: 0; transform: translateY(10px);
+            animation: qcat-in .5s cubic-bezier(.16,.84,.44,1) forwards;
         }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes qcat-in { to { opacity: 1; transform: translateY(0); } }
+        .qcat-card:hover { border-color: #e2e5ea; box-shadow: 0 14px 32px rgba(17,24,39,.1); transform: translateY(-3px); }
+        .qcat-card__head { display: flex; align-items: center; gap: .8rem; }
+        .qcat-icon {
+            width: 48px; height: 48px; border-radius: 13px; flex-shrink: 0;
+            display: grid; place-items: center; font-size: 1.6rem; color: #d97706;
+            background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa;
         }
-    }
-</style>
+        .qcat-icon--lg { width: 60px; height: 60px; font-size: 2rem; border-radius: 16px; }
+        .qcat-name { font-size: 1.05rem; font-weight: 700; color: #1f2937; margin: 0; }
+        .qcat-desc {
+            margin: 0; color: #6b7280; font-size: .88rem; line-height: 1.5; flex: 1;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 3.9em;
+        }
+        .qcat-actions { display: flex; gap: .45rem; }
+        .qcat-actions .qlist-act { flex: 1; }
+        .qcat-modal__hero { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .qcat-modal__hero h4 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #111827; }
+        .qcat-modal__desc { color: #4b5563; font-size: .95rem; line-height: 1.6; margin: 0; }
+        @media (max-width: 560px) { .qcat-actions .qlist-act span { display: inline; } }
+    </style>
 
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- Include Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-<script>
-   document.getElementById('categoryDetailsModal').addEventListener('show.bs.modal', function (event) {
-        // Get the button that triggered the modal
-        var button = event.relatedTarget;
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#f43f5e', cancelButtonColor: '#94a3b8', confirmButtonText: 'Yes, delete it!'
+            }).then((result) => { if (result.isConfirmed) document.getElementById(`delete-form-${id}`).submit(); });
+        }
 
-        // Update the modal content with the data attributes
-        document.getElementById('category-image').src = button.dataset.categoryImage;
-        document.getElementById('category-title').textContent = button.dataset.categoryTitle;
-        document.getElementById('category-description').textContent = button.dataset.categoryDescription;
-    });
-
-    // Handle live search
-    document.getElementById('search-input').addEventListener('input', function() {
-        const query = this.value.toLowerCase();
-        const rows = document.querySelectorAll('#category-table-body tr');
-
-        rows.forEach(row => {
-            const name = row.children[0].textContent.toLowerCase();
-            const description = row.children[1].textContent.toLowerCase();
-
-            if (name.includes(query) || description.includes(query)) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
+        document.getElementById('categoryDetailsModal').addEventListener('show.bs.modal', function (event) {
+            const b = event.relatedTarget;
+            document.getElementById('category-title').textContent = b.dataset.categoryTitle;
+            document.getElementById('category-description').textContent = b.dataset.categoryDescription || 'No description provided.';
         });
-    });
-</script>
+
+        (function () {
+            const input = document.getElementById('search-input');
+            const empty = document.getElementById('category-empty');
+            if (!input) return;
+            input.addEventListener('input', function () {
+                const q = this.value.toLowerCase().trim();
+                let shown = 0;
+                document.querySelectorAll('#category-list .qcat-card').forEach(card => {
+                    const match = card.dataset.search.includes(q);
+                    card.style.display = match ? '' : 'none';
+                    if (match) shown++;
+                });
+                if (empty) empty.hidden = shown !== 0;
+            });
+        })();
+    </script>
+
+    @foreach (['showAlertCreate' => 'created', 'showAlertEdit' => 'edited', 'showAlertDelete' => 'deleted'] as $flag => $verb)
+        @if(session($flag))
+        <script>
+            Swal.fire({ title: 'Category {{ $verb }} successfully!', text: '{{ session("success") }}', icon: 'success', confirmButtonText: 'OK', confirmButtonColor: '#ff9800', showCloseButton: true });
+        </script>
+        @endif
+    @endforeach
 </x-app-layout>
