@@ -8,8 +8,6 @@
             $pendingBookings++;
         }
     }
-    $requestCount  = $bookings->filter(fn ($b) => $b->action === 'request')->count();
-    $progressCount = $FixingProgress->filter(fn ($p) => $p->action === 'progress')->count();
     $payedCount    = $payments->where('status', 'done')->count();
 
     $isBookingActive = request()->routeIs('admin.requests.*')
@@ -34,7 +32,7 @@
     </div>
 
     {{-- Nav --}}
-    <nav class="qf-nav" x-data="{ bookingsOpen: {{ $isBookingActive ? 'true' : 'false' }} }">
+    <nav class="qf-nav">
 
         <p class="qf-nav__section">Main</p>
 
@@ -45,58 +43,14 @@
         </a>
 
         @canany(['Request access', 'Request delete', 'Progress access', 'Progress delete', 'Done access'])
-        <div class="qf-group {{ $isBookingActive ? 'is-open' : '' }}">
-            <a href="{{ route('admin.requests.index') }}"
-                    class="qf-nav__item qf-nav__item--toggle {{ $isBookingActive ? 'is-active' : '' }}"
-                    :aria-expanded="bookingsOpen">
-                <i class='bx bx-calendar-check qf-nav__icon'></i>
-                <span class="qf-nav__label">Bookings</span>
-                @if ($pendingBookings > 0)
-                    <span class="qf-badge">{{ $pendingBookings > 99 ? '99+' : $pendingBookings }}</span>
-                @endif
-                <i class='bx bx-chevron-down qf-nav__chev'
-                   :class="bookingsOpen && 'qf-nav__chev--open'"
-                   @click.prevent.stop="bookingsOpen = !bookingsOpen"></i>
-            </a>
-
-            <ul class="qf-submenu" x-show="bookingsOpen" x-transition>
-                @canany(['Request access', 'Request delete'])
-                <li>
-                    <a href="{{ route('admin.requests.index') }}"
-                       class="qf-subnav__item {{ Route::currentRouteNamed('admin.requests.index') ? 'is-active' : '' }}">
-                        <i class='bx bx-receipt qf-subnav__icon'></i>
-                        <span>Requests</span>
-                        @if ($requestCount > 0)
-                            <span class="qf-badge qf-badge--sm">{{ $requestCount > 99 ? '99+' : $requestCount }}</span>
-                        @endif
-                    </a>
-                </li>
-                @endcanany
-
-                @canany(['Progress access', 'Progress delete'])
-                <li>
-                    <a href="{{ route('admin.progresss.index') }}"
-                       class="qf-subnav__item {{ Route::currentRouteNamed('admin.progresss.index') ? 'is-active' : '' }}">
-                        <i class='bx bx-loader-circle qf-subnav__icon'></i>
-                        <span>In Progress</span>
-                        @if ($progressCount > 0)
-                            <span class="qf-badge qf-badge--sm">{{ $progressCount > 99 ? '99+' : $progressCount }}</span>
-                        @endif
-                    </a>
-                </li>
-                @endcanany
-
-                @can('Done access')
-                <li>
-                    <a href="{{ route('admin.dones.index') }}"
-                       class="qf-subnav__item {{ Route::currentRouteNamed('admin.dones.index') ? 'is-active' : '' }}">
-                        <i class='bx bx-check-circle qf-subnav__icon'></i>
-                        <span>Done Fixing</span>
-                    </a>
-                </li>
-                @endcan
-            </ul>
-        </div>
+        <a href="{{ route('admin.requests.index') }}"
+           class="qf-nav__item {{ $isBookingActive ? 'is-active' : '' }}">
+            <i class='bx bx-calendar-check qf-nav__icon'></i>
+            <span class="qf-nav__label">Bookings</span>
+            @if ($pendingBookings > 0)
+                <span class="qf-badge">{{ $pendingBookings > 99 ? '99+' : $pendingBookings }}</span>
+            @endif
+        </a>
         @endcanany
 
         @canany(['Payment access', 'Payment create', 'Payment edit'])
