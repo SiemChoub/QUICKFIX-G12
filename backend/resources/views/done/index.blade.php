@@ -6,15 +6,6 @@
         @include('booking._tabs')
         @include('booking._card_styles')
         <div class="mb-2 d-flex gap-3 align-items-center">
-            <button id="immediately" class="btn btn-warning d-flex align-items-center gap-2 shadow-sm" style="padding: 10px 20px; font-size: 1.1rem; border-radius: 10px; transition: all 0.3s ease;">
-                <i class='bx bxs-user-voice me-2' style='font-size: 1.5rem;'></i>
-                Immediately
-            </button>
-            <button id="dead" class="btn btn-warning d-flex align-items-center shadow-sm" style="padding: 10px 20px; font-size: 1.1rem; border-radius: 10px; transition: all 0.3s ease;">
-                <i class='bx bxs-calendar me-2' style='font-size: 1.5rem;'></i>
-                Deadline
-            </button>
-
             @php
                 $count = 0;
                 foreach ($FixingProgress as $booking) {

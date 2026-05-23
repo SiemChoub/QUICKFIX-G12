@@ -1,6 +1,8 @@
-{{-- Booking section tabs: Request / In Progress / Done.
+{{-- Booking section tabs: Request / In Progress / Done, with the
+     Immediately / Deadline filter buttons on the same row (start & end).
      Counts use the globally-shared $bookings and $FixingProgress collections
-     (same source the sidebar uses), so this works on all three pages. --}}
+     (same source the sidebar uses), so this works on all three pages.
+     The #immediately / #dead buttons are wired up by per-page scripts. --}}
 @php
     $reqCount  = isset($bookings) ? $bookings->where('action', 'request')->count() : 0;
     $progCount = isset($FixingProgress) ? $FixingProgress->where('action', 'progress')->count() : 0;
@@ -8,41 +10,57 @@
 @endphp
 
 <div class="qf-tabs">
-    @canany(['Request access', 'Request delete'])
-    <a href="{{ route('admin.requests.index') }}"
-       class="qf-tab {{ request()->routeIs('admin.requests.*') ? 'is-active' : '' }}">
-        <i class='bx bx-receipt'></i>
-        <span>Requests</span>
-        <span class="qf-tab-count">{{ $reqCount }}</span>
-    </a>
-    @endcanany
+    <div class="qf-tabs__group">
+        @canany(['Request access', 'Request delete'])
+        <a href="{{ route('admin.requests.index') }}"
+           class="qf-tab {{ request()->routeIs('admin.requests.*') ? 'is-active' : '' }}">
+            <i class='bx bx-receipt'></i>
+            <span>Requests</span>
+            <span class="qf-tab-count">{{ $reqCount }}</span>
+        </a>
+        @endcanany
 
-    @canany(['Progress access', 'Progress delete'])
-    <a href="{{ route('admin.progresss.index') }}"
-       class="qf-tab {{ request()->routeIs('admin.progresss.*') ? 'is-active' : '' }}">
-        <i class='bx bx-loader-circle'></i>
-        <span>In Progress</span>
-        <span class="qf-tab-count">{{ $progCount }}</span>
-    </a>
-    @endcanany
+        @canany(['Progress access', 'Progress delete'])
+        <a href="{{ route('admin.progresss.index') }}"
+           class="qf-tab {{ request()->routeIs('admin.progresss.*') ? 'is-active' : '' }}">
+            <i class='bx bx-loader-circle'></i>
+            <span>In Progress</span>
+            <span class="qf-tab-count">{{ $progCount }}</span>
+        </a>
+        @endcanany
 
-    @can('Done access')
-    <a href="{{ route('admin.dones.index') }}"
-       class="qf-tab {{ request()->routeIs('admin.dones.*') ? 'is-active' : '' }}">
-        <i class='bx bx-check-circle'></i>
-        <span>Done</span>
-        <span class="qf-tab-count">{{ $doneCount }}</span>
-    </a>
-    @endcan
+        @can('Done access')
+        <a href="{{ route('admin.dones.index') }}"
+           class="qf-tab {{ request()->routeIs('admin.dones.*') ? 'is-active' : '' }}">
+            <i class='bx bx-check-circle'></i>
+            <span>Done</span>
+            <span class="qf-tab-count">{{ $doneCount }}</span>
+        </a>
+        @endcan
+    </div>
+
+    <div class="qf-tabs__filters">
+        <button id="immediately" type="button" class="qf-filter-btn">
+            <i class='bx bxs-user-voice'></i>
+            <span>Immediately</span>
+        </button>
+        <button id="dead" type="button" class="qf-filter-btn">
+            <i class='bx bxs-calendar'></i>
+            <span>Deadline</span>
+        </button>
+    </div>
 </div>
 
 <style>
     .qf-tabs {
-        display: flex; gap: .4rem; flex-wrap: wrap;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 1rem; flex-wrap: wrap;
         background: #fff; padding: .4rem; border-radius: 14px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
         margin-bottom: 1.2rem;
     }
+    .qf-tabs__group { display: flex; gap: .4rem; flex-wrap: wrap; }
+
     .qf-tab {
         display: inline-flex; align-items: center; gap: .5rem;
         padding: .6rem 1.1rem; border-radius: 10px;
@@ -61,4 +79,23 @@
         border-radius: 999px; min-width: 20px; text-align: center;
     }
     .qf-tab.is-active .qf-tab-count { background: rgba(0, 0, 0, .18); }
+
+    /* Filter buttons at the end of the row */
+    .qf-tabs__filters { display: flex; gap: .5rem; padding-right: .2rem; }
+    .qf-filter-btn {
+        display: inline-flex; align-items: center; gap: .45rem;
+        padding: .58rem 1.05rem; border: 0; border-radius: 10px;
+        background: linear-gradient(135deg, #f59e0b, #f97316);
+        color: #fff; font-weight: 600; font-size: .88rem; cursor: pointer;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, .28);
+        transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+    }
+    .qf-filter-btn:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 6px 16px rgba(245, 158, 11, .36); }
+    .qf-filter-btn i { font-size: 1.15rem; }
+
+    @media (max-width: 720px) {
+        .qf-tabs { justify-content: flex-start; }
+        .qf-tabs__filters { width: 100%; }
+        .qf-filter-btn { flex: 1; justify-content: center; }
+    }
 </style>
