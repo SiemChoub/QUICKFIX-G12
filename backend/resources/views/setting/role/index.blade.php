@@ -1,49 +1,83 @@
 <x-settings-layout title="Roles" subtitle="Roles and their assigned permissions" icon="bx-shield">
-    <div class="table-responsive">
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr>
-                    <th class="py-3 px-4 bg-gray-50 font-bold text-sm text-gray-600 border-b border-gray-200 w-2/12">Role Name</th>
-                    <th class="py-3 px-4 bg-gray-50 font-bold text-sm text-gray-600 border-b border-gray-200">Permissions</th>
-                    <th class="py-3 px-4 bg-gray-50 font-bold text-sm text-gray-600 border-b border-gray-200 text-right w-2/12">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @can('Role access')
-                    @foreach($roles as $role)
-                        <tr class="hover:bg-gray-50 transition-colors duration-200">
-                            <td class="py-4 px-4 border-b border-gray-200 font-medium text-gray-800">{{ $role->name }}</td>
-                            <td class="py-4 px-4 border-b border-gray-200">
-                                @foreach($role->permissions as $permission)
-                                    <span class="inline-flex items-center justify-center px-3 py-1 mr-2 mb-1 text-xs font-semibold text-white bg-blue-500 rounded-full">{{ $permission->name }}</span>
-                                @endforeach
-                            </td>
-                            <td class="py-4 px-4 border-b border-gray-200 text-right">
-                                @can('Role edit')
-                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-warning d-inline-flex align-items-center">
-                                        <i class="bx bx-cog me-1"></i>
-                                        Edit
-                                    </a>
-                                @endcan
-                            </td>
-                        </tr>
-                    @endforeach
-                @endcan
-            </tbody>
-        </table>
+    <div class="qrole-list">
+        @can('Role access')
+            @foreach($roles as $i => $role)
+                @php
+                    $perms = $role->permissions;
+                    $shown = $perms->take(12);
+                    $extra = $perms->count() - $shown->count();
+                @endphp
+                <div class="qrole-card" style="animation-delay: {{ $i * 55 }}ms">
+                    <div class="qrole-head">
+                        <span class="qrole-icon"><i class='bx bxs-shield-alt-2'></i></span>
+                        <div class="qrole-meta">
+                            <span class="qrole-name">{{ ucfirst($role->name) }}</span>
+                            <span class="qrole-count">{{ $perms->count() }} {{ \Illuminate\Support\Str::plural('permission', $perms->count()) }}</span>
+                        </div>
+                        @can('Role edit')
+                            <a href="{{ route('admin.roles.edit', $role->id) }}" class="qrole-edit">
+                                <i class='bx bx-cog'></i><span>Edit</span>
+                            </a>
+                        @endcan
+                    </div>
+
+                    <div class="qrole-perms">
+                        @forelse($shown as $permission)
+                            <span class="qrole-chip">{{ $permission->name }}</span>
+                        @empty
+                            <span class="qrole-empty">No permissions assigned</span>
+                        @endforelse
+                        @if($extra > 0)
+                            <span class="qrole-chip qrole-chip--more">+{{ $extra }} more</span>
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        @endcan
     </div>
+
+    <style>
+        .qrole-list { display: flex; flex-direction: column; gap: .8rem; }
+        .qrole-card {
+            border: 1px solid #eef0f4; border-radius: 14px; padding: 1.1rem 1.25rem;
+            background: #fff; transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+            opacity: 0; transform: translateY(8px);
+            animation: qrole-in .45s cubic-bezier(.16,.84,.44,1) forwards;
+        }
+        @keyframes qrole-in { to { opacity: 1; transform: translateY(0); } }
+        .qrole-card:hover { border-color: #e2e5ea; box-shadow: 0 10px 26px rgba(17,24,39,.07); transform: translateY(-2px); }
+
+        .qrole-head { display: flex; align-items: center; gap: .9rem; }
+        .qrole-icon {
+            width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+            display: grid; place-items: center; font-size: 1.5rem; color: #fff;
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            box-shadow: 0 4px 12px rgba(99,102,241,.3);
+        }
+        .qrole-meta { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+        .qrole-name { font-size: 1.05rem; font-weight: 700; color: #1f2937; text-transform: capitalize; }
+        .qrole-count { font-size: .78rem; color: #9ca3af; }
+        .qrole-edit {
+            display: inline-flex; align-items: center; gap: .35rem; flex-shrink: 0;
+            font-size: .82rem; font-weight: 600; color: #b45309; background: rgba(245,158,11,.12);
+            padding: .5rem .9rem; border-radius: 10px; text-decoration: none; transition: background .15s ease, color .15s ease;
+        }
+        .qrole-edit:hover { color: #fff; background: #f59e0b; }
+        .qrole-edit i { font-size: 1.05rem; }
+
+        .qrole-perms { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .9rem; padding-top: .9rem; border-top: 1px dashed #eef0f4; }
+        .qrole-chip {
+            font-size: .73rem; font-weight: 600; color: #4f46e5; background: #eef2ff;
+            padding: .25rem .65rem; border-radius: 8px;
+        }
+        .qrole-chip--more { color: #6b7280; background: #f1f5f9; }
+        .qrole-empty { font-size: .82rem; color: #9ca3af; font-style: italic; }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if(session('showAlertEdit'))
     <script>
-        Swal.fire({
-            title: 'Role edited Success!',
-            text: '{{ session("success") }}',
-            icon: 'success',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#ff9800',
-            showCloseButton: true,
-        });
+        Swal.fire({ title: 'Role edited successfully!', text: '{{ session("success") }}', icon: 'success', confirmButtonText: 'OK', confirmButtonColor: '#ff9800', showCloseButton: true });
     </script>
     @endif
 </x-settings-layout>

@@ -4,7 +4,11 @@
       "Bash(git fetch *)",
       "Bash(awk '{print \"ahead: \"$1\"  behind: \"$2}')",
       "Bash(php -r '$d=json_decode\\(file_get_contents\\(\"php://stdin\"\\),true\\); if\\($d&&isset\\($d[\"tables\"]\\)\\){foreach\\($d[\"tables\"] as $t\\){echo $t[\"name\"].\" \\(\".$t[\"rows\"].\" rows\\)\\\\n\";}} else { echo \"db:show unavailable\\\\n\"; }')",
-      "Bash(grep -aviE \"Deprecation|Implicitly|Psy Shell|^>>>|^\\\\.\\\\.\\\\.|INFO|^$\")"
+      "Bash(grep -aviE \"Deprecation|Implicitly|Psy Shell|^>>>|^\\\\.\\\\.\\\\.|INFO|^$\")",
+      "Bash(rm -f /tmp/verify_all.py /tmp/verify_pay.py /tmp/all_*.png /tmp/pay2.png; echo cleaned)"
+    ],
+    "additionalDirectories": [
+      "/tmp"
     ]
   }
 }

@@ -4,9 +4,9 @@
     @include('partials.list-chrome')
 
     @php
-        $doneCount = $payments->where('status', 'done')->count();
-        $noCount   = $payments->where('status', 'no')->count();
         $allCount  = $payments->count();
+        $noCount   = $payments->where('status', 'no')->count();
+        $doneCount = $allCount - $noCount;
         $months    = $payments->pluck('datepay')->filter()->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-M'))->unique()->values();
     @endphp
 
@@ -71,11 +71,11 @@
                     $parts    = preg_split('/\s+/', trim($cname));
                     $initials = strtoupper(substr($parts[0] ?? 'U', 0, 1) . (isset($parts[1]) ? substr($parts[1], 0, 1) : ''));
                     $month    = $payment->datepay ? \Carbon\Carbon::parse($payment->datepay)->format('Y-M') : '';
-                    $done     = $payment->status === 'done';
+                    $done     = $payment->status !== 'no';
                 @endphp
                 <div class="qpay-card {{ $done ? 'qpay-card--done' : 'qpay-card--no' }}"
                      style="animation-delay: {{ $i * 45 }}ms"
-                     data-status="{{ $payment->status }}" data-month="{{ $month }}"
+                     data-status="{{ $done ? 'done' : 'no' }}" data-month="{{ $month }}"
                      data-search="{{ strtolower($cname . ' ' . $payment->total . ' ' . $month) }}">
 
                     <span class="qpay-avatar">{{ $initials }}</span>
