@@ -280,10 +280,13 @@
         .qf-input__icon { font-size: 1.2rem; color: var(--qf-muted); padding: 0 .2rem 0 .85rem; }
         .qf-input:focus-within .qf-input__icon { color: var(--qf-amber); }
         .qf-input input {
-            flex: 1 1 auto; width: 100%; border: 0; outline: none; background: transparent;
+            flex: 1 1 auto; width: 100%; border: 0; outline: none; box-shadow: none; background: transparent;
             color: var(--qf-text); font-size: .95rem; font-family: inherit;
             padding: .85rem .9rem .85rem .65rem;
         }
+        /* Kill the framework's blue focus ring; the amber .qf-input:focus-within glow is the focus cue */
+        .qf-input input:focus,
+        .qf-input input:focus-visible { outline: none; box-shadow: none; border: 0; }
         .qf-input input::placeholder { color: #5b6675; }
         .qf-input input:-webkit-autofill {
             -webkit-text-fill-color: var(--qf-text);

@@ -17,6 +17,30 @@
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+
+        {{-- Brand (amber) focus for every form field — overrides the framework's blue focus ring --}}
+        <style>
+            input[type=text]:focus, input[type=email]:focus, input[type=password]:focus,
+            input[type=number]:focus, input[type=search]:focus, input[type=tel]:focus,
+            input[type=url]:focus, input[type=date]:focus, input[type=datetime-local]:focus,
+            input[type=time]:focus, input[type=month]:focus, input[type=week]:focus,
+            input:not([type]):focus, textarea:focus, select:focus,
+            .form-control:focus, .form-select:focus {
+                border-color: #f59e0b !important;
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, .18) !important;
+                outline: none !important;
+            }
+            input[type=checkbox]:focus, input[type=radio]:focus, .form-check-input:focus {
+                border-color: #f59e0b !important;
+                box-shadow: 0 0 0 3px rgba(245, 158, 11, .25) !important;
+                outline: none !important;
+            }
+            /* Placed last so it wins at equal specificity: borderless search pills show focus on the wrapper */
+            .qlist-search input:focus, .qperm-search input:focus, .qdisc-search input:focus {
+                box-shadow: none !important;
+                border: 0 !important;
+            }
+        </style>
     </head>
     <body class="font-sans antialiased">
         <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-200">

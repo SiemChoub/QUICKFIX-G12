@@ -75,7 +75,7 @@
                             <h6 class="dash-card__title">Top Service</h6>
                             <span class="badge bg-warning-subtle text-warning fw-semibold">Most booked</span>
                         </div>
-                        <div class="dash-card__body dash-scroll dash-collapsible" style="max-height: 300px;">
+                        <div class="dash-card__body dash-scroll" style="max-height: 300px;">
                             @php
                                 $data = [];
                                 foreach ($Service as $service) {
@@ -105,7 +105,7 @@
                                 $dataCollection = collect($data);
                                 $filteredData = $dataCollection->filter(fn ($item) => $item['number'] != 0);
                                 $sortedData = $filteredData->sortByDesc('number');
-                                $topFiveData = $sortedData->take(12);
+                                $topFiveData = $sortedData->take(6);
                             @endphp
 
                             @forelse ($topFiveData as $item)
@@ -138,11 +138,9 @@
                                 </div>
                             @endforelse
                         </div>
-                        @if($topFiveData->count() > 4)
-                            <div class="dash-card__footer">
-                                <button type="button" class="dash-toggle" onclick="toggleDashList(this)">See more</button>
-                            </div>
-                        @endif
+                        <div class="dash-card__footer">
+                            <a href="{{ route('admin.dashboard.top-services') }}" class="dash-toggle">View all</a>
+                        </div>
                     </section>
 
                     {{-- Low Service --}}
@@ -151,7 +149,7 @@
                             <h6 class="dash-card__title">Low Service</h6>
                             <span class="badge bg-danger-subtle text-danger fw-semibold">No bookings</span>
                         </div>
-                        <div class="dash-card__body dash-scroll dash-collapsible" style="max-height: 300px;">
+                        <div class="dash-card__body dash-scroll" style="max-height: 300px;">
                             @php $mama = 0; @endphp
                             @foreach ($Service as $service)
                                 @php
@@ -166,6 +164,7 @@
                                 @endphp
                                 @if ($book_service->isEmpty())
                                     @php $mama++ @endphp
+                                    @if ($mama <= 6)
                                     <div class="list-row">
                                         <div class="list-row__main">
                                             <p class="list-row__title">{{ $service->name }}</p>
@@ -182,6 +181,7 @@
                                             <i class="bx bx-info-circle"></i> view more
                                         </button>
                                     </div>
+                                    @endif
                                 @endif
                             @endforeach
                             @if ($mama == 0)
@@ -191,11 +191,9 @@
                                 </div>
                             @endif
                         </div>
-                        @if($mama > 4)
-                            <div class="dash-card__footer">
-                                <button type="button" class="dash-toggle" onclick="toggleDashList(this)">See more</button>
-                            </div>
-                        @endif
+                        <div class="dash-card__footer">
+                            <a href="{{ route('admin.dashboard.low-services') }}" class="dash-toggle">View all</a>
+                        </div>
                     </section>
                 </div>
 
@@ -226,7 +224,7 @@
                                 $topFixers = \App\Models\FixingProgress::selectRaw('fixer_id, count(*) as count')
                                     ->groupBy('fixer_id')
                                     ->orderBy('count', 'desc')
-                                    ->limit(12)
+                                    ->limit(6)
                                     ->get();
                             @endphp
 
@@ -236,7 +234,7 @@
                                     <p>No top fixer yet</p>
                                 </div>
                             @else
-                                <div class="fixer-grid dash-collapsible">
+                                <div class="fixer-grid">
                                     @foreach ($topFixers as $top)
                                         @php $fixer = $users->where('id', $top->fixer_id)->first(); @endphp
                                         @if ($fixer)
@@ -267,11 +265,9 @@
                                 </div>
                             @endif
                         </div>
-                        @if(count($topFixers) > 3)
-                            <div class="dash-card__footer">
-                                <button type="button" class="dash-toggle" onclick="toggleDashList(this)">See more</button>
-                            </div>
-                        @endif
+                        <div class="dash-card__footer">
+                            <a href="{{ route('admin.dashboard.top-fixers') }}" class="dash-toggle">View all</a>
+                        </div>
                     </section>
 
                     {{-- Customer feedback --}}
@@ -280,7 +276,7 @@
                             <h6 class="dash-card__title">Customer feedback</h6>
                             <span class="badge bg-secondary-subtle text-secondary fw-semibold">{{ count($feedbacks) }}</span>
                         </div>
-                        <div class="dash-card__body dash-scroll dash-collapsible" style="max-height: 240px;">
+                        <div class="dash-card__body dash-scroll" style="max-height: 240px;">
                             @if (count($feedbacks) == 0)
                                 <div class="empty-state">
                                     <i class='bx bx-message-square-detail'></i>
@@ -288,7 +284,7 @@
                                 </div>
                             @endif
 
-                            @foreach ($feedbacks as $feedback)
+                            @foreach ($feedbacks->take(6) as $feedback)
                                 @php $user = $users->where('id', $feedback->user_id)->first(); @endphp
                                 @if ($user)
                                 <div class="feedback-row">
@@ -319,11 +315,9 @@
                                 @endif
                             @endforeach
                         </div>
-                        @if(count($feedbacks) > 4)
-                            <div class="dash-card__footer">
-                                <button type="button" class="dash-toggle" onclick="toggleDashList(this)">See more</button>
-                            </div>
-                        @endif
+                        <div class="dash-card__footer">
+                            <a href="{{ route('admin.dashboard.feedbacks') }}" class="dash-toggle">View all</a>
+                        </div>
                     </section>
                 </div>
 
@@ -339,16 +333,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    function toggleDashList(btn) {
-        const card = btn.closest('.dash-card');
-        const target = card && card.querySelector('.dash-collapsible');
-        if (!target) return;
-        const expanded = target.classList.toggle('is-expanded');
-        btn.textContent = expanded ? 'See less' : 'See more';
-    }
-</script>
 
 {{-- User detail --}}
 <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
@@ -812,16 +796,12 @@
         to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* See more / See less collapsible dashboard lists */
-    .dash-collapsible:not(.is-expanded) > .list-row:nth-child(n+5),
-    .dash-collapsible:not(.is-expanded) > .feedback-row:nth-child(n+5) { display: none !important; }
-    .fixer-grid.dash-collapsible:not(.is-expanded) > .fixer-card:nth-child(n+4) { display: none !important; }
-    .dash-card__body.dash-collapsible.is-expanded { max-height: none !important; }
+    /* "View all" footer links on dashboard cards */
     .dash-card__footer { display: flex; justify-content: center; padding: .55rem 1.1rem .9rem; }
     .dash-toggle {
-        border: none; background: #fff7ed; color: #b45309; font-weight: 600; font-size: .8rem;
-        padding: .45rem 1.15rem; border-radius: 9px; cursor: pointer;
-        transition: background .15s ease, color .15s ease;
+        display: inline-block; border: none; background: #fff7ed; color: #b45309;
+        font-weight: 600; font-size: .8rem; padding: .45rem 1.15rem; border-radius: 9px;
+        cursor: pointer; text-decoration: none; transition: background .15s ease, color .15s ease;
     }
     .dash-toggle:hover { background: #f59e0b; color: #fff; }
 </style>

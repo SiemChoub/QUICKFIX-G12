@@ -59,6 +59,14 @@ Route::get('/admin/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('admin.dashboard');
 
+// Dashboard "View all" full-list pages (data is shared globally via AppServiceProvider)
+Route::middleware(['auth'])->prefix('admin/dashboard')->name('admin.dashboard.')->group(function () {
+    Route::view('/top-services', 'dashboard.lists.top-services')->name('top-services');
+    Route::view('/low-services', 'dashboard.lists.low-services')->name('low-services');
+    Route::view('/top-fixers', 'dashboard.lists.top-fixers')->name('top-fixers');
+    Route::view('/feedbacks', 'dashboard.lists.feedbacks')->name('feedbacks');
+});
+
 
 require __DIR__.'/auth.php';
 
