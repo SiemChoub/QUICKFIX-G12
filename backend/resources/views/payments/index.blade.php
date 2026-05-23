@@ -13,10 +13,13 @@
                 </span>
             </div>
             <div class="qlist-head__actions">
-                <div class="qlist-search">
+                <form method="GET" class="qlist-search" role="search" style="margin:0">
                     <i class='bx bx-search-alt'></i>
-                    <input type="text" id="search-input" placeholder="Search payments…" aria-label="Search payments">
-                </div>
+                    <input type="text" name="q" value="{{ $searchQ ?? '' }}" placeholder="Search payments…" aria-label="Search payments">
+                    @if(!empty($activeStatus))<input type="hidden" name="status" value="{{ $activeStatus }}">@endif
+                    @if(!empty($activeMonth))<input type="hidden" name="month" value="{{ $activeMonth }}">@endif
+                    @if(request('per_page'))<input type="hidden" name="per_page" value="{{ request('per_page') }}">@endif
+                </form>
                 @can('Payment create')
                     <a href="{{ route('admin.payments.create') }}" class="qlist-create">
                         <i class='bx bx-plus'></i><span>Create Payment</span>
@@ -29,35 +32,38 @@
         {{-- Stat filter chips + month filter --}}
         <div class="qpay-toolbar">
             <div class="qpay-stats">
-                <button type="button" class="qpay-stat is-active" data-status="all">
+                <a href="{{ request()->fullUrlWithQuery(['status' => null, 'page' => null]) }}"
+                   class="qpay-stat {{ empty($activeStatus) ? 'is-active' : '' }}">
                     <span class="qpay-stat__num">{{ $allCount }}</span>
                     <span class="qpay-stat__lbl"><i class='bx bx-list-ul'></i> All</span>
-                </button>
-                <button type="button" class="qpay-stat qpay-stat--done" data-status="done">
+                </a>
+                <a href="{{ request()->fullUrlWithQuery(['status' => 'done', 'page' => null]) }}"
+                   class="qpay-stat qpay-stat--done {{ ($activeStatus ?? '') === 'done' ? 'is-active' : '' }}">
                     <span class="qpay-stat__num">{{ $doneCount }}</span>
                     <span class="qpay-stat__lbl"><i class='bx bx-check-circle'></i> Succeeded</span>
-                </button>
-                <button type="button" class="qpay-stat qpay-stat--no" data-status="no">
+                </a>
+                <a href="{{ request()->fullUrlWithQuery(['status' => 'no', 'page' => null]) }}"
+                   class="qpay-stat qpay-stat--no {{ ($activeStatus ?? '') === 'no' ? 'is-active' : '' }}">
                     <span class="qpay-stat__num">{{ $noCount }}</span>
                     <span class="qpay-stat__lbl"><i class='bx bx-time-five'></i> Incomplete</span>
-                </button>
+                </a>
             </div>
 
             <div class="dropdown qpay-month">
                 <button class="qpay-month__btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class='bx bx-calendar'></i> <span id="month-label">All months</span>
+                    <i class='bx bx-calendar'></i> <span>{{ $activeMonth ?? 'All months' }}</span>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end qpay-month__menu">
-                    <li><a class="dropdown-item" href="#" data-value="all">All months</a></li>
+                    <li><a class="dropdown-item {{ empty($activeMonth) ? 'active' : '' }}" href="{{ request()->fullUrlWithQuery(['month' => null, 'page' => null]) }}">All months</a></li>
                     @foreach ($months as $m)
-                        <li><a class="dropdown-item" href="#" data-value="{{ $m }}">{{ $m }}</a></li>
+                        <li><a class="dropdown-item {{ ($activeMonth ?? '') === $m ? 'active' : '' }}" href="{{ request()->fullUrlWithQuery(['month' => $m, 'page' => null]) }}">{{ $m }}</a></li>
                     @endforeach
                 </ul>
             </div>
         </div>
 
         <div class="qpay-list" id="payment-list">
-            @foreach ($payments as $i => $payment)
+            @forelse ($payments as $i => $payment)
                 @php
                     $customer = optional($users->where('id', $payment->fixer_id)->first());
                     $cname    = $customer->name ?? 'Unknown';
@@ -67,9 +73,7 @@
                     $done     = $payment->status !== 'no';
                 @endphp
                 <div class="qpay-card {{ $done ? 'qpay-card--done' : 'qpay-card--no' }}"
-                     style="animation-delay: {{ $i * 45 }}ms"
-                     data-status="{{ $done ? 'done' : 'no' }}" data-month="{{ $month }}"
-                     data-search="{{ strtolower($cname . ' ' . $payment->total . ' ' . $month) }}">
+                     style="animation-delay: {{ $i * 45 }}ms">
 
                     <span class="qpay-avatar">{{ $initials }}</span>
 
@@ -102,12 +106,12 @@
                         @endif
                     </span>
                 </div>
-            @endforeach
-        </div>
-
-        <div class="qlist-empty" id="payment-empty" hidden>
-            <i class='bx bx-search-alt'></i>
-            <p>No payments match your filters.</p>
+            @empty
+                <div class="qlist-empty">
+                    <i class='bx bx-search-alt'></i>
+                    <p>No payments match your filters.</p>
+                </div>
+            @endforelse
         </div>
 
         @include('booking._pagination', ['paginator' => $payments, 'default' => 20])
@@ -122,8 +126,11 @@
             display: flex; flex-direction: column; align-items: flex-start; gap: .15rem;
             background: #fff; border: 1.5px solid #eef0f4; border-radius: 14px;
             padding: .7rem 1.1rem; cursor: pointer; min-width: 120px;
+            text-decoration: none; color: inherit;
             transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
         }
+        .qpay-stat:hover { color: inherit; }
+        .qpay-month__menu .dropdown-item.active { background: #f59e0b; color: #fff; }
         .qpay-stat:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(17,24,39,.07); }
         .qpay-stat__num { font-size: 1.5rem; font-weight: 800; color: #111827; line-height: 1; }
         .qpay-stat__lbl { display: inline-flex; align-items: center; gap: .3rem; font-size: .78rem; font-weight: 600; color: #6b7280; }
@@ -195,44 +202,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        (function () {
-            let fStatus = 'all', fMonth = 'all', fQuery = '';
-            const cards = () => document.querySelectorAll('#payment-list .qpay-card');
-            const empty = document.getElementById('payment-empty');
-
-            function apply() {
-                let shown = 0;
-                cards().forEach(card => {
-                    const okStatus = fStatus === 'all' || card.dataset.status === fStatus;
-                    const okMonth  = fMonth === 'all'  || card.dataset.month === fMonth;
-                    const okSearch = card.dataset.search.includes(fQuery);
-                    const show = okStatus && okMonth && okSearch;
-                    card.style.display = show ? '' : 'none';
-                    if (show) shown++;
-                });
-                if (empty) empty.hidden = shown !== 0;
-            }
-
-            document.querySelectorAll('.qpay-stat').forEach(btn => btn.addEventListener('click', function () {
-                document.querySelectorAll('.qpay-stat').forEach(b => b.classList.remove('is-active'));
-                this.classList.add('is-active');
-                fStatus = this.dataset.status;
-                apply();
-            }));
-
-            document.querySelectorAll('.qpay-month__menu .dropdown-item').forEach(item => item.addEventListener('click', function (e) {
-                e.preventDefault();
-                fMonth = this.dataset.value;
-                document.getElementById('month-label').textContent = fMonth === 'all' ? 'All months' : fMonth;
-                apply();
-            }));
-
-            const input = document.getElementById('search-input');
-            if (input) input.addEventListener('input', function () { fQuery = this.value.toLowerCase().trim(); apply(); });
-        })();
-    </script>
 
     @if(session('showAlertCreate'))
     <script>
