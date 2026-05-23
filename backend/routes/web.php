@@ -70,7 +70,6 @@ Route::namespace('App\Http\Controllers\Admin')->name('admin.')->prefix('admin')
         Route::resource('roles','RoleController');
         Route::resource('permissions','PermissionController');
         Route::resource('users','UserController');
-        Route::resource('posts','PostController');
         Route::resource('services','ServiceController');
         Route::resource('categories','CategoryController');
         Route::resource('discounts','DiscountController');

@@ -120,6 +120,11 @@
         <WebService />
       </section>
 
+      <!-- ============ FEATURED FIXERS ============ -->
+      <section id="fixers" class="qf-section">
+        <FeaturedFixers />
+      </section>
+
       <!-- ============ ABOUT ============ -->
       <section class="qf-section">
         <AboutPage />
@@ -174,6 +179,7 @@ import WebLayout from '@/Components/Layouts/WebLayout.vue'
 import AboutPage from '@/Components/AboutPage.vue'
 import FooterPage from '@/Components/FooterPage.vue'
 import WebService from '@/Components/WebServiceCustomer.vue'
+import FeaturedFixers from '@/Components/FeaturedFixers.vue'
 import axios from 'axios'
 
 interface Slide {

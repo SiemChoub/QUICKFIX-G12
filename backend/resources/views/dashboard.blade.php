@@ -1,433 +1,404 @@
-  <x-app-layout>
-  <div style="margin-top:60px">
-    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-      <div class="container mx-auto px-6 py-8">
-        <div class="product w-100 h-20 d-flex justify-content-around">
-          <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
-            <div class="content flex flex-col items-start">
-              <h6 class="text-lg font-medium text-gray-800 mb-1">Categories</h6>
-              <p class="text-gray-600 text-sm">{{count($Categories)}}</p>
-            </div>
-            <div class="icon">
-              <i class='bx bxs-category text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
-            </div>
-          </div>
-          <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md flex justify-between items-center">
-            <div class="content flex flex-col items-start">
-              <h6 class="text-lg font-medium text-gray-800 mb-1">Services</h6>
-              <p class="text-gray-600 text-sm">{{count($Service)}}</p>
-            </div>
-            <div class="icon">
-              <i class='bx bxs-briefcase-alt-2 text-yellow-500 text-3xl'></i>
-            </div>
-          </div>
-          <div class="product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-transform duration-300 flex justify-between items-center">
-          <div class="content flex flex-col items-start">
-            <h6 class="text-lg font-medium text-gray-800 mb-1">Revenues</h6>
-            @php 
-              // Retrieve the total amounts where status is 'done'
-              $totals = $payments->where('status', 'done')->pluck('total');
+<x-app-layout>
+<div class="dashboard-wrapper">
+    <main class="flex-1 overflow-x-hidden overflow-y-auto">
+        <div class="container-fluid px-3 px-md-4 py-4">
 
-              // Calculate the sum of the totals
-              $totalSum = $totals->sum();
-
-              // Format the total sum based on the value
-              if ($totalSum >= 10000) {
-                  $formattedTotal = number_format($totalSum / 1000, 0) . 'k';
-              } else {
-                  $formattedTotal = $totalSum;
-              }
-          @endphp
-
-          <strong class="text-warning text-sm">${{ $formattedTotal }}</strong>
-
-          </div>
-          <div class="icon">
-            <i class='bx bxs-archive-in text-yellow-500 text-3xl transition-transform duration-400 hover:scale-110'></i>
-          </div>
-        </div>
-          <div class=" product-card bg-white w-44 p-4 rounded-lg border-l-4 border-yellow-500 shadow-md hover:scale-110 transition-all duration-300 flex justify-between items-center">
-            <div class="content flex flex-col items-start">
-              <h6 class="text-lg font-medium text-gray-800 mb-1">Users</h6>
-              <p class="text-gray-600 text-sm">{{count($users)}}</p>
-            </div>
-            <div class="icon">
-              <i class='bx bx-user text-yellow-500 text-3xl hover:text-4xl transition-all duration-400'></i>
-            </div>
-          </div>
-        </div>
-        <div class="data p-2 pt-4 row">
-          <div class="left col-md-6">
-            <!-- ----------------top service----------------- -->
-            <section id="top-service">
-              <div class="top-services bg-white p-3 rounded-lg shadow">
-                <div class="title d-flex justify-content-between items-center mb-2">
-                  <h6 class="text-lg font-medium text-gray-800 mb-1">Top Service</h6>
+            {{-- ====================== KPI STRIP ====================== --}}
+            <div class="kpi-grid">
+                {{-- Categories --}}
+                <div class="kpi-card kpi-card--amber">
+                    <div class="kpi-card__content">
+                        <span class="kpi-card__label">Categories</span>
+                        <span class="kpi-card__value">{{ count($Categories) }}</span>
+                        <span class="kpi-card__hint">Total registered</span>
+                    </div>
+                    <div class="kpi-card__icon">
+                        <i class='bx bxs-category'></i>
+                    </div>
                 </div>
-                <div class="top-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
+
+                {{-- Services --}}
+                <div class="kpi-card kpi-card--blue">
+                    <div class="kpi-card__content">
+                        <span class="kpi-card__label">Services</span>
+                        <span class="kpi-card__value">{{ count($Service) }}</span>
+                        <span class="kpi-card__hint">Active services</span>
+                    </div>
+                    <div class="kpi-card__icon">
+                        <i class='bx bxs-briefcase-alt-2'></i>
+                    </div>
+                </div>
+
+                {{-- Revenues --}}
                 @php
-                  // Initialize the $data array
-                  $data = [];
-
-                  // Fill $data with service information
-                  foreach ($Service as $service) {
-                      $data[$service->id] = [
-                          'id' => $service->id,
-                          'name' => $service->name,
-                          'number' => 0,
-                      ];
-
-                      // Get booking IDs where status is 'done'
-                      $booking_id = $FixingProgress->where('status', 'done')->pluck('booking_id');
-
-                      // Initialize book_service variable
-                      $book_service = collect();
-
-                      foreach ($bookings as $booking) {
-                          if ($booking->type == 'immediately') {
-                              $book_service = $bookin_immediatelies->where('service_id', $service->id);
-                          } else {
-                              $book_service = $bookin_deadlines->where('service_id', $service->id);
-                          }
-                          
-                          if($book_service->isEmpty()){
-                              // Increment the number for the corresponding service ID
-                              if (isset($data[$service->id])) {
-                                  $data[$service->id]['number']++;
-                              }
-                          }
-                      }
-                  }
-                  // Convert $data array to a collection
-                    $dataCollection = collect($data);
-
-                    // Filter out items where 'number' is zero
-                    $filteredData = $dataCollection->filter(function ($item) {
-                        return $item['number'] != 0;
-                    });
-
-                    // Sort the filtered collection by 'number' field in descending order
-                    $sortedData = $filteredData->sortByDesc('number');
-
-                    // Limit the results to the top 5 items
-                    $topFiveData = $sortedData->take(5);
-
-              @endphp
-              @foreach ($topFiveData  as $item)
-                @php 
-                  $topservice = $Service->where('id', $item['id'])->first();
-                @endphp
-                  <!-- ------------------------- -->
-                  <div class="top-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                    <div class="title relative">
-                      <p class="text-gray-800 font-medium text-sm">{{$topservice->name}}</p>
-                      <div class="d-flex items-center">
-                      <i class='bx bxs-group'></i><span>+{{$item['number']}}</span>
-                      </div>
-                    </div>
-                    <div class="evaluation">
-                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                      <i class='bx bxs-star text-yellow-500 text-xl hover:text-4xl transition-all duration-400'></i>
-                    </div>
-                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#topServiceDetailModel" 
-                    data-service-image="{{ $service->image }}"
-                            data-service-title="{{ $service->name }}"
-                            data-service-description="{{ $service->description }}"
-                            data-service-category="{{ $service->category->name }}"
-                            data-service-price="{{ $service->price }}"
-                            data-service-stars="3">
-                      View more
-                    </button>
-                  </div>
-                  <!-- ---------------------------------- -->
-                @endforeach
-                @if(count($topFiveData)==0)
-                    <div class="feedback mt-12" style="text-align: center;">
-                      Nothing Top Service !!
-                  </div>
-                  @endif
-                </div>
-              </div>
-            </section>
-            <!-- ----------------top service end----------------- -->
-
-            <!-- ----------------low service----------------- -->
-            <div class="low-services bg-white p-3 rounded-lg shadow mt-4">
-              <div class="title">
-                <h6 class="text-lg font-medium text-gray-800 mb-1">Low Service</h6>
-              </div>
-              <div class="low-service-info p-3 flex flex-col space-y-2" style="height: 300px; overflow-y: scroll;">
-                @php $mama =0; @endphp
-              @foreach ($Service as $service)
-              @php
-                  $booking_id = $FixingProgress->where('status', 'done')->pluck('booking_id');
-
-                  foreach ($bookings as $booking) {
-                      if ($booking->type == 'immediately') {
-                          $book_service = $bookin_immediatelies->where('service_id', $service->id);
-                      } else {
-                          $book_service = $bookin_deadlines->where('service_id', $service->id);
-                      }
-                  }
-              @endphp
-              @if($book_service->isEmpty())
-               @php $mama++ @endphp
-              <!-- ------------------------- -->
-                  <div class="low-service-card d-flex justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-                    <div class="title relative">
-                      <p class="text-gray-800 font-medium text-sm">{{$service->name}}</p>
-                      <p class="text-red-600 text-sm">Nothing booking!</p>
-                    </div>
-                    <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#topServiceDetailModel" 
-                    data-service-image="{{ $service->image }}"
-                            data-service-title="{{ $service->name }}"
-                            data-service-description="{{ $service->description }}"
-                            data-service-category="{{ $service->category->name }}"
-                            data-service-price="{{ $service->price }}"
-                            data-service-stars="0">
-                        <i class="bx bx-info-circle"></i> view more
-                    </button>
-                    </div>
-                  </div>
-                  <!-- ---------------------------------- -->
-                  @endif
-                  @endforeach
-                  @if($mama==0)
-                    <div class="feedback mt-12" style="text-align: center;">
-                      Nothing Low Service !!
-                  </div>
-                  @endif
-              </div>
-            </div>
-            <!-- ----------------low service end----------------- -->
-          </div>
-          <div class="right col-md-6 p-3 pt-0 flex flex-col space-y-6">
-            <div class="service-performent bg-white p-3 rounded-lg shadow" style="height: 270px;">
-              <div class="title d-flex align-items-center justify-content-between">
-                <h6 class="text-lg font-medium text-gray-800 mb-0">Services performent</h6>
-                <div class="date-input">
-                  <input type="date" class="form-control" placeholder="Select a date">
-                  <i class="bi bi-calendar3"></i>
-                </div>
-              </div>
-              <canvas id="myChart"></canvas>
-            </div>
-            <div class="top-than bg-white p-3 rounded-lg shadow " style="height:250px;">
-              <div class="title">
-                <h6 class="text-lg font-medium text-gray-800">Top Fixer</h6>
-              </div>
-              <div class="topthan-info d-flex justify-content-center">
-              @php 
-                $topFixers = \App\Models\FixingProgress::selectRaw('fixer_id, count(*) as count')
-                    ->groupBy('fixer_id')
-                    ->orderBy('count', 'desc')
-                    ->limit(3)
-                    ->get();
-            @endphp
-
-            @foreach ($topFixers as $top)
-                @php 
-                    $fixer = $users->where('id', $top->fixer_id)->first();
-                @endphp
-                <!-- ...................................... -->
-                <div class="card-top p-2 shadow-sm mx-2" style="width: 8rem; height: 11rem;">
-                    <div class="d-flex justify-content-center">
-                        <img src="{{ $fixer->profile }}" class="card rounded-circle" alt="..." style="height: 4rem; width: 4rem; object-fit: cover;">
-                    </div>
-                    <div class="card-body text-center">
-                        <h5 class="card-title fw-bold mb-1" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            {{ $fixer->name }}
-                        </h5>
-                        <p class="card-text text-muted xs-font mb-2" style="font-size:12px;">99+ stars</p>
-                        <div class="evaluation d-flex justify-content-center mb-2">
-                            <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                            <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                            <i class='bx bxs-star text-warning fs-6 me-1'></i>
-                        </div>
-                        <button class="btn btn-warning btn-sm btn-sm detail-button d-none" data-bs-toggle="modal" data-bs-target="#userDetailsModal"
-                            data-user-name="{{$fixer->name}}"
-                            data-user-email="{{$fixer->email}}"
-                            data-user-phone="{{$fixer->phone}}"
-                            data-user-address="{{$fixer->address}}"
-                            data-user-profile="{{$fixer->profile}}"
-                            data-user-role="{{ $fixer->role }}">
-                            <small>View more</small></button>
-                    </div>
-                </div>
-                <!-- ...................................... -->
-            @endforeach
-            @if ( count ($topFixers) == 0)
-                <div class="feedback mt-12" style="text-align: center;">
-                  Nothing Top Fixer!!
-                </div>
-                
-                @endif
-
-
-              </div>
-
-            </div>
-            <!-- ----------------Customer feedback----------------- -->
-            <div class="customer-feedback bg-white p-3 rounded-lg shadow mt-4">
-              <div class="title">
-                <h6 class="text-lg font-medium text-gray-800 mb-1">Customer feedback</h6>
-              </div>
-              <div class="customer-feedback-info p-3 flex flex-col gap-3 space-y-2" style="height: 200px; overflow-y: scroll;">
-                <!-- ------------------------- -->
-                @if ( count ($feedbacks) == 0)
-                <div class="feedback mt-12" style="text-align: center;">
-                  Nothing Feedback from Customer
-                </div>
-                
-                @endif
-                @foreach ($feedbacks as $feedback)
-                @php
-                $user = $users->where('id',$feedback->user_id)->first()
-                @endphp
-                <div class="customer-feedback-card d-flex justify-content-between items-center p-2 rounded-lg h-12 shadow-md hover:scale-105 transition-all duration-300">
-                  <img src="{{$user->profile}}" class="card rounded-circle" alt="..." style="height: 2rem; width: 2rem;">
-                  <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                    <h5 class="card-title fw-bold mb-0" style="font-size:13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{$user->name}}</h5>
-                    <p class="text-gray-600 text-sm truncate-text" style="font-size:10px;">
-                      {{$feedback->content}}
-                    </p>
-                  </div>
-                  <div class="evaluation">
-                    <button class="btn btn-outline-warning btn-sm text-center" data-bs-toggle="modal" data-bs-target="#feedbackDetail" data-service-image="https://i.pinimg.com/564x/ed/75/7f/ed757f7b67b716facd211f1733965417.jpg" data-service-title="Premium Service" data-service-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat." data-service-stars="0" data-feedback-image="{{ $user->profile }}" data-feedback-name="{{ $user->name }}" data-feedback-content="{{ $feedback->content }}"><i class="bx bx-love"></i>view more</button>
-                    @can('Feedback delete')
-                    <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $feedback->id }})">Delete</button>
-
-                    <!-- JavaScript for confirmation dialog -->
-                    <script>
-                    function confirmDelete(id) {
-                        Swal.fire({
-                            title: 'Are you sure?',
-                            text: "You won't be able to revert this!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'Yes, delete it!'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // Perform the delete action by submitting the form
-                                document.getElementById(`delete-form-${id}`).submit();
-                            }
-                        });
+                    $totals = $payments->where('status', 'done')->pluck('total');
+                    $totalSum = $totals->sum();
+                    if ($totalSum >= 10000) {
+                        $formattedTotal = number_format($totalSum / 1000, 0) . 'k';
+                    } else {
+                        $formattedTotal = $totalSum;
                     }
-                    </script>
-
-                    <!-- Form for deletion -->
-                    <form id="delete-form-{{ $feedback->id }}" action="{{ route('admin.feedbacks.destroy', $feedback->id) }}" method="POST" class="d-none">
-                        @csrf
-                        @method('delete')
-                    </form>
-                @endcan
-
-                  </div>
+                @endphp
+                <div class="kpi-card kpi-card--green">
+                    <div class="kpi-card__content">
+                        <span class="kpi-card__label">Revenues</span>
+                        <span class="kpi-card__value">${{ $formattedTotal }}</span>
+                        <span class="kpi-card__hint">Completed payouts</span>
+                    </div>
+                    <div class="kpi-card__icon">
+                        <i class='bx bxs-archive-in'></i>
+                    </div>
                 </div>
-                <!-- ---------------------------------- -->
-                @endforeach
-              </div>
-            </div>
-            <!-- ---------------- customer feedback end----------------- -->
-          </div>
-          <div class="data -pr-3 mt-4">
-            <iframe class="map bg-white  rounded-lg shadow" style='height:250px;' src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31273.788411035468!2d104.88050064999999!3d11.5358151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2skh!4v1719023181034!5m2!1sen!2skh" width="930" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-          </div>
-        </div>
 
+                {{-- Users --}}
+                <div class="kpi-card kpi-card--purple">
+                    <div class="kpi-card__content">
+                        <span class="kpi-card__label">Users</span>
+                        <span class="kpi-card__value">{{ count($users) }}</span>
+                        <span class="kpi-card__hint">Across all roles</span>
+                    </div>
+                    <div class="kpi-card__icon">
+                        <i class='bx bx-user'></i>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ====================== MAIN GRID ====================== --}}
+            <div class="row g-3 g-md-4 mt-1">
+
+                {{-- LEFT COLUMN --}}
+                <div class="col-12 col-lg-6 d-flex flex-column gap-3 gap-md-4">
+
+                    {{-- Top Service --}}
+                    <section class="dash-card">
+                        <div class="dash-card__header">
+                            <h6 class="dash-card__title">Top Service</h6>
+                            <span class="badge bg-warning-subtle text-warning fw-semibold">Most booked</span>
+                        </div>
+                        <div class="dash-card__body dash-scroll" style="max-height: 300px;">
+                            @php
+                                $data = [];
+                                foreach ($Service as $service) {
+                                    $data[$service->id] = [
+                                        'id' => $service->id,
+                                        'name' => $service->name,
+                                        'number' => 0,
+                                    ];
+
+                                    $booking_id = $FixingProgress->where('status', 'done')->pluck('booking_id');
+                                    $book_service = collect();
+
+                                    foreach ($bookings as $booking) {
+                                        if ($booking->type == 'immediately') {
+                                            $book_service = $bookin_immediatelies->where('service_id', $service->id);
+                                        } else {
+                                            $book_service = $bookin_deadlines->where('service_id', $service->id);
+                                        }
+
+                                        if ($book_service->isEmpty()) {
+                                            if (isset($data[$service->id])) {
+                                                $data[$service->id]['number']++;
+                                            }
+                                        }
+                                    }
+                                }
+                                $dataCollection = collect($data);
+                                $filteredData = $dataCollection->filter(fn ($item) => $item['number'] != 0);
+                                $sortedData = $filteredData->sortByDesc('number');
+                                $topFiveData = $sortedData->take(5);
+                            @endphp
+
+                            @forelse ($topFiveData as $item)
+                                @php $topservice = $Service->where('id', $item['id'])->first(); @endphp
+                                <div class="list-row">
+                                    <div class="list-row__main">
+                                        <p class="list-row__title">{{ $topservice->name }}</p>
+                                        <div class="list-row__meta">
+                                            <i class='bx bxs-group'></i><span>+{{ $item['number'] }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="list-row__rating">
+                                        <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-warning"
+                                        data-bs-toggle="modal" data-bs-target="#topServiceDetailModel"
+                                        data-service-image="{{ $topservice->image }}"
+                                        data-service-title="{{ $topservice->name }}"
+                                        data-service-description="{{ $topservice->description }}"
+                                        data-service-category="{{ $topservice->category->name ?? '' }}"
+                                        data-service-price="{{ $topservice->price }}"
+                                        data-service-stars="3">
+                                        View more
+                                    </button>
+                                </div>
+                            @empty
+                                <div class="empty-state">
+                                    <i class='bx bx-trophy'></i>
+                                    <p>No top service yet</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </section>
+
+                    {{-- Low Service --}}
+                    <section class="dash-card">
+                        <div class="dash-card__header">
+                            <h6 class="dash-card__title">Low Service</h6>
+                            <span class="badge bg-danger-subtle text-danger fw-semibold">No bookings</span>
+                        </div>
+                        <div class="dash-card__body dash-scroll" style="max-height: 300px;">
+                            @php $mama = 0; @endphp
+                            @foreach ($Service as $service)
+                                @php
+                                    $booking_id = $FixingProgress->where('status', 'done')->pluck('booking_id');
+                                    foreach ($bookings as $booking) {
+                                        if ($booking->type == 'immediately') {
+                                            $book_service = $bookin_immediatelies->where('service_id', $service->id);
+                                        } else {
+                                            $book_service = $bookin_deadlines->where('service_id', $service->id);
+                                        }
+                                    }
+                                @endphp
+                                @if ($book_service->isEmpty())
+                                    @php $mama++ @endphp
+                                    <div class="list-row">
+                                        <div class="list-row__main">
+                                            <p class="list-row__title">{{ $service->name }}</p>
+                                            <p class="list-row__warn">Nothing booking!</p>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-warning"
+                                            data-bs-toggle="modal" data-bs-target="#topServiceDetailModel"
+                                            data-service-image="{{ $service->image }}"
+                                            data-service-title="{{ $service->name }}"
+                                            data-service-description="{{ $service->description }}"
+                                            data-service-category="{{ $service->category->name ?? '' }}"
+                                            data-service-price="{{ $service->price }}"
+                                            data-service-stars="0">
+                                            <i class="bx bx-info-circle"></i> view more
+                                        </button>
+                                    </div>
+                                @endif
+                            @endforeach
+                            @if ($mama == 0)
+                                <div class="empty-state">
+                                    <i class='bx bx-check-circle'></i>
+                                    <p>All services have bookings</p>
+                                </div>
+                            @endif
+                        </div>
+                    </section>
+                </div>
+
+                {{-- RIGHT COLUMN --}}
+                <div class="col-12 col-lg-6 d-flex flex-column gap-3 gap-md-4">
+
+                    {{-- Chart --}}
+                    <section class="dash-card">
+                        <div class="dash-card__header">
+                            <h6 class="dash-card__title">Services performance</h6>
+                            <input type="date" class="form-control form-control-sm date-input" placeholder="Select a date">
+                        </div>
+                        <div class="dash-card__body">
+                            <div class="chart-wrap">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- Top Fixer --}}
+                    <section class="dash-card">
+                        <div class="dash-card__header">
+                            <h6 class="dash-card__title">Top Fixer</h6>
+                            <span class="badge bg-info-subtle text-info fw-semibold">Top 3</span>
+                        </div>
+                        <div class="dash-card__body">
+                            @php
+                                $topFixers = \App\Models\FixingProgress::selectRaw('fixer_id, count(*) as count')
+                                    ->groupBy('fixer_id')
+                                    ->orderBy('count', 'desc')
+                                    ->limit(3)
+                                    ->get();
+                            @endphp
+
+                            @if (count($topFixers) == 0)
+                                <div class="empty-state">
+                                    <i class='bx bx-medal'></i>
+                                    <p>No top fixer yet</p>
+                                </div>
+                            @else
+                                <div class="fixer-grid">
+                                    @foreach ($topFixers as $top)
+                                        @php $fixer = $users->where('id', $top->fixer_id)->first(); @endphp
+                                        @if ($fixer)
+                                            <div class="fixer-card">
+                                                <div class="fixer-card__avatar">
+                                                    <img src="{{ $fixer->profile }}" alt="{{ $fixer->name }}">
+                                                </div>
+                                                <h6 class="fixer-card__name">{{ $fixer->name }}</h6>
+                                                <p class="fixer-card__meta">99+ jobs</p>
+                                                <div class="fixer-card__stars">
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                    <i class='bx bxs-star'></i>
+                                                </div>
+                                                <button class="btn btn-sm btn-warning fixer-card__btn detail-button"
+                                                    data-bs-toggle="modal" data-bs-target="#userDetailsModal"
+                                                    data-user-name="{{ $fixer->name }}"
+                                                    data-user-email="{{ $fixer->email }}"
+                                                    data-user-phone="{{ $fixer->phone }}"
+                                                    data-user-address="{{ $fixer->address }}"
+                                                    data-user-profile="{{ $fixer->profile }}"
+                                                    data-user-role="{{ $fixer->role }}">
+                                                    View more
+                                                </button>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </section>
+
+                    {{-- Customer feedback --}}
+                    <section class="dash-card">
+                        <div class="dash-card__header">
+                            <h6 class="dash-card__title">Customer feedback</h6>
+                            <span class="badge bg-secondary-subtle text-secondary fw-semibold">{{ count($feedbacks) }}</span>
+                        </div>
+                        <div class="dash-card__body dash-scroll" style="max-height: 240px;">
+                            @if (count($feedbacks) == 0)
+                                <div class="empty-state">
+                                    <i class='bx bx-message-square-detail'></i>
+                                    <p>No customer feedback yet</p>
+                                </div>
+                            @endif
+
+                            @foreach ($feedbacks as $feedback)
+                                @php $user = $users->where('id', $feedback->user_id)->first(); @endphp
+                                @if ($user)
+                                <div class="feedback-row">
+                                    <img src="{{ $user->profile }}" class="feedback-row__avatar" alt="{{ $user->name }}">
+                                    <div class="feedback-row__body">
+                                        <h6 class="feedback-row__name">{{ $user->name }}</h6>
+                                        <p class="feedback-row__text">{{ $feedback->content }}</p>
+                                    </div>
+                                    <div class="feedback-row__actions">
+                                        <button class="btn btn-sm btn-outline-warning"
+                                            data-bs-toggle="modal" data-bs-target="#feedbackDetail"
+                                            data-feedback-image="{{ $user->profile }}"
+                                            data-feedback-name="{{ $user->name }}"
+                                            data-feedback-content="{{ $feedback->content }}">
+                                            <i class="bx bx-show"></i>
+                                        </button>
+                                        @can('Feedback delete')
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $feedback->id }})">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                            <form id="delete-form-{{ $feedback->id }}" action="{{ route('admin.feedbacks.destroy', $feedback->id) }}" method="POST" class="d-none">
+                                                @csrf
+                                                @method('delete')
+                                            </form>
+                                        @endcan
+                                    </div>
+                                </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    </section>
+                </div>
+
+                {{-- MAP --}}
+                <div class="col-12">
+                    <div class="dash-card map-card">
+                        <div class="dash-card__header">
+                            <h6 class="dash-card__title">Service Location</h6>
+                        </div>
+                        <div class="map-wrap">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31273.788411035468!2d104.88050064999999!3d11.5358151!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2skh!4v1719023181034!5m2!1sen!2skh"
+                                allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
-  </div>
-  </div>
-<!-- Example CDN includes for SweetAlert -->
+</div>
+
+{{-- ===================================================== --}}
+{{-- MODALS                                                --}}
+{{-- ===================================================== --}}
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-  <!-- ---------------------top service detail------------------ -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- -----------user detail------ -->
+{{-- User detail --}}
 <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-labelledby="userDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
                 <h5 class="modal-title" id="userDetailsModalLabel"><i class='bx bxs-user'></i> Top fixer Profile</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-md-7">
                         <div class="user-details-card">
-                            <div class="user-details-header d-flex align-items-center">
+                            <div class="user-details-header d-flex align-items-center gap-2">
                                 <i class='bx bxs-user'></i>
-                                <h4 class="text-warning" id="user-name"></h4>
+                                <h4 class="text-warning mb-0" id="user-name"></h4>
                             </div>
-                            <div class="user-details-body">
-                                <p class="d-flex align-items-center">
-                                    <i class='bx bxs-envelope'></i>
-                                    <span class="ms-2">Email: <span id="user-email"></span></span>
-                                </p>
-                                <div class="user-details d-flex align-items-center">
-                                    <i class='bx bxs-user-detail'></i>
-                                    <span class="ms-2"><strong>Role:</strong> <span id="user-role"></span></span>
-                                </div>
-                                <div class="user-details d-flex align-items-center">
-                                    <i class='bx bxs-map'></i>
-                                    <span class="ms-2"><strong>Address:</strong> <span id="user-address"></span></span>
-                                </div>
-                                <div class="user-details d-flex align-i4tems-center">
-                                    <i class='bx bxs-phone'></i>
-                                    <span class="ms-2"><strong>Phone:</strong> <span id="user-phone"></span></span>
-                                </div>
+                            <div class="user-details-body mt-3">
+                                <p class="d-flex align-items-center gap-2"><i class='bx bxs-envelope'></i> <span>Email: <span id="user-email"></span></span></p>
+                                <p class="d-flex align-items-center gap-2"><i class='bx bxs-user-detail'></i> <span><strong>Role:</strong> <span id="user-role"></span></span></p>
+                                <p class="d-flex align-items-center gap-2"><i class='bx bxs-map'></i> <span><strong>Address:</strong> <span id="user-address"></span></span></p>
+                                <p class="d-flex align-items-center gap-2"><i class='bx bxs-phone'></i> <span><strong>Phone:</strong> <span id="user-phone"></span></span></p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5 d-flex justify-content-center align-items-center">
-                        <div class="user-profile-container" style="height: 230px;width:400px">
-                            <img src="" class="img-fluid rounded" style="object-fit: cover;width:100%;height:100%"  alt="Base64 profile" id="user-profile">
+                    <div class="col-md-5">
+                        <div class="user-profile-container">
+                            <img src="" class="img-fluid rounded" alt="profile" id="user-profile">
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="additional-info mt-3">
-                    <h5 class="d-flex align-items-center">
-                        <i class='bx bx-info-circle'></i>
-                        <span class="ms-2">Additional Information</span>
-                    </h5>
-                    <p id="user-additional-info">This is where additional information about the user can be displayed.</p>
+                    <h5 class="d-flex align-items-center gap-2"><i class='bx bx-info-circle'></i> Additional Information</h5>
+                    <p id="user-additional-info">Additional fixer details will appear here.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ----------- Top service detail------ -->
+{{-- Top service detail --}}
 <div class="modal fade" id="topServiceDetailModel" tabindex="-1" aria-labelledby="topServiceDetailModelLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="topServiceDetailModelLabel"> Service Detail</h5>
+                <h5 class="modal-title" id="topServiceDetailModelLabel">Service Detail</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-md-5">
-                        <div class="service-image-container" style="height: 230px;">
-                            <img src="" class="img-fluid rounded" style="object-fit: cover; width:100%; height:100%" alt="Service Image" id="service-image">
+                        <div class="service-image-container">
+                            <img src="" class="img-fluid rounded" alt="Service Image" id="service-image">
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <div class="shadow p-2 text-center" style="background-color: #f8f9fa;">
+                        <div class="shadow-sm p-3 rounded text-center bg-light">
                             <h4 class="text-warning" id="service-title"><i class="bx bxs-star"></i> Premium Service</h4>
-                            <p id="service-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac diam at magna tempus volutpat.</p>
-                            <div class="rating mb-3">
-                                <p><i class="bx bxs-star"></i> Stars: <span id="service-stars"></span></p>
+                            <p id="service-description"></p>
+                            <div class="rating mb-2">
+                                <p class="mb-1"><i class="bx bxs-star"></i> Stars: <span id="service-stars"></span></p>
                             </div>
                             <div class="service-details">
-                                <p><i class="bx bxs-category"></i> <strong>Category:</strong> <span id="service-category"></span></p>
-                                <p><i class="bx bxs-dollar-circle"></i> <strong>Price:</strong> <span id="service-price"></span>$</p>
+                                <p class="mb-1"><i class="bx bxs-category"></i> <strong>Category:</strong> <span id="service-category"></span></p>
+                                <p class="mb-0"><i class="bx bxs-dollar-circle"></i> <strong>Price:</strong> <span id="service-price"></span>$</p>
                             </div>
                         </div>
                     </div>
@@ -435,173 +406,133 @@
                 <hr>
                 <div class="additional-info mt-3">
                     <h5><i class="bx bx-info-circle"></i> Additional Information</h5>
-                    <p id="service-additional-info">This is where additional information about the service can be displayed.</p>
+                    <p id="service-additional-info">Additional service details will appear here.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-  <!-- ------------end Top service detail ------------------------ -->
-<!-- ----------- low service detail------ -->
-<div class="modal fade" id="lowServiceDetailModel" tabindex="-1" aria-labelledby="lowServiceDetailModelLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
+
+{{-- Feedback detail --}}
+<div class="modal fade" id="feedbackDetail" tabindex="-1" aria-labelledby="feedbackDetailLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-warning text-white">
-                <h5 class="modal-title" id="lowServiceDetailModelLabel">Low Service Detail</h5>
+                <h5 class="modal-title" id="topfeedbackDetailLabel">Feedback detail</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="service-image-container" style="height: 230px;">
-                            <img src="" class="img-fluid rounded" style="object-fit: cover; width:100%; height:100%" alt="Service Image" id="service-image">
-                        </div>
+                <div class="row g-3">
+                    <div class="col-md-5 text-center">
+                        <img src="" class="img-fluid rounded-circle feedback-modal-img" alt="feedback Image" id="feedback-image">
                     </div>
                     <div class="col-md-7">
-                        <div class="shadow p-2 text-center" style="background-color: #f8f9fa;">
-                            <h4 class="text-warning" id="service-title"></h4>
-                            <p id="service-description"></p>
-                            <div class="rating mb-3">
-                                <p><i class="bx bxs-star"></i> Stars: <span id="service-stars"></span></p>
-                            </div>
-                            <div class="service-details">
-                                <p><i class="bx bxs-category"></i> <strong>Category:</strong> <span id="service-category"></span></p>
-                                <p><i class="bx bxs-dollar-circle"></i> <strong>Price:</strong> <span id="service-price"></span>$</p>
-                            </div>
-                        </div>
+                        <h4 class="text-warning" id="feedback-name"></h4>
+                        <p id="feedback-content"></p>
                     </div>
-                </div>
-                <hr>
-                <div class="additional-info mt-3">
-                    <h5><i class="bx bx-info-circle"></i> Additional Information</h5>
-                    <p id="service-additional-info">This is where additional information about the service can be displayed.</p>
                 </div>
             </div>
         </div>
     </div>
 </div>
-  <!-- ------------end low service detail ------------------------ -->
 
-  <!-- ---------------- feedback-------------------------------- -->
-  <div class="modal fade" id="feedbackDetail" tabindex="-1" aria-labelledby="feedbackDetailLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-custom-width">
-      <div class="modal-content">
-        <div class="modal-header bg-warning text-white">
-          <h5 class="modal-title" id="topfeedbackDetailLabel">Feedback detail</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <img src="" class="img-fluid rounded" alt="feedback Image" id="feedback-image">
-            </div>
-            <div class="col-md-6">
-              <h4 class="text-warning" id="feedback-name"></h4>
-              <p id="feedback-content"></p>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-warning btn-sm" style="background-color: red;">Delete</button>
-        </div> -->
-      </div>
-    </div>
-  </div>
+{{-- ===================================================== --}}
+{{-- SCRIPTS                                               --}}
+{{-- ===================================================== --}}
 
-  <!-- ------------ low feedback detail ------------------------ -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.8.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  <script>
-    // ......................graph building....................
+<script>
     var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Users', 'Services', 'Fixers', 'Customers', 'Categories'],
-        datasets: [{
-          label: '# of perform',
-          data: [ @php echo count($users) @endphp,@php echo count($Service) @endphp, @php echo count($users->where('role','fixer')) @endphp, @php echo count($users->where('role','customer')) @endphp, @php echo count($Categories) @endphp, 3],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Users', 'Services', 'Fixers', 'Customers', 'Categories'],
+            datasets: [{
+                label: '# of perform',
+                data: [
+                    @php echo count($users) @endphp,
+                    @php echo count($Service) @endphp,
+                    @php echo count($users->where('role', 'fixer')) @endphp,
+                    @php echo count($users->where('role', 'customer')) @endphp,
+                    @php echo count($Categories) @endphp
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.35)',
+                    'rgba(54, 162, 235, 0.35)',
+                    'rgba(255, 206, 86, 0.35)',
+                    'rgba(75, 192, 192, 0.35)',
+                    'rgba(153, 102, 255, 0.35)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
         }
-      }
     });
 
-    // -------------detail data--------------------------
-    function updateModalContent(event) {
-    // Get the button that triggered the modal
-    var button = event.relatedTarget;
+    function updateServiceModal(event) {
+        var button = event.relatedTarget;
+        document.getElementById('service-image').src = button.dataset.serviceImage;
+        document.getElementById('service-title').textContent = button.dataset.serviceTitle;
+        document.getElementById('service-description').textContent = button.dataset.serviceDescription;
+        document.getElementById('service-stars').textContent = button.dataset.serviceStars;
+        document.getElementById('service-category').textContent = button.dataset.serviceCategory;
+        document.getElementById('service-price').textContent = button.dataset.servicePrice;
+    }
+    document.getElementById('topServiceDetailModel').addEventListener('show.bs.modal', updateServiceModal);
 
-    // Update the modal content with the data attributes
-    document.getElementById('service-image').src = button.dataset.serviceImage;
-    document.getElementById('service-title').textContent = button.dataset.serviceTitle;
-    document.getElementById('service-description').textContent = button.dataset.serviceDescription;
-    document.getElementById('service-stars').textContent = button.dataset.serviceStars;
-    document.getElementById('service-category').textContent = button.dataset.serviceCategory;
-    document.getElementById('service-price').textContent = button.dataset.servicePrice;
-    document.getElementById('service-additional-info').textContent = button.dataset.serviceAdditionalInfo;
-}
-
-// Attach the update function to both modals
-document.getElementById('lowServiceDetailModel').addEventListener('show.bs.modal', updateModalContent);
-document.getElementById('topServiceDetailModel').addEventListener('show.bs.modal', updateModalContent);
-
-
-    /// feedback////
-
-    document.getElementById('feedbackDetail').addEventListener('show.bs.modal', function(event) {
-
-      var button = event.relatedTarget;
-
-      document.getElementById('feedback-image').src = button.dataset.feedbackImage;
-      document.getElementById('feedback-name').textContent = button.dataset.feedbackName;
-      document.getElementById('feedback-content').textContent = button.dataset.feedbackContent;
-
-
+    document.getElementById('feedbackDetail').addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        document.getElementById('feedback-image').src = button.dataset.feedbackImage;
+        document.getElementById('feedback-name').textContent = button.dataset.feedbackName;
+        document.getElementById('feedback-content').textContent = button.dataset.feedbackContent;
     });
-
 
     document.getElementById('userDetailsModal').addEventListener('show.bs.modal', function (event) {
-        // Get the button that triggered the modal
         var button = event.relatedTarget;
-
-        // Update the modal content with the data attributes
         document.getElementById('user-name').textContent = button.dataset.userName;
         document.getElementById('user-email').textContent = button.dataset.userEmail;
         document.getElementById('user-role').textContent = button.dataset.userRole;
         document.getElementById('user-address').textContent = button.dataset.userAddress;
         document.getElementById('user-phone').textContent = button.dataset.userPhone;
         document.getElementById('user-profile').src = button.dataset.userProfile;
-        document.getElementById('user-additional-info').textContent = button.dataset.userAdditionalInfo;
     });
-  </script>
-  @if(session('showAlertDelete'))
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`delete-form-${id}`).submit();
+            }
+        });
+    }
+</script>
+
+@if (session('showAlertDelete'))
 <script>
     Swal.fire({
-        title: "User's eedback deleted Success!",
+        title: "User's feedback deleted successfully!",
         text: '{{ session("success") }}',
         icon: 'success',
         confirmButtonText: 'OK',
@@ -610,485 +541,275 @@ document.getElementById('topServiceDetailModel').addEventListener('show.bs.modal
     });
 </script>
 @endif
-  <style>
-    .card-top:hover .detail-button {
-      display: inline-block !important;
+
+{{-- ===================================================== --}}
+{{-- STYLES                                                --}}
+{{-- ===================================================== --}}
+<style>
+    .dashboard-wrapper {
+        margin-top: 60px;
+        background: #f1f3f9;
+        min-height: calc(100vh - 60px);
     }
 
-    .card-top {
-      width: 8rem;
-      height: 11rem;
-      transition: all 0.3s ease-in-out;
+    /* ============ KPI STRIP ============ */
+    .kpi-grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    @media (max-width: 991px) {
+        .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 420px) {
+        .kpi-grid { grid-template-columns: 1fr; }
     }
 
-    .card-top:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .product-card {
-      transition: all 0.3s ease-in-out;
-    }
-
-    .product-card:hover {
-      transform: scale(1.1);
-      background-color: #f5f5f5;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-
-    .product-card .icon i {
-      transition: all 0.1s ease-in-out;
-    }
-
-    .product-card:hover .icon i {
-      font-size: 2rem;
-    }
-
-    /* Custom CSS for modal dialog width */
-    .modal-custom-width {
-      max-width: 600px;
-    }
-
-    .truncate-text {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Tablet styles */
-    @media (max-width: 991px) and (min-width: 768px) {
-      .product-card {
-        width: 9rem;
-        transition: all 0.3s ease-in-out;
-      }
-
-      .top-service-card {
-        transition: all 0.3s ease-in-out;
-      }
-
-      .top-service-card .evaluation i {
-        font-size: 0.6rem;
-      }
-
-      .top-service-card button {
-        font: 0.5em sans-serif;
-        margin-top: 4rem;
-      }
-
-
-      .low-service-card button {
-        font: 0.5em sans-serif;
-      }
-
-      .low-service-card {
-        transition: all 0.3s ease-in-out;
-      }
-
-      .card-top {
-        width: 8rem;
-        height: 11rem;
-        transition: all 0.3s ease-in-out;
-      }
-
-      .topthan-info {
-        overflow-y: auto;
-        height: 300px !important;
-        padding-left: 140px;
-      }
-
-      .top-than {
-        height: 270px !important;
-      }
-
-      .customer-feedback-card button {
-        font: 0.5em sans-serif;
-      }
-
-      .map {
-        width: 650px;
-      }
-
-      .bx-menu {
-        display: block;
-      }
-
-    }
-
-    /* Mobile styles */
-    @media (max-width: 320px) and (min-width:568px) {
-
-      .product-card {
-        justify-Content: space-around;
-        gap: 2rem;
-        width: 5rem;
-        height: 2rem;
-        transition: all 0.1s ease-in-out;
-        font-size: 5px;
-      }
-
-      .product-card .content h6 {
-        font-size: 0.5rem;
-        margin: 0;
-      }
-
-      .product-card .content p {
-        justify-Content: space-between;
-        font-size: 0.5rem;
-        margin: 0;
-        margin-top: -10px;
-      }
-
-      .product-card .icon i {
-        font-size: 2rem;
-        margin-left: -20px;
-        font-size: 1.5rem;
-      }
-
-      .product-card .icon .bxs-briefcase-alt-2 {
-        font-size: 1.5rem;
-        margin-left: -20px;
-      }
-
-      .product-card .icon .bxs-star {
-        font-size: 1.5rem;
-        margin-left: -30px;
-      }
-
-      .product-card .content {
-        margin-left: -15px;
-      }
-
-      .product {
-        overflow-x: auto;
-      }
-
-      .product {
-        margin-top: -20px;
-      }
-
-      .data {
-        margin-top: -40px;
-      }
-
-      .top-services {
-        width: 290px;
-        margin-left: -20px;
-      }
-
-      .top-service-card {
-        width: 270px;
-        transition: all 0.3s ease-in-out;
-        margin: 0px;
-        margin-left: -20px;
-      }
-
-      .top-service-card .evaluation i {
-        font-size: 0.9rem;
-      }
-
-      .top-service-card button {
-        font: 0.5em sans-serif;
-        margin-top: 2rem;
-      }
-
-      .top-service-card .title .d-flex img {
-        width: 1.5rem !important;
-        height: 1.5rem !important;
-      }
-
-      .top-service-card .title .d-flex {
-        font-size: 1rem !important;
-      }
-
-      .top-service-info {
-        width: 300px;
-      }
-
-
-      .low-services {
-        width: 290px;
-        margin-left: -20px;
-      }
-
-      .low-service-card {
-        width: 270px;
-        transition: all 0.3s ease-in-out;
-        margin: 0px;
-        margin-left: -20px;
-      }
-
-      .low-service-card button {
-        font: 0.5em sans-serif;
-        margin-top: 2rem;
-      }
-
-      .service-performent {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-        height: 200px;
-      }
-
-      .service-performent .title h6 {
-        font-size: 15px;
-      }
-
-      .top-than {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-      }
-
-      .card-top {
-        width: 8rem;
-        height: 11rem;
-        transition: all 0.3s ease-in-out;
-      }
-
-      .topthan-info {
-        overflow-y: auto;
-        height: 300px !important;
-        padding-left: 140px;
-      }
-
-      .top-than {
-        height: 270px !important;
-      }
-
-      .customer-feedback {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-      }
-
-      .customer-feedback-card button {
-        font: 0.5em sans-serif;
-      }
-
-      .map {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-        height: 10rem !important;
-        margin-top: -20px;
-      }
-
-    }
-
-    /* Mobile styles */
-    @media (max-width: 600px) {
-
-
-      .product-card {
-        justify-Content: space-around;
-        gap: 2rem;
-        width: 5rem;
-        height: 2rem;
-        transition: all 0.1s ease-in-out;
-        font-size: 5px;
-      }
-
-      .product-card .content h6 {
-        font-size: 0.5rem;
-        margin: 0;
-      }
-
-      .product-card .content p {
-        justify-Content: space-between;
-        font-size: 0.5rem;
-        margin: 0;
-        margin-top: -10px;
-      }
-
-      .product-card .icon i {
-        font-size: 2rem;
-        margin-left: -20px;
-        font-size: 1.5rem;
-      }
-
-      .product-card .icon .bxs-briefcase-alt-2 {
-        font-size: 1.5rem;
-        margin-left: -20px;
-      }
-
-      .product-card .icon .bxs-star {
-        font-size: 1.5rem;
-        margin-left: -30px;
-      }
-
-      .product-card .content {
-        margin-left: -15px;
-      }
-
-      .product {
-        overflow-x: auto;
-      }
-
-      .product {
-        margin-top: -20px;
-      }
-
-      .data {
-        margin-top: -40px;
-      }
-
-      .top-services {
-        width: 340px;
-        margin-left: -20px;
-      }
-
-      .top-service-card {
-        width: 310px;
-        transition: all 0.3s ease-in-out;
-        margin: 0px;
-        margin-left: -20px;
-      }
-
-      .top-service-card .evaluation i {
-        font-size: 0.9rem;
-      }
-
-      .top-service-card button {
-        font: 0.5em sans-serif;
-      }
-
-      .top-service-card .title .d-flex img {
-        width: 1.5rem !important;
-        height: 1.5rem !important;
-      }
-
-      .top-service-card .title .d-flex {
-        font-size: 1rem !important;
-      }
-
-      .top-service-info {
-        width: 300px;
-      }
-
-
-      .low-services {
-        width: 340px;
-        margin-left: -20px;
-      }
-
-      .low-service-card {
-        width: 310px;
-        transition: all 0.3s ease-in-out;
-        margin: 0px;
-        margin-left: -20px;
-      }
-
-      .low-service-card button {
-        font: 0.5em sans-serif;
-        margin-top: 2rem;
-      }
-
-      .service-performent {
-        margin-top: 20px;
-        width: 310px;
-        margin-left: -20px;
-        height: 200px;
-      }
-
-      .service-performent .title h6 {
-        font-size: 15px;
-      }
-
-      .top-than {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-      }
-
-      .card-top {
-        width: 8rem;
-        height: 11rem;
-        transition: all 0.3s ease-in-out;
-      }
-
-      .topthan-info {
-        overflow-y: auto;
-        height: 300px !important;
-        padding-left: 140px;
-      }
-
-      .top-than {
-        height: 270px !important;
-      }
-
-      .customer-feedback {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-      }
-
-      .customer-feedback-card button {
-        font: 0.5em sans-serif;
-      }
-
-      .map {
-        margin-top: 20px;
-        width: 290px;
-        margin-left: -20px;
-        height: 10rem !important;
-        margin-top: -20px;
-      }
-
-    }
-
-
-    .modal-content {
-        animation: fadeIn 0.5s;
-    }
-
-    .modal-header {
-        position: relative;
-    }
-
-    .modal-header .btn-close {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-    }
-
-    .modal-header .modal-title {
-        font-weight: bold;
-    }
-
-    .modal-body {
-        padding: 20px;
-    }
-
-    .service-image-container {
-        overflow: hidden;
-        border-radius: 10px;
-    }
-
-    .service-image-container img {
-        transition: transform 0.3s ease;
-    }
-
-    .service-image-container img:hover {
-        transform: scale(1.1);
-    }
-
-    .service-details p,
-    .rating p,
-    .additional-info h5 {
+    .kpi-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 1.1rem 1.2rem;
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+        border: 1px solid #eef0f5;
+        position: relative;
+        overflow: hidden;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1);
+    }
+    .kpi-card::before {
+        content: '';
+        position: absolute;
+        left: 0; top: 0; bottom: 0;
+        width: 5px;
+    }
+    .kpi-card--amber::before  { background: #f59e0b; }
+    .kpi-card--blue::before   { background: #3b82f6; }
+    .kpi-card--green::before  { background: #10b981; }
+    .kpi-card--purple::before { background: #8b5cf6; }
+
+    .kpi-card__content { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .kpi-card__label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7280;
+    }
+    .kpi-card__value {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: #111827;
+        line-height: 1.1;
+    }
+    .kpi-card__hint { font-size: 0.72rem; color: #9ca3af; }
+
+    .kpi-card__icon {
+        width: 46px; height: 46px;
+        border-radius: 12px;
+        display: grid; place-items: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    .kpi-card--amber  .kpi-card__icon { background: #fef3c7; color: #f59e0b; }
+    .kpi-card--blue   .kpi-card__icon { background: #dbeafe; color: #3b82f6; }
+    .kpi-card--green  .kpi-card__icon { background: #d1fae5; color: #10b981; }
+    .kpi-card--purple .kpi-card__icon { background: #ede9fe; color: #8b5cf6; }
+
+    /* ============ DASH CARDS ============ */
+    .dash-card {
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #eef0f5;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        overflow: hidden;
+    }
+    .dash-card__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.9rem 1.1rem;
+        border-bottom: 1px solid #f1f3f9;
+    }
+    .dash-card__title {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #111827;
+    }
+    .dash-card__body { padding: 0.9rem 1.1rem; }
+    .dash-scroll { overflow-y: auto; }
+    .dash-scroll::-webkit-scrollbar { width: 6px; }
+    .dash-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+    .date-input { max-width: 170px; }
+
+    /* ============ LIST ROW ============ */
+    .list-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 0.85rem;
+        border-radius: 10px;
+        background: #f9fafb;
+        margin-bottom: 0.5rem;
+        transition: background .15s ease, transform .15s ease;
+    }
+    .list-row:last-child { margin-bottom: 0; }
+    .list-row:hover { background: #f3f4f6; transform: translateX(2px); }
+    .list-row__main { flex: 1 1 auto; min-width: 0; }
+    .list-row__title {
+        margin: 0;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #1f2937;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .list-row__meta {
+        font-size: 0.75rem;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .list-row__warn { font-size: 0.75rem; color: #ef4444; margin: 0; }
+    .list-row__rating { color: #f59e0b; font-size: 0.9rem; white-space: nowrap; }
+
+    @media (max-width: 480px) {
+        .list-row { flex-wrap: wrap; }
+        .list-row__rating { order: 3; }
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ============ CHART ============ */
+    .chart-wrap { position: relative; height: 260px; width: 100%; }
+
+    /* ============ TOP FIXER ============ */
+    .fixer-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
     }
-  </style>
+    @media (max-width: 480px) {
+        .fixer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .fixer-card {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 0.85rem 0.5rem;
+        text-align: center;
+        transition: transform .2s ease, box-shadow .2s ease;
+        border: 1px solid #f1f3f9;
+    }
+    .fixer-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+    }
+    .fixer-card__avatar {
+        width: 56px; height: 56px;
+        margin: 0 auto 8px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 6px rgba(0,0,0,.1);
+    }
+    .fixer-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .fixer-card__name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        margin: 0;
+        color: #1f2937;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .fixer-card__meta { font-size: 0.7rem; color: #6b7280; margin: 2px 0 4px; }
+    .fixer-card__stars { color: #f59e0b; font-size: 0.85rem; margin-bottom: 6px; }
+    .fixer-card__btn { font-size: 0.7rem; padding: 0.2rem 0.55rem; }
+
+    /* ============ FEEDBACK ============ */
+    .feedback-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.65rem;
+        background: #f9fafb;
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+        transition: background .15s ease;
+    }
+    .feedback-row:hover { background: #f3f4f6; }
+    .feedback-row__avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+    .feedback-row__body { flex: 1 1 auto; min-width: 0; }
+    .feedback-row__name {
+        font-size: 0.82rem;
+        font-weight: 600;
+        margin: 0;
+        color: #1f2937;
+    }
+    .feedback-row__text {
+        font-size: 0.72rem;
+        color: #6b7280;
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .feedback-row__actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+    /* ============ MAP ============ */
+    .map-wrap {
+        position: relative;
+        width: 100%;
+        height: 320px;
+    }
+    .map-wrap iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+    }
+    @media (max-width: 600px) {
+        .map-wrap { height: 240px; }
+    }
+
+    /* ============ EMPTY STATE ============ */
+    .empty-state {
+        text-align: center;
+        padding: 1.5rem 1rem;
+        color: #9ca3af;
+    }
+    .empty-state i { font-size: 2.2rem; display: block; margin-bottom: 6px; opacity: .7; }
+    .empty-state p { margin: 0; font-size: 0.85rem; }
+
+    /* ============ MODAL TWEAKS ============ */
+    .feedback-modal-img { max-height: 180px; object-fit: cover; }
+    .user-profile-container img {
+        width: 100%;
+        max-height: 230px;
+        object-fit: cover;
+    }
+    .service-image-container { overflow: hidden; border-radius: 10px; }
+    .service-image-container img {
+        width: 100%; max-height: 230px; object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    .service-image-container img:hover { transform: scale(1.05); }
+    .modal-content { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
 </x-app-layout>

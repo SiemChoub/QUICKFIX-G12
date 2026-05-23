@@ -1,239 +1,383 @@
-<div :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'" class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-gray-900 overflow-hidden lg:translate-x-0 lg:static lg:inset-0">
-    <div class="d-flex align-items-center justify-content-center bg-gray-900 mt-4" style="position: fixed; top: 0; width: 93%; z-index: 1000;">
-        <div class="d-flex align-items-center bg-white p-1 rounded">
-            <i class='bx bxs-circle' style='color:#f59300;font-size:70px'></i>
-            <strong class='-ml-10' style='font-size:30px'>QUICKFIX</strong>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+@php
+    $pendingBookings = 0;
+    foreach ($bookings as $booking) {
+        if ($booking['action'] == 'progress' || $booking['action'] == 'request') {
+            $pendingBookings++;
+        }
+    }
+    $requestCount  = $bookings->filter(fn ($b) => $b->action === 'request')->count();
+    $progressCount = $FixingProgress->filter(fn ($p) => $p->action === 'progress')->count();
+    $payedCount    = $payments->where('status', 'done')->count();
+
+    $isBookingActive = request()->routeIs('admin.requests.*')
+        || request()->routeIs('admin.progresss.*')
+        || request()->routeIs('admin.dones.*');
+@endphp
+
+<aside
+    :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
+    class="qf-sidebar fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform lg:translate-x-0 lg:static lg:inset-0">
+
+    {{-- Brand --}}
+    <div class="qf-sidebar__brand">
+        <a href="{{ route('admin.dashboard') }}" class="qf-brand">
+            <span class="qf-brand__mark">
+                <i class='bx bxs-wrench'></i>
+            </span>
+            <span class="qf-brand__text">
+                <strong>QUICK</strong><span>FIX</span>
+            </span>
+        </a>
+    </div>
+
+    {{-- Nav --}}
+    <nav class="qf-nav" x-data="{ bookingsOpen: {{ $isBookingActive ? 'true' : 'false' }} }">
+
+        <p class="qf-nav__section">Main</p>
+
+        <a href="{{ route('admin.dashboard') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.dashboard') ? 'is-active' : '' }}">
+            <i class='bx bx-grid-alt qf-nav__icon'></i>
+            <span class="qf-nav__label">Dashboard</span>
+        </a>
+
+        @canany(['Request access', 'Request delete', 'Progress access', 'Progress delete', 'Done access'])
+        <div class="qf-group {{ $isBookingActive ? 'is-open' : '' }}">
+            <button type="button"
+                    class="qf-nav__item qf-nav__item--toggle {{ $isBookingActive ? 'is-active' : '' }}"
+                    @click="bookingsOpen = !bookingsOpen"
+                    :aria-expanded="bookingsOpen">
+                <i class='bx bx-calendar-check qf-nav__icon'></i>
+                <span class="qf-nav__label">Bookings</span>
+                @if ($pendingBookings > 0)
+                    <span class="qf-badge">{{ $pendingBookings > 99 ? '99+' : $pendingBookings }}</span>
+                @endif
+                <i class='bx bx-chevron-down qf-nav__chev' :class="bookingsOpen && 'qf-nav__chev--open'"></i>
+            </button>
+
+            <ul class="qf-submenu" x-show="bookingsOpen" x-transition>
+                @canany(['Request access', 'Request delete'])
+                <li>
+                    <a href="{{ route('admin.requests.index') }}"
+                       class="qf-subnav__item {{ Route::currentRouteNamed('admin.requests.index') ? 'is-active' : '' }}">
+                        <i class='bx bx-receipt qf-subnav__icon'></i>
+                        <span>Requests</span>
+                        @if ($requestCount > 0)
+                            <span class="qf-badge qf-badge--sm">{{ $requestCount > 99 ? '99+' : $requestCount }}</span>
+                        @endif
+                    </a>
+                </li>
+                @endcanany
+
+                @canany(['Progress access', 'Progress delete'])
+                <li>
+                    <a href="{{ route('admin.progresss.index') }}"
+                       class="qf-subnav__item {{ Route::currentRouteNamed('admin.progresss.index') ? 'is-active' : '' }}">
+                        <i class='bx bx-loader-circle qf-subnav__icon'></i>
+                        <span>In Progress</span>
+                        @if ($progressCount > 0)
+                            <span class="qf-badge qf-badge--sm">{{ $progressCount > 99 ? '99+' : $progressCount }}</span>
+                        @endif
+                    </a>
+                </li>
+                @endcanany
+
+                @can('Done access')
+                <li>
+                    <a href="{{ route('admin.dones.index') }}"
+                       class="qf-subnav__item {{ Route::currentRouteNamed('admin.dones.index') ? 'is-active' : '' }}">
+                        <i class='bx bx-check-circle qf-subnav__icon'></i>
+                        <span>Done Fixing</span>
+                    </a>
+                </li>
+                @endcan
+            </ul>
+        </div>
+        @endcanany
+
+        @canany(['Payment access', 'Payment create', 'Payment edit'])
+        <a href="{{ route('admin.payments.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.payments.index') ? 'is-active' : '' }}">
+            <i class='bx bx-credit-card qf-nav__icon'></i>
+            <span class="qf-nav__label">Payment</span>
+            @if ($payedCount > 0)
+                <span class="qf-badge">{{ $payedCount > 99 ? '99+' : $payedCount }}</span>
+            @endif
+        </a>
+        @endcanany
+
+        <p class="qf-nav__section">Access Control</p>
+
+        @canany(['Role access', 'Role add', 'Role edit', 'Role delete'])
+        <a href="{{ route('admin.roles.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.roles.index') ? 'is-active' : '' }}">
+            <i class='bx bx-shield qf-nav__icon'></i>
+            <span class="qf-nav__label">Role</span>
+        </a>
+        @endcanany
+
+        @canany(['Permission access', 'Permission add', 'Permission edit', 'Permission delete'])
+        <a href="{{ route('admin.permissions.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.permissions.index') ? 'is-active' : '' }}">
+            <i class='bx bx-key qf-nav__icon'></i>
+            <span class="qf-nav__label">Permission</span>
+        </a>
+        @endcanany
+
+        @canany(['User access', 'User add', 'User edit', 'User delete'])
+        <a href="{{ route('admin.users.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.users.index') ? 'is-active' : '' }}">
+            <i class='bx bx-user qf-nav__icon'></i>
+            <span class="qf-nav__label">User</span>
+        </a>
+        @endcanany
+
+        <p class="qf-nav__section">Catalog</p>
+
+        @canany(['Category access', 'Category add', 'Category edit', 'Category delete'])
+        <a href="{{ route('admin.categories.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.categories.index') ? 'is-active' : '' }}">
+            <i class='bx bx-category qf-nav__icon'></i>
+            <span class="qf-nav__label">Categories</span>
+        </a>
+        @endcanany
+
+        @canany(['Service access', 'Service add', 'Service edit', 'Service delete'])
+        <a href="{{ route('admin.services.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.services.index') ? 'is-active' : '' }}">
+            <i class='bx bx-briefcase qf-nav__icon'></i>
+            <span class="qf-nav__label">Services</span>
+        </a>
+        @endcanany
+
+        @canany(['Discount access', 'Discount add', 'Discount edit', 'Discount delete'])
+        <a href="{{ route('admin.discounts.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.discounts.index') ? 'is-active' : '' }}">
+            <i class='bx bx-purchase-tag qf-nav__icon'></i>
+            <span class="qf-nav__label">Discount</span>
+        </a>
+        @endcanany
+
+        @canany(['Mail access', 'Mail edit'])
+        <p class="qf-nav__section">System</p>
+
+        <a href="{{ route('admin.mail.index') }}"
+           class="qf-nav__item {{ Route::currentRouteNamed('admin.mail.index') ? 'is-active' : '' }}">
+            <i class='bx bx-cog qf-nav__icon'></i>
+            <span class="qf-nav__label">Setting</span>
+        </a>
+        @endcanany
+    </nav>
+
+    {{-- Footer profile --}}
+    @auth
+    <div class="qf-sidebar__footer">
+        <div class="qf-user">
+            <div class="qf-user__avatar">
+                @if (Auth::user()->profile)
+                    <img src="{{ asset('storage/' . Auth::user()->profile) }}"
+                         onerror="this.onerror=null;this.src='{{ asset(Auth::user()->profile) }}';"
+                         alt="{{ Auth::user()->name }}">
+                @else
+                    <i class='bx bxs-user-circle'></i>
+                @endif
+            </div>
+            <div class="qf-user__info">
+                <span class="qf-user__name">{{ Auth::user()->name }}</span>
+                <span class="qf-user__role">{{ ucfirst(Auth::user()->role ?? 'admin') }}</span>
+            </div>
         </div>
     </div>
-    <div class="h-full relative overflow-y-auto">
-        <!-- Your content here -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <nav style='margin-top:120px'>
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.dashboard') ? 'active' : '' }} " href="{{ route('admin.dashboard')}}">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
-                </svg>
+    @endauth
+</aside>
 
-                <span class="mx-3 ">Dashboard</span>
-            </a>
+<style>
+    .qf-sidebar {
+        background: linear-gradient(180deg, #111827 0%, #0b1220 100%);
+        display: flex;
+        flex-direction: column;
+        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.18);
+        overflow: hidden;
+    }
 
-            <div class="dropdown">
-                <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg class="h-6 w-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 14v6h14v-6z" />
-                    </svg>
-                    <span>Bookings</span>
-                    <?php
-                        // Assuming $bookings is your array of bookings with 'action' column
-                        $count = 0;
-                        foreach ($bookings as $booking) {
-                            if ($booking['action'] == 'progress' || $booking['action'] == 'request') {
-                                $count++;
-                            }
-                        }
+    /* ----- Brand ----- */
+    .qf-sidebar__brand {
+        padding: 1.1rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+    }
+    .qf-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        text-decoration: none;
+        color: #fff;
+    }
+    .qf-brand:hover { color: #fff; }
+    .qf-brand__mark {
+        width: 38px; height: 38px;
+        background: linear-gradient(135deg, #f59e0b, #f97316);
+        border-radius: 10px;
+        display: grid; place-items: center;
+        color: #fff;
+        font-size: 1.4rem;
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+    }
+    .qf-brand__text {
+        font-size: 1.15rem;
+        letter-spacing: 0.5px;
+        line-height: 1;
+    }
+    .qf-brand__text strong { color: #fff; }
+    .qf-brand__text span   { color: #f59e0b; font-weight: 700; }
 
-                        if ($count > 0) {
-                    ?>
-                        <span class="badge bg-warning rounded-pill ml-1 -mt-3">
-                            <?php
-                                if ($count > 99) {
-                                    echo '99+';
-                                } else {
-                                    echo $count;
-                                }
-                            ?>
-                        </span>
-                    <?php
-                        }
-                    ?>
+    /* ----- Nav ----- */
+    .qf-nav {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 0.5rem 0.6rem 1rem;
+    }
+    .qf-nav::-webkit-scrollbar { width: 5px; }
+    .qf-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 3px; }
 
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end p-3 " aria-labelledby="messagesDropdown" style="width:240px; max-height: 500px;">
-                <div class="message-info space-y-2 d-flex flex-col gap-3">
-                <!-- --------------------------------- -->
-                @canany('Request access','Request delete')
-                <li>
-                    <a href="{{ route('admin.requests.index') }}" class="flex items-center mt-2 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.requests.index') ? 'active' : '' }}">
-                    <svg class="h-6 w-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                    <span>Requests</span>
-                        <?php
-                            $requestCount = $bookings->filter(function($booking) {
-                                return $booking->action === 'request';
-                            })->count();
+    .qf-nav__section {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #6b7280;
+        padding: 0.85rem 0.85rem 0.4rem;
+        margin: 0;
+    }
 
-                            if ($requestCount > 0) {
-                        ?>
-                            <span class="badge bg-warning rounded-pill ml-1 -mt-3"> 
-                                <?php
-                                    if ($requestCount > 99) {
-                                        echo '99+';
-                                    } else {
-                                        echo $requestCount;
-                                    }
-                                ?>
-                            </span>
-                        <?php
-                            }
-                        ?>
-                    </a>
-                </li>
-                @endcanany
-                    <!-- -------------------------------- -->
-                <!-- --------------------------------- -->
-                @canany('Progress access','Progress delete')
-                <li>
-                    <a href="{{ route('admin.progresss.index') }}" class="flex items-center mt-2 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.progresss.index') ? 'active' : '' }}">
-                    <div class="flex items-center">
-                    <svg class="h-5 w-5 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                    <span class="text-sm">In Progress</span>
-                    </div>
-                    <?php
-                        $progressCount = $FixingProgress->filter(function($booking) {
-                            return $booking->action === 'progress';
-                        })->count();
+    .qf-nav__item {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.6rem 0.85rem;
+        border-radius: 9px;
+        color: #cbd5e1;
+        font-size: 0.88rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background .15s ease, color .15s ease, transform .15s ease;
+        margin-bottom: 2px;
+        width: 100%;
+        background: transparent;
+        border: 0;
+        text-align: left;
+        position: relative;
+    }
+    .qf-nav__item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+    .qf-nav__item.is-active {
+        background: linear-gradient(90deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.04));
+        color: #fbbf24;
+    }
+    .qf-nav__item.is-active::before {
+        content: '';
+        position: absolute;
+        left: -0.6rem;
+        top: 8px;
+        bottom: 8px;
+        width: 3px;
+        background: #f59e0b;
+        border-radius: 0 3px 3px 0;
+    }
 
-                        if ($progressCount > 0) {
-                    ?>
-                        <span class="badge bg-warning rounded-pill ml-1 -mt-3"> 
-                            <?php
-                                if ($progressCount > 99) {
-                                    echo '99+';
-                                } else {
-                                    echo $progressCount;
-                                }
-                            ?>
-                        </span>
-                    <?php
-                        }
-                    ?>
-                    </a>
-                </li>
-                @endcanany
-                <!-- -------------------------------- -->
-                <!-- --------------------------------- -->
-                @canany('Done access')
-                <li>
-                    <a href="{{ route('admin.dones.index') }}" class="flex items-center mt-2 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.dones.index') ? 'active' : '' }}">
-                    <div class="flex items-center">
-                    <svg class="h-6 w-6 mr-2 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                        <span class="text-sm">Dones Fixing</span>
-                    </div>
-                    </a>
-                </li>
-                @endcanany
-                    <!-- -------------------------------- -->
-                </ul>
-            </div>
+    .qf-nav__icon { font-size: 1.2rem; flex-shrink: 0; }
+    .qf-nav__label { flex: 1 1 auto; }
+    .qf-nav__chev {
+        font-size: 1.1rem;
+        transition: transform .2s ease;
+    }
+    .qf-nav__chev--open { transform: rotate(180deg); }
 
-            @canany('Payment access', 'Payment create', 'Payment edit')
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.payments.index') ? 'active' : '' }}"
-            href="{{ route('admin.payments.index')}}">
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 6h18a2 2 0 012 2v8a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2zm0 4h18m-9 4h4"></path>
-            </svg>
-            <span class="mx-3">Payment</span>
-            @php 
-                $number_payed = count($payments->where('status','done'));
-            @endphp
-            @if($number_payed>0)
-                <span class="badge bg-warning rounded-pill -mt-3">{{$number_payed}}</span>
-            @endif
-            </a>
-            @endcanany
-            
-            @canany('Role access','Role add','Role edit','Role delete')
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.roles.index') ? 'active' : '' }}"
-                href="{{ route('admin.roles.index') }}">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z">
-                    </path>
-                </svg>
+    /* ----- Sub menu ----- */
+    .qf-submenu {
+        list-style: none;
+        margin: 4px 0 6px;
+        padding: 0 0 0 1.2rem;
+        border-left: 1px dashed rgba(255, 255, 255, 0.08);
+        margin-left: 1rem;
+    }
+    .qf-subnav__item {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.7rem;
+        border-radius: 7px;
+        color: #94a3b8;
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: background .15s ease, color .15s ease;
+        margin-bottom: 2px;
+    }
+    .qf-subnav__item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #fff;
+    }
+    .qf-subnav__item.is-active {
+        color: #fbbf24;
+        background: rgba(245, 158, 11, 0.1);
+    }
+    .qf-subnav__icon { font-size: 1rem; flex-shrink: 0; }
 
-                <span class="mx-3">Role</span>
-            </a>
-            @endcanany
-            @canany('Permission access','Permission add','Permission edit','Permission delete')
-             <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.permissions.index') ? 'active' : '' }}"
-                href="{{ route('admin.permissions.index') }}">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 14v6m-3-3h6M6 10h2a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2zm10 0h2a2 2 0 002-2V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v2a2 2 0 002 2zM6 20h2a2 2 0 002-2v-2a2 2 0 00-2-2H6a2 2 0 00-2 2v2a2 2 0 002 2z">
-                    </path>
-                </svg>
+    /* ----- Badge ----- */
+    .qf-badge {
+        background: #f59e0b;
+        color: #111827;
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        line-height: 1.2;
+        margin-left: auto;
+    }
+    .qf-badge--sm { font-size: 0.6rem; padding: 1px 6px; }
 
-                <span class="mx-3">Permission</span>
-            </a>
-            @endcanany
-
-            @canany('User access','User add','User edit','User delete')
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.users.index') ? 'active' : '' }}"
-                href="{{ route('admin.users.index')}}">
-                <span class="inline-flex justify-center items-center">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-            </span>
-
-                <span class="mx-3">User</span>
-            </a>
-            @endcanany
-
-            @canany('Category access','Category add','Category edit','Category delete')
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.categories.index') ? 'active' : '' }}"
-            href="{{ route('admin.categories.index')}}">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012 2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012 2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                <span class="mx-3">Categories</span>
-            </a>
-            @endcanany
-
-            @canany('Service access','Service add','Service edit','Service delete')
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.services.index') ? 'active' : '' }}"
-            href="{{ route('admin.services.index')}}">
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4">
-                </path>
-            </svg>
-            <span class="mx-3">Services</span>
-            </a>
-            @endcanany
-
-            @canany('Discount access','Discount add','Discount edit','Discount delete')
-            <a class="flex items-center mt-4 py-2 px-6 text-gray-500 fw-semibold text-decoration-none hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.discounts.index') ? 'active' : '' }}"
-            href="{{ route('admin.discounts.index')}}">
-            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-4-4-3 3v5h5l3-3 4 4 7-7-4-4zm-5 1h.01"></path>
-            </svg>
-            <span class="mx-3">Discount</span>
-            </a>
-            @endcanany
-     
-            @canany('Mail access','Mail edit')
-             <a class="flex items-center mt-4 py-2 px-6 text-gray-500 hover:bg-gray-700 fw-semibold text-decoration-none hover:bg-opacity-25 hover:text-gray-100 {{ Route::currentRouteNamed('admin.mail.index') ? 'active' : '' }}"
-                href="{{ route('admin.mail.index')}}">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                    </path>
-                </svg>
-                <span class="mx-3">Setting</span>
-            </a>
-            @endcanany
-            
-        </nav>
-    </div>
-</div>
+    /* ----- Footer ----- */
+    .qf-sidebar__footer {
+        padding: 0.75rem 0.85rem 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        flex-shrink: 0;
+    }
+    .qf-user {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 0.6rem;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+    }
+    .qf-user__avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        overflow: hidden;
+        background: #1f2937;
+        display: grid; place-items: center;
+        color: #6b7280;
+        font-size: 1.6rem;
+        flex-shrink: 0;
+    }
+    .qf-user__avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .qf-user__info { display: flex; flex-direction: column; min-width: 0; }
+    .qf-user__name {
+        color: #fff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .qf-user__role {
+        color: #9ca3af;
+        font-size: 0.7rem;
+        text-transform: capitalize;
+    }
+</style>
