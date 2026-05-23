@@ -14,7 +14,6 @@
                 <i class='bx bxs-calendar me-2' style='font-size: 1.5rem;'></i>
                 Deadline
             </button>
-            <span id='showAll' style="font-size: 1.1rem; cursor: pointer; transition: color 0.3s ease;" class="show-all">Show All</span>
         </div>
 
         <!-- Customer feedback section -->
@@ -317,16 +316,6 @@
         let deadButton = document.querySelector('#dead');
         let deadElements = document.querySelectorAll('#deadline');
         let immediateElements = document.querySelectorAll('#immediate');
-        let showAll = document.querySelector('#showAll');
-        
-        showAll.addEventListener('click', function () {
-            deadElements.forEach(function (element) {
-                element.style.display = 'block';
-            });
-            immediateElements.forEach(function (element) {
-                element.style.display = 'block';
-            });
-        });
 
         immediatelyButton.addEventListener('click', function () {
             deadElements.forEach(function (element) {
