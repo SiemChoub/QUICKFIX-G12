@@ -122,6 +122,8 @@
             --qf-line:   rgba(255, 255, 255, .08);
         }
 
+        html, body { background: #0a0e13; }
+
         .qf-login {
             position: relative;
             min-height: 100vh;
