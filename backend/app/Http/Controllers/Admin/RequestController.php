@@ -15,9 +15,9 @@ class RequestController extends Controller
     //
     public function index()
     {
-        $perPage = (int) request('per_page', 10);
+        $perPage = (int) request('per_page', 20);
         if (!in_array($perPage, [5, 10, 20, 50, 100])) {
-            $perPage = 10;
+            $perPage = 20;
         }
 
         $user = User::all();
