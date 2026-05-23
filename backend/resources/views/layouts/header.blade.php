@@ -1,91 +1,230 @@
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<header style="position: fixed; top: 0; width: 80%; z-index: 1000;">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        <span class="panel"><i class="bx bxl-bootstrap"></i>Admin Panel</span>
+<header class="qf-header">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand qf-brand d-flex align-items-center gap-2" href="#">
+        <span class="qf-brand-icon"><i class="bx bxs-wrench"></i></span>
+        <span class="qf-brand-text">Admin <span class="qf-brand-accent">Panel</span></span>
       </a>
-      <div class="d-flex align-items-center">
-      <div data-bs-toggle="modal" data-bs-target="#messageModal">
-        <a class=" nav-link dropdown-toggle" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bx bx-mail-send"></i>
-          @php 
-            $mess = $messages->where('receiver_id', 1)->where('is_read', 0)->count();
-          @endphp
-          @if ($mess!=0)
-          <span class="badge bg-warning rounded-pill">{{$mess}}</span>
+
+      <div class="d-flex align-items-center gap-1">
+
+        {{-- Messages --}}
+        @php
+          $mess = $messages->where('receiver_id', 1)->where('is_read', 0)->count();
+        @endphp
+        <div class="qf-icon-btn" data-bs-toggle="modal" data-bs-target="#messageModal" role="button" title="Messages">
+          <i class="bx bx-envelope"></i>
+          @if ($mess != 0)
+            <span class="qf-badge qf-badge-warning">{{ $mess }}</span>
           @endif
-        </a>
-      </div>
-      <div class="dropdown ms-3">
-        <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bx bx-bell"></i>
-          @if(count($feedbacks) !=0)
-          <span class="badge bg-danger rounded-pill">{{count($feedbacks)}}</span>
-          @endif
-          </a>
-        <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="notificationsDropdown" style="width: 400px; max-height: 400px; overflow-y: auto;">
-          <div class="notification-list space-y-2" style="height: 300px; overflow-y: scroll;">
-          @if(count($feedbacks) !=0)
-          @foreach ($feedbacks as $feedback)
-            @php 
-            $user = $users->where('id',$feedback->user_id)->first();
-            @endphp
-            {{-- ----------------------------------- --}}
-            <a href="#" class="dropdown-item d-flex border border-warning justify-content-between items-center p-2 rounded-lg shadow-md hover:scale-105 transition-all duration-300">
-              <div class="title relative w-50 d-flex flex-col align-item-center pt-2">
-                <h5 class="card-title fw-bold mb-0 truncate" style="font-size:13px;">{{$user->name}}</h5>
-                <p class="text-600 fw-bold text-sm truncate" style="font-size:10px;">{{$feedback->created_at->format('Y-m-d')}}
-                </p>
-              </div>
-              <div class="text-2">
-                {{$feedback->content}}
-              </div>
-            </a>
-            {{-- --------------------------- --}}
-            @endforeach
+        </div>
+
+        {{-- Notifications --}}
+        <div class="dropdown">
+          <div class="qf-icon-btn" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Notifications">
+            <i class="bx bx-bell"></i>
+            @if (count($feedbacks) != 0)
+              <span class="qf-badge qf-badge-danger">{{ count($feedbacks) }}</span>
             @endif
-            
           </div>
-        </ul>
-      </div>
-  <div class="dropdown ms-3">
-  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-  <img src="{{ auth()->user()->profile }}" class="rounded-circle me-2" alt="Profile Picture" style="width: 40px; height: 40px; object-fit: cover;">    <span class="d-none d-md-inline">{{ auth()->user()->name }}</span>
-  </a>
-  <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="profileDropdown" style="width: 200px;">
-    <li>
-      <a href="{{ route('admin.profile') }}" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-        <i class="bx bx-user text-warning me-2"></i>
-        <span class="text-gray-800">Profile</span>
-      </a> 
-    </li>
-    <li>
-      <a href="#" class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-        <i class="bx bx-cog text-secondary me-2"></i>
-        <span class="text-gray-800">Settings</span>
-      </a>
-    </li>
-    <li>
-        {{-- <span class="text-gray-800">Logout {{route('admin.logout')}}</span> --}}
-        {{-- <form  action="{{route('admin.logout')}}" method="POST"></form> --}}
-        <form method="POST" action="{{ route('admin.logout') }}">
-          @csrf
-              <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();
-                                          this.closest('form').submit();"
-              class="dropdown-item d-flex align-items-center py-2 rounded-lg hover:bg-gray-100 transition-colors duration-300">        <i class="bx bx-log-out text-danger me-2">  logout</i>
-            </a>
-          </form>
-      </a>
-    </li>
-  </ul>
-</div>
-<i class='bx bx-menu' style='color:#f7f7f7;display:none;'></i>
+          <ul class="dropdown-menu dropdown-menu-end qf-dropdown qf-dropdown-notif" aria-labelledby="notificationsDropdown">
+            <li class="qf-dropdown-header d-flex justify-content-between align-items-center">
+              <span>Notifications</span>
+              <span class="qf-pill">{{ count($feedbacks) }} new</span>
+            </li>
+            <div class="qf-notif-list">
+              @if (count($feedbacks) != 0)
+                @foreach ($feedbacks as $feedback)
+                  @php
+                    $user = $users->where('id', $feedback->user_id)->first();
+                  @endphp
+                  <a href="#" class="qf-notif-item">
+                    <span class="qf-notif-avatar"><i class="bx bx-message-rounded-dots"></i></span>
+                    <span class="qf-notif-body">
+                      <span class="d-flex justify-content-between align-items-center">
+                        <span class="qf-notif-name">{{ $user->name }}</span>
+                        <span class="qf-notif-date">{{ $feedback->created_at->format('Y-m-d') }}</span>
+                      </span>
+                      <span class="qf-notif-text">{{ $feedback->content }}</span>
+                    </span>
+                  </a>
+                @endforeach
+              @else
+                <div class="qf-notif-empty">
+                  <i class="bx bx-bell-off"></i>
+                  <span>You're all caught up</span>
+                </div>
+              @endif
+            </div>
+          </ul>
+        </div>
+
+        {{-- Profile --}}
+        <div class="dropdown ms-2">
+          <div class="qf-profile d-flex align-items-center" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{{ auth()->user()->profile }}" class="qf-avatar" alt="Profile">
+            <span class="qf-profile-meta d-none d-md-flex flex-column">
+              <span class="qf-profile-name">{{ auth()->user()->name }}</span>
+              <span class="qf-profile-role">Administrator</span>
+            </span>
+            <i class="bx bx-chevron-down qf-profile-caret d-none d-md-inline"></i>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end qf-dropdown" aria-labelledby="profileDropdown">
+            <li class="qf-profile-card">
+              <img src="{{ auth()->user()->profile }}" class="qf-avatar" alt="Profile">
+              <span>
+                <span class="qf-profile-name d-block">{{ auth()->user()->name }}</span>
+                <span class="qf-profile-email">{{ auth()->user()->email }}</span>
+              </span>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a href="{{ route('admin.profile') }}" class="dropdown-item qf-menu-item">
+                <i class="bx bx-user"></i><span>Profile</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="dropdown-item qf-menu-item">
+                <i class="bx bx-cog"></i><span>Settings</span>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <form method="POST" action="{{ route('admin.logout') }}">
+                @csrf
+                <a href="{{ route('admin.logout') }}"
+                   onclick="event.preventDefault(); this.closest('form').submit();"
+                   class="dropdown-item qf-menu-item qf-menu-item-danger">
+                  <i class="bx bx-log-out"></i><span>Logout</span>
+                </a>
+              </form>
+            </li>
+          </ul>
+        </div>
+
+        <i class='bx bx-menu qf-mobile-toggle'></i>
       </div>
     </div>
   </nav>
 </header>
+
+<style>
+  :root {
+    --qf-accent: #f59e0b;
+    --qf-accent-light: #fbbf24;
+    --qf-dark: #1b1f24;
+    --qf-dark-2: #23272e;
+  }
+  .qf-header {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+  }
+  .qf-header .navbar {
+    background: linear-gradient(90deg, var(--qf-dark) 0%, var(--qf-dark-2) 100%);
+    border-bottom: 1px solid rgba(245, 158, 11, .25);
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
+    padding: .55rem 0;
+  }
+  /* Brand */
+  .qf-brand { text-decoration: none; }
+  .qf-brand-icon {
+    display: grid; place-items: center;
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--qf-accent), var(--qf-accent-light));
+    color: var(--qf-dark); font-size: 1.25rem;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, .35);
+  }
+  .qf-brand-text { color: #f8f9fa; font-weight: 700; font-size: 1.05rem; letter-spacing: .3px; }
+  .qf-brand-accent { color: var(--qf-accent-light); }
+  /* Icon buttons */
+  .qf-icon-btn {
+    position: relative;
+    display: grid; place-items: center;
+    width: 42px; height: 42px; border-radius: 50%;
+    color: #cdd2da; font-size: 1.35rem; cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+  }
+  .qf-icon-btn:hover { background: rgba(255, 255, 255, .08); color: var(--qf-accent-light); }
+  .qf-badge {
+    position: absolute; top: 4px; right: 4px;
+    min-width: 18px; height: 18px; padding: 0 5px;
+    font-size: .65rem; font-weight: 700; line-height: 18px; text-align: center;
+    border-radius: 999px; color: var(--qf-dark);
+    border: 2px solid var(--qf-dark-2);
+  }
+  .qf-badge-warning { background: var(--qf-accent-light); }
+  .qf-badge-danger { background: #ef4444; color: #fff; }
+  /* Profile trigger */
+  .qf-profile {
+    gap: .6rem; padding: .25rem .55rem .25rem .3rem; border-radius: 999px; cursor: pointer;
+    transition: background .2s ease;
+  }
+  .qf-profile:hover { background: rgba(255, 255, 255, .08); }
+  .qf-avatar {
+    width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--qf-accent);
+  }
+  .qf-profile-meta { line-height: 1.15; }
+  .qf-profile-name { color: #f8f9fa; font-weight: 600; font-size: .85rem; }
+  .qf-profile-role { color: #9aa1ab; font-size: .7rem; }
+  .qf-profile-caret { color: #9aa1ab; font-size: 1.1rem; }
+  /* Dropdowns */
+  .qf-dropdown {
+    border: none; border-radius: 14px; padding: .5rem; margin-top: .6rem;
+    min-width: 240px; box-shadow: 0 12px 32px rgba(0, 0, 0, .18) !important;
+  }
+  .qf-dropdown-notif { min-width: 340px; }
+  .qf-dropdown-header {
+    font-weight: 700; font-size: .8rem; color: var(--qf-dark);
+    padding: .4rem .6rem .6rem; text-transform: uppercase; letter-spacing: .5px;
+  }
+  .qf-pill {
+    background: rgba(245, 158, 11, .15); color: #b45309; font-size: .65rem; font-weight: 700;
+    padding: .15rem .5rem; border-radius: 999px; text-transform: none; letter-spacing: 0;
+  }
+  .qf-notif-list { max-height: 320px; overflow-y: auto; }
+  .qf-notif-item {
+    display: flex; gap: .7rem; align-items: flex-start;
+    padding: .6rem; border-radius: 10px; text-decoration: none; color: inherit;
+    transition: background .15s ease;
+  }
+  .qf-notif-item:hover { background: #f6f7f9; }
+  .qf-notif-avatar {
+    flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: rgba(245, 158, 11, .15); color: var(--qf-accent); font-size: 1.2rem;
+  }
+  .qf-notif-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .qf-notif-name { font-weight: 600; font-size: .8rem; color: #1f2937; }
+  .qf-notif-date { font-size: .68rem; color: #9aa1ab; white-space: nowrap; }
+  .qf-notif-text {
+    margin-top: .1rem; font-size: .78rem; color: #6b7280;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .qf-notif-empty {
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    padding: 2rem 1rem; color: #9aa1ab; font-size: .85rem;
+  }
+  .qf-notif-empty i { font-size: 2rem; }
+  .qf-profile-card { display: flex; gap: .7rem; align-items: center; padding: .4rem .6rem .6rem; }
+  .qf-profile-card .qf-profile-name { color: #1f2937; }
+  .qf-profile-email { font-size: .72rem; color: #9aa1ab; }
+  .qf-menu-item {
+    display: flex; align-items: center; gap: .7rem;
+    padding: .55rem .6rem; border-radius: 10px; font-size: .85rem; color: #374151;
+  }
+  .qf-menu-item i { font-size: 1.15rem; color: #6b7280; }
+  .qf-menu-item:hover { background: #f6f7f9; }
+  .qf-menu-item-danger, .qf-menu-item-danger i { color: #dc2626; }
+  .qf-menu-item-danger:hover { background: #fef2f2; }
+  /* Mobile */
+  .qf-mobile-toggle { display: none; color: #f7f7f7; font-size: 1.7rem; cursor: pointer; margin-left: .4rem; }
+  @media (max-width: 991px) { .qf-mobile-toggle { display: inline; } }
+  @media (max-width: 767px) { .qf-brand-text { display: none; } }
+</style>
 <!-- ---------------------top service detail------------------ -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script> -->
 
@@ -232,27 +371,6 @@ $sent = [];
 
 
 <style>
-/* Tablet styles */
-@media (max-width: 991px) and (min-width: 768px) {
-
-  .bx-menu{
-    display:block;
-    font: 3em sans-serif;
-  }
-}
-
-/* Mobile styles */
-@media (max-width: 767px) {
-  .bx-menu{
-    display:block;
-    font: 2em sans-serif;
-  }
-  .navbar-brand{
-    display:none;
-  }
-
-}
-
 /* ............. */
 .btn-hover-border-bottom {
   position: relative;
