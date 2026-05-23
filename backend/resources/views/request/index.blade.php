@@ -49,9 +49,9 @@
                             <div class="qf-booking-card">
                                 {{-- Customer --}}
                                 <div class="qf-bk-customer">
-                                    <img src="{{ $customer->profile }}"
-                                         onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($customer->name ?? 'User') }}&background=f59e0b&color=fff&bold=true'"
-                                         class="qf-bk-avatar" alt="{{ $customer->name }}">
+                                    <img src="{{ $customer?->profile ?: 'https://ui-avatars.com/api/?name=' . urlencode($customer?->name ?? 'User') . '&background=f59e0b&color=fff&bold=true' }}"
+                                         onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($customer?->name ?? 'User') }}&background=f59e0b&color=fff&bold=true'"
+                                         class="qf-bk-avatar" alt="{{ $customer?->name ?? 'User' }}">
                                     <div class="qf-bk-customer-meta">
                                         <span class="qf-bk-name">{{ $customer->name ?? 'Unknown user' }}</span>
                                         <span class="qf-bk-service"><i class='bx bx-wrench'></i> {{ $service_name }}</span>
@@ -80,16 +80,16 @@
                                 <div class="qf-bk-actions">
                                     <button class="btn btn-outline-warning btn-sm qf-bk-btn"
                                         data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
-                                        data-booking-image="{{$customer->profile}}"
+                                        data-booking-image="{{ $customer?->profile }}"
                                         data-booking-stars="{{$service_name}}"
                                         data-booking-type="{{$booking->type}}"
                                         data-booking-date="{{$booking_date}}"
                                         data-booking-deadline="{{$deadline}}"
                                         data-booking-fixname="{{$fixer_name}}"
-                                        data-booking-customername="{{$customer->name}}"
-                                        data-booking-customeremail="{{$customer->email}}"
-                                        data-booking-customerphone="{{$customer->phone}}"
-                                        data-booking-customeraddress="{{$customer->address}}"
+                                        data-booking-customername="{{ $customer?->name ?? 'Unknown user' }}"
+                                        data-booking-customeremail="{{ $customer?->email ?? '—' }}"
+                                        data-booking-customerphone="{{ $customer?->phone ?? '—' }}"
+                                        data-booking-customeraddress="{{ $customer?->address ?? '—' }}"
                                         @if($fixer)
                                             data-booking-fixername="{{$fixer->name}}"
                                             data-booking-fixeremail="{{$fixer->email}}"
