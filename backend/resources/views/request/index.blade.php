@@ -25,9 +25,7 @@
             </div>
             <div class="customer-feedback-info d-flex flex-column gap-3 pt-2">
                 @can('Request access')
-                    @foreach ($bookings->filter(function($booking) {
-                        return $booking->action === 'request';
-                    }) as $booking)
+                    @foreach ($requests as $booking)
                         @php
                             $service_name = 'No Service selected';
                             $customer = $users->where('id', $booking->user_id)->first();
@@ -145,6 +143,8 @@
                     @endif
                 @endcan
             </div>
+
+            @include('booking._pagination', ['paginator' => $requests])
         </div>
     </div>
 

@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\Payments;
 use App\Models\Bookin_immediately;
 use App\Models\Bookin_deadline;
+use Illuminate\Pagination\Paginator;
 
 
 
@@ -39,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Paginator::useBootstrapFive();
+
         if (Schema::hasTable('mailsettings')) {
             $mailsetting = Mailsetting::first();
             if($mailsetting){

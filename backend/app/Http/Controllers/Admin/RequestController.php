@@ -15,14 +15,29 @@ class RequestController extends Controller
     //
     public function index()
     {
-        //
+        $perPage = (int) request('per_page', 10);
+        if (!in_array($perPage, [5, 10, 20, 50, 100])) {
+            $perPage = 10;
+        }
+
         $user = User::all();
         $Bookin_immediately = Bookin_immediately::all();
         $Bookin_deadline = Bookin_deadline::all();
         $service = Service::all();
         $bookings = Booking::all();
-        return view('request.index',['bookings'=>$bookings,'users'=>$user,'deadlines'=>$Bookin_deadline,'immediatelys'=>$Bookin_immediately,'services'=>$service]);
+        $requests = Booking::where('action', 'request')
+            ->orderByDesc('id')
+            ->paginate($perPage)
+            ->withQueryString();
 
+        return view('request.index', [
+            'bookings'      => $bookings,
+            'requests'      => $requests,
+            'users'         => $user,
+            'deadlines'     => $Bookin_deadline,
+            'immediatelys'  => $Bookin_immediately,
+            'services'      => $service,
+        ]);
     }
 
     // public function destroy(Request $request)
