@@ -46,17 +46,18 @@
 
         @canany(['Request access', 'Request delete', 'Progress access', 'Progress delete', 'Done access'])
         <div class="qf-group {{ $isBookingActive ? 'is-open' : '' }}">
-            <button type="button"
+            <a href="{{ route('admin.requests.index') }}"
                     class="qf-nav__item qf-nav__item--toggle {{ $isBookingActive ? 'is-active' : '' }}"
-                    @click="bookingsOpen = !bookingsOpen"
                     :aria-expanded="bookingsOpen">
                 <i class='bx bx-calendar-check qf-nav__icon'></i>
                 <span class="qf-nav__label">Bookings</span>
                 @if ($pendingBookings > 0)
                     <span class="qf-badge">{{ $pendingBookings > 99 ? '99+' : $pendingBookings }}</span>
                 @endif
-                <i class='bx bx-chevron-down qf-nav__chev' :class="bookingsOpen && 'qf-nav__chev--open'"></i>
-            </button>
+                <i class='bx bx-chevron-down qf-nav__chev'
+                   :class="bookingsOpen && 'qf-nav__chev--open'"
+                   @click.prevent.stop="bookingsOpen = !bookingsOpen"></i>
+            </a>
 
             <ul class="qf-submenu" x-show="bookingsOpen" x-transition>
                 @canany(['Request access', 'Request delete'])
