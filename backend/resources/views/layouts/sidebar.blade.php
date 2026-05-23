@@ -111,22 +111,6 @@
 
         <p class="qf-nav__section">Access Control</p>
 
-        @canany(['Role access', 'Role add', 'Role edit', 'Role delete'])
-        <a href="{{ route('admin.roles.index') }}"
-           class="qf-nav__item {{ Route::currentRouteNamed('admin.roles.index') ? 'is-active' : '' }}">
-            <i class='bx bx-shield qf-nav__icon'></i>
-            <span class="qf-nav__label">Role</span>
-        </a>
-        @endcanany
-
-        @canany(['Permission access', 'Permission add', 'Permission edit', 'Permission delete'])
-        <a href="{{ route('admin.permissions.index') }}"
-           class="qf-nav__item {{ Route::currentRouteNamed('admin.permissions.index') ? 'is-active' : '' }}">
-            <i class='bx bx-key qf-nav__icon'></i>
-            <span class="qf-nav__label">Permission</span>
-        </a>
-        @endcanany
-
         @canany(['User access', 'User add', 'User edit', 'User delete'])
         <a href="{{ route('admin.users.index') }}"
            class="qf-nav__item {{ Route::currentRouteNamed('admin.users.index') ? 'is-active' : '' }}">
@@ -161,11 +145,15 @@
         </a>
         @endcanany
 
-        @canany(['Mail access', 'Mail edit'])
+        @canany([
+            'Mail access', 'Mail edit',
+            'Role access', 'Role add', 'Role edit', 'Role delete',
+            'Permission access', 'Permission add', 'Permission edit', 'Permission delete',
+        ])
         <p class="qf-nav__section">System</p>
 
         <a href="{{ route('admin.mail.index') }}"
-           class="qf-nav__item {{ Route::currentRouteNamed('admin.mail.index') ? 'is-active' : '' }}">
+           class="qf-nav__item {{ request()->routeIs('admin.mail.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'is-active' : '' }}">
             <i class='bx bx-cog qf-nav__icon'></i>
             <span class="qf-nav__label">Setting</span>
         </a>
