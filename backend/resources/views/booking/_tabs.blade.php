@@ -11,6 +11,7 @@
 
 <div class="qf-tabs">
     <div class="qf-tabs__group">
+        <span class="qf-tab-slider" aria-hidden="true"></span>
         @canany(['Request access', 'Request delete'])
         <a href="{{ route('admin.requests.index') }}"
            class="qf-tab {{ request()->routeIs('admin.requests.*') ? 'is-active' : '' }}">
@@ -59,20 +60,28 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
         margin-bottom: 1.2rem;
     }
-    .qf-tabs__group { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .qf-tabs__group { display: flex; gap: .4rem; flex-wrap: wrap; position: relative; }
+
+    /* Sliding pill that animates behind the tabs */
+    .qf-tab-slider {
+        position: absolute; top: 0; left: 0; height: 100%; width: 0;
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        border-radius: 10px; box-shadow: 0 4px 12px rgba(245, 158, 11, .3);
+        z-index: 0; opacity: 0;
+        transition: left .32s cubic-bezier(.4, 0, .2, 1), width .32s cubic-bezier(.4, 0, .2, 1),
+                    top .25s ease, height .25s ease, opacity .2s ease;
+    }
 
     .qf-tab {
+        position: relative; z-index: 1;
         display: inline-flex; align-items: center; gap: .5rem;
         padding: .6rem 1.1rem; border-radius: 10px;
         color: #6b7280; font-weight: 600; font-size: .9rem; text-decoration: none;
-        transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+        transition: color .2s ease;
     }
-    .qf-tab:hover { background: #f6f7f9; color: #374151; }
+    .qf-tab:hover { color: #1b1f24; }
     .qf-tab i { font-size: 1.2rem; }
-    .qf-tab.is-active {
-        background: linear-gradient(135deg, #f59e0b, #fbbf24);
-        color: #1b1f24; box-shadow: 0 4px 12px rgba(245, 158, 11, .3);
-    }
+    .qf-tab.is-active { color: #1b1f24; }
     .qf-tab-count {
         background: rgba(0, 0, 0, .08); color: inherit;
         font-size: .7rem; font-weight: 700; padding: .1rem .5rem;
@@ -99,3 +108,29 @@
         .qf-filter-btn { flex: 1; justify-content: center; }
     }
 </style>
+
+<script>
+    (function () {
+        const group = document.querySelector('.qf-tabs__group');
+        if (!group) return;
+        const slider = group.querySelector('.qf-tab-slider');
+        const tabs = group.querySelectorAll('.qf-tab');
+        if (!slider || !tabs.length) return;
+
+        const moveTo = (el) => {
+            if (!el) return;
+            slider.style.width = el.offsetWidth + 'px';
+            slider.style.height = el.offsetHeight + 'px';
+            slider.style.left = el.offsetLeft + 'px';
+            slider.style.top = el.offsetTop + 'px';
+            slider.style.opacity = '1';
+        };
+        const reset = () => moveTo(group.querySelector('.qf-tab.is-active') || tabs[0]);
+
+        requestAnimationFrame(reset);
+        window.addEventListener('load', reset);
+        window.addEventListener('resize', reset);
+        tabs.forEach((t) => t.addEventListener('mouseenter', () => moveTo(t)));
+        group.addEventListener('mouseleave', reset);
+    })();
+</script>
