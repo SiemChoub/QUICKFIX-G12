@@ -86,7 +86,7 @@
               </a>
             </li>
             <li>
-              <a href="#" class="dropdown-item qf-menu-item">
+              <a href="{{ route('admin.mail.index') }}" class="dropdown-item qf-menu-item">
                 <i class="bx bx-cog"></i><span>Settings</span>
               </a>
             </li>
@@ -103,8 +103,6 @@
             </li>
           </ul>
         </div>
-
-        <i class='bx bx-menu qf-mobile-toggle'></i>
       </div>
     </div>
   </nav>
@@ -221,8 +219,6 @@
   .qf-menu-item-danger, .qf-menu-item-danger i { color: #dc2626; }
   .qf-menu-item-danger:hover { background: #fef2f2; }
   /* Mobile */
-  .qf-mobile-toggle { display: none; color: #f7f7f7; font-size: 1.7rem; cursor: pointer; margin-left: .4rem; }
-  @media (max-width: 991px) { .qf-mobile-toggle { display: inline; } }
   @media (max-width: 767px) { .qf-brand-text { display: none; } }
 </style>
 <!-- ---------------------top service detail------------------ -->

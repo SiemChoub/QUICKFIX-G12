@@ -100,41 +100,7 @@
         </a>
         @endcanany
 
-        @canany([
-            'Mail access', 'Mail edit',
-            'Role access', 'Role add', 'Role edit', 'Role delete',
-            'Permission access', 'Permission add', 'Permission edit', 'Permission delete',
-        ])
-        <p class="qf-nav__section">System</p>
-
-        <a href="{{ route('admin.mail.index') }}"
-           class="qf-nav__item {{ request()->routeIs('admin.mail.*') || request()->routeIs('admin.roles.*') || request()->routeIs('admin.permissions.*') ? 'is-active' : '' }}">
-            <i class='bx bx-cog qf-nav__icon'></i>
-            <span class="qf-nav__label">Setting</span>
-        </a>
-        @endcanany
     </nav>
-
-    {{-- Footer profile --}}
-    @auth
-    <div class="qf-sidebar__footer">
-        <div class="qf-user">
-            <div class="qf-user__avatar">
-                @if (Auth::user()->profile)
-                    <img src="{{ asset('storage/' . Auth::user()->profile) }}"
-                         onerror="this.onerror=null;this.src='{{ asset(Auth::user()->profile) }}';"
-                         alt="{{ Auth::user()->name }}">
-                @else
-                    <i class='bx bxs-user-circle'></i>
-                @endif
-            </div>
-            <div class="qf-user__info">
-                <span class="qf-user__name">{{ Auth::user()->name }}</span>
-                <span class="qf-user__role">{{ ucfirst(Auth::user()->role ?? 'admin') }}</span>
-            </div>
-        </div>
-    </div>
-    @endauth
 </aside>
 
 <style>
@@ -283,44 +249,4 @@
         margin-left: auto;
     }
     .qf-badge--sm { font-size: 0.6rem; padding: 1px 6px; }
-
-    /* ----- Footer ----- */
-    .qf-sidebar__footer {
-        padding: 0.75rem 0.85rem 1rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        flex-shrink: 0;
-    }
-    .qf-user {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        padding: 0.5rem 0.6rem;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.04);
-    }
-    .qf-user__avatar {
-        width: 36px; height: 36px;
-        border-radius: 50%;
-        overflow: hidden;
-        background: #1f2937;
-        display: grid; place-items: center;
-        color: #6b7280;
-        font-size: 1.6rem;
-        flex-shrink: 0;
-    }
-    .qf-user__avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .qf-user__info { display: flex; flex-direction: column; min-width: 0; }
-    .qf-user__name {
-        color: #fff;
-        font-size: 0.85rem;
-        font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .qf-user__role {
-        color: #9ca3af;
-        font-size: 0.7rem;
-        text-transform: capitalize;
-    }
 </style>
