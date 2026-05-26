@@ -26,10 +26,10 @@
         </header>
 
         @can('Service access')
-        <div class="qsvc-grid" id="service-list">
+        <div class="qsvc-list" id="service-list">
             @foreach ($services as $i => $service)
                 @php $cat = optional($service->category)->name ?? 'Uncategorized'; @endphp
-                <article class="qsvc-card" style="animation-delay: {{ $i * 55 }}ms"
+                <article class="qsvc-row" style="animation-delay: {{ $i * 45 }}ms"
                          data-search="{{ strtolower($service->name . ' ' . $service->description . ' ' . $service->price . ' ' . $cat) }}">
                     <div class="qsvc-thumb">
                         @if($service->image)
@@ -39,37 +39,37 @@
                         @else
                             <span class="qsvc-thumb__fallback"><i class='bx bxs-wrench'></i></span>
                         @endif
-                        <span class="qsvc-price">{{ $service->price }}$</span>
                     </div>
-                    <div class="qsvc-body">
+                    <div class="qsvc-row__body">
                         <h3 class="qsvc-name">{{ $service->name }}</h3>
                         <span class="qsvc-cat"><i class='bx bx-category'></i> {{ $cat }}</span>
                         <p class="qsvc-desc">{{ $service->description ?: 'No description provided.' }}</p>
-                        <div class="qsvc-actions">
-                            <button type="button" class="qlist-act qlist-act--info"
-                                data-bs-toggle="modal" data-bs-target="#serviceDetailsModal"
-                                data-service-image="{{ $service->image }}"
-                                data-service-title="{{ $service->name }}"
-                                data-service-description="{{ $service->description }}"
-                                data-service-category="{{ $cat }}"
-                                data-service-price="{{ $service->price }}">
-                                <i class='bx bx-detail'></i><span>Details</span>
+                    </div>
+                    <span class="qsvc-price">{{ $service->price }}$</span>
+                    <div class="qsvc-actions">
+                        <button type="button" class="qlist-act qlist-act--info"
+                            data-bs-toggle="modal" data-bs-target="#serviceDetailsModal"
+                            data-service-image="{{ $service->image }}"
+                            data-service-title="{{ $service->name }}"
+                            data-service-description="{{ $service->description }}"
+                            data-service-category="{{ $cat }}"
+                            data-service-price="{{ $service->price }}">
+                            <i class='bx bx-detail'></i><span>Details</span>
+                        </button>
+                        @can('Service edit')
+                            <a href="{{ route('admin.services.edit', $service->id) }}" class="qlist-act qlist-act--edit">
+                                <i class='bx bx-edit-alt'></i><span>Edit</span>
+                            </a>
+                        @endcan
+                        @can('Service delete')
+                            <button type="button" class="qlist-act qlist-act--del" onclick="confirmDelete({{ $service->id }})">
+                                <i class='bx bx-trash'></i><span>Delete</span>
                             </button>
-                            @can('Service edit')
-                                <a href="{{ route('admin.services.edit', $service->id) }}" class="qlist-act qlist-act--edit">
-                                    <i class='bx bx-edit-alt'></i><span>Edit</span>
-                                </a>
-                            @endcan
-                            @can('Service delete')
-                                <button type="button" class="qlist-act qlist-act--del" onclick="confirmDelete({{ $service->id }})">
-                                    <i class='bx bx-trash'></i><span>Delete</span>
-                                </button>
-                                <form id="delete-form-{{ $service->id }}" action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-none">
-                                    @csrf
-                                    @method('delete')
-                                </form>
-                            @endcan
-                        </div>
+                            <form id="delete-form-{{ $service->id }}" action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-none">
+                                @csrf
+                                @method('delete')
+                            </form>
+                        @endcan
                     </div>
                 </article>
             @endforeach
@@ -113,38 +113,40 @@
     </div>
 
     <style>
-        .qsvc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; }
-        .qsvc-card {
-            background: #fff; border: 1px solid #eef0f4; border-radius: 16px; overflow: hidden;
-            display: flex; flex-direction: column;
+        .qsvc-list { display: flex; flex-direction: column; gap: .7rem; }
+        .qsvc-row {
+            background: #fff; border: 1px solid #eef0f4; border-radius: 14px; padding: .85rem 1rem;
+            display: flex; align-items: center; gap: 1rem;
             transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
-            opacity: 0; transform: translateY(10px);
-            animation: qsvc-in .5s cubic-bezier(.16,.84,.44,1) forwards;
+            opacity: 0; transform: translateY(8px);
+            animation: qsvc-in .45s cubic-bezier(.16,.84,.44,1) forwards;
         }
         @keyframes qsvc-in { to { opacity: 1; transform: translateY(0); } }
-        .qsvc-card:hover { border-color: #e2e5ea; box-shadow: 0 14px 32px rgba(17,24,39,.12); transform: translateY(-3px); }
+        .qsvc-row:hover { border-color: #e2e5ea; box-shadow: 0 10px 24px rgba(17,24,39,.08); transform: translateY(-2px); }
 
-        .qsvc-thumb { position: relative; height: 140px; background: linear-gradient(135deg, #fff7ed, #ffedd5); }
-        .qsvc-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .qsvc-thumb__fallback { width: 100%; height: 100%; display: grid; place-items: center; font-size: 3rem; color: #fbbf24; }
-        .qsvc-price {
-            position: absolute; bottom: .6rem; right: .6rem;
-            background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff;
-            font-weight: 800; font-size: .95rem; padding: .3rem .8rem; border-radius: 999px;
-            box-shadow: 0 4px 12px rgba(245,158,11,.4);
+        .qsvc-thumb {
+            width: 58px; height: 58px; border-radius: 13px; flex-shrink: 0; overflow: hidden;
+            background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa;
         }
-        .qsvc-body { padding: 1rem 1.1rem 1.1rem; display: flex; flex-direction: column; gap: .5rem; flex: 1; }
+        .qsvc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .qsvc-thumb__fallback { width: 100%; height: 100%; display: grid; place-items: center; font-size: 1.7rem; color: #fbbf24; }
+
+        .qsvc-row__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .25rem; }
         .qsvc-name { font-size: 1.02rem; font-weight: 700; color: #1f2937; margin: 0; }
         .qsvc-cat {
             display: inline-flex; align-items: center; gap: .3rem; align-self: flex-start;
-            font-size: .73rem; font-weight: 600; color: #0369a1; background: #e0f2fe; padding: .25rem .65rem; border-radius: 999px;
+            font-size: .72rem; font-weight: 600; color: #0369a1; background: #e0f2fe; padding: .2rem .6rem; border-radius: 999px;
         }
         .qsvc-desc {
-            margin: 0; color: #6b7280; font-size: .85rem; line-height: 1.45; flex: 1;
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.5em;
+            margin: 0; color: #6b7280; font-size: .84rem; line-height: 1.4;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .qsvc-actions { display: flex; gap: .4rem; margin-top: .3rem; }
-        .qsvc-actions .qlist-act { flex: 1; padding: .5rem .4rem; }
+        .qsvc-price {
+            flex-shrink: 0; background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff;
+            font-weight: 800; font-size: .9rem; padding: .35rem .85rem; border-radius: 999px;
+            box-shadow: 0 4px 12px rgba(245,158,11,.35);
+        }
+        .qsvc-actions { display: flex; gap: .45rem; flex-shrink: 0; }
 
         /* modal */
         .qsvc-modal { display: flex; gap: 1.2rem; flex-wrap: wrap; }
@@ -158,7 +160,12 @@
         .qsvc-modal__cat { display: inline-flex; align-items: center; gap: .3rem; font-weight: 600; color: #0369a1; background: #e0f2fe; padding: .3rem .7rem; border-radius: 999px; font-size: .85rem; }
         .qsvc-modal__info p { color: #4b5563; font-size: .92rem; line-height: 1.55; margin: 0; }
 
-        @media (max-width: 560px) { .qsvc-actions .qlist-act span { display: none; } }
+        @media (max-width: 560px) {
+            .qsvc-row { flex-wrap: wrap; }
+            .qsvc-price { order: -1; }
+            .qsvc-actions { width: 100%; }
+            .qsvc-actions .qlist-act { flex: 1; }
+        }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -192,9 +199,9 @@
             input.addEventListener('input', function () {
                 const q = this.value.toLowerCase().trim();
                 let shown = 0;
-                document.querySelectorAll('#service-list .qsvc-card').forEach(card => {
-                    const match = card.dataset.search.includes(q);
-                    card.style.display = match ? '' : 'none';
+                document.querySelectorAll('#service-list .qsvc-row').forEach(row => {
+                    const match = row.dataset.search.includes(q);
+                    row.style.display = match ? '' : 'none';
                     if (match) shown++;
                 });
                 if (empty) empty.hidden = shown !== 0;
