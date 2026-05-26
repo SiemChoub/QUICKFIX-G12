@@ -1,13 +1,15 @@
 {{-- Reusable image upload field with thumbnail preview.
-     Usage: @include('partials.image-field', ['current' => $model->image, 'name' => 'image', 'label' => 'Image']) --}}
+     Usage: @include('partials.image-field', ['current' => $model->image, 'name' => 'image', 'label' => 'Image'])
+     Pass a unique $uid when including more than once on a page (e.g. create + edit modals). --}}
 @php
     $name    = $name ?? 'image';
     $label   = $label ?? 'Image';
     $current = $current ?? null;
+    $uid     = $uid ?? $name;
 @endphp
 
 <div class="qf-img-upload">
-    <div class="qf-img-upload__thumb" id="qfThumb_{{ $name }}">
+    <div class="qf-img-upload__thumb" id="qfThumb_{{ $uid }}">
         @if ($current)
             <img src="{{ $current }}" alt="{{ $label }}">
         @else
@@ -15,9 +17,9 @@
         @endif
     </div>
     <div class="qf-img-upload__body">
-        <label for="{{ $name }}" class="text-gray-700 font-medium text-sm">{{ $label }}</label>
-        <input id="{{ $name }}" type="file" name="{{ $name }}" accept="image/*"
-               class="qf-img-upload__input" data-thumb="qfThumb_{{ $name }}">
+        <label for="{{ $uid }}" class="text-gray-700 font-medium text-sm">{{ $label }}</label>
+        <input id="{{ $uid }}" type="file" name="{{ $name }}" accept="image/*"
+               class="qf-img-upload__input" data-thumb="qfThumb_{{ $uid }}">
         <p class="qf-img-upload__hint">JPG or PNG, up to 2&nbsp;MB.@if ($current) Leave empty to keep the current image.@endif</p>
         @error($name)<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
     </div>

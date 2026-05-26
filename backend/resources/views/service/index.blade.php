@@ -18,9 +18,9 @@
                     <input type="text" id="search-input" placeholder="Search services…" aria-label="Search services">
                 </div>
                 @can('Service create')
-                    <a href="{{ route('admin.services.create') }}" class="qlist-create">
+                    <button type="button" class="qlist-create" data-bs-toggle="modal" data-bs-target="#serviceCreateModal">
                         <i class='bx bx-plus'></i><span>Create New</span>
-                    </a>
+                    </button>
                 @endcan
             </div>
         </header>
@@ -57,9 +57,16 @@
                             <i class='bx bx-detail'></i><span>Details</span>
                         </button>
                         @can('Service edit')
-                            <a href="{{ route('admin.services.edit', $service->id) }}" class="qlist-act qlist-act--edit">
+                            <button type="button" class="qlist-act qlist-act--edit"
+                                data-bs-toggle="modal" data-bs-target="#serviceEditModal"
+                                data-action="{{ route('admin.services.update', $service->id) }}"
+                                data-name="{{ $service->name }}"
+                                data-description="{{ $service->description }}"
+                                data-price="{{ $service->price }}"
+                                data-category="{{ $service->category_id }}"
+                                data-image="{{ $service->image }}">
                                 <i class='bx bx-edit-alt'></i><span>Edit</span>
-                            </a>
+                            </button>
                         @endcan
                         @can('Service delete')
                             <button type="button" class="qlist-act qlist-act--del" onclick="confirmDelete({{ $service->id }})">
@@ -112,6 +119,55 @@
         </div>
     </div>
 
+    {{-- Create modal --}}
+    @can('Service create')
+    <div class="modal fade" id="serviceCreateModal" tabindex="-1" aria-labelledby="serviceCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="serviceCreateModalLabel"><i class='bx bxs-wrench'></i> Create Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.services.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body qsvc-form">
+                        @include('service._form-fields', ['uid' => 'create', 'categories' => $categories])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="qsvc-btn qsvc-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="qsvc-btn qsvc-btn--primary"><i class='bx bx-check'></i> Create Service</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    {{-- Edit modal (same form component as Create; filled via JS from the row's data-* attributes) --}}
+    @can('Service edit')
+    <div class="modal fade" id="serviceEditModal" tabindex="-1" aria-labelledby="serviceEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="serviceEditModalLabel"><i class='bx bx-edit-alt'></i> Edit Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="" id="serviceEditForm" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body qsvc-form">
+                        @include('service._form-fields', ['uid' => 'edit', 'categories' => $categories])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="qsvc-btn qsvc-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="qsvc-btn qsvc-btn--primary"><i class='bx bx-check'></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+
     <style>
         .qsvc-list { display: flex; flex-direction: column; gap: .7rem; }
         .qsvc-row {
@@ -160,11 +216,39 @@
         .qsvc-modal__cat { display: inline-flex; align-items: center; gap: .3rem; font-weight: 600; color: #0369a1; background: #e0f2fe; padding: .3rem .7rem; border-radius: 999px; font-size: .85rem; }
         .qsvc-modal__info p { color: #4b5563; font-size: .92rem; line-height: 1.55; margin: 0; }
 
+        /* create form (inside modal) */
+        .qsvc-form { display: flex; flex-direction: column; gap: 1rem; }
+        .qsvc-field { display: flex; flex-direction: column; gap: .35rem; }
+        .qsvc-field label { font-size: .82rem; font-weight: 600; color: #374151; }
+        .qsvc-field input, .qsvc-field textarea, .qsvc-field select {
+            width: 100%; border: 1px solid #e5e7eb; border-radius: 10px; padding: .6rem .8rem;
+            font-size: .9rem; color: #111827; outline: 0; background: #fff;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .qsvc-field input:focus, .qsvc-field textarea:focus, .qsvc-field select:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+        .qsvc-field textarea { resize: vertical; }
+        .qsvc-field__error { color: #e11d48; font-size: .75rem; }
+        .qsvc-field__note { font-size: .82rem; color: #6b7280; margin: 0; }
+        .qsvc-field__note a { color: #b45309; font-weight: 600; }
+        .qsvc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .qlist-modal .modal-footer { border-top: 1px solid #f1f5f9; gap: .5rem; }
+        .qsvc-btn {
+            display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .88rem;
+            padding: .6rem 1.1rem; border-radius: 10px; border: 1px solid transparent; cursor: pointer;
+            transition: filter .15s ease, background .15s ease, color .15s ease;
+        }
+        .qsvc-btn i { font-size: 1.1rem; }
+        .qsvc-btn--ghost { background: #f1f5f9; color: #475569; }
+        .qsvc-btn--ghost:hover { background: #e2e8f0; }
+        .qsvc-btn--primary { background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff; box-shadow: 0 6px 16px rgba(245,158,11,.32); }
+        .qsvc-btn--primary:hover { filter: brightness(1.05); }
+
         @media (max-width: 560px) {
             .qsvc-row { flex-wrap: wrap; }
             .qsvc-price { order: -1; }
             .qsvc-actions { width: 100%; }
             .qsvc-actions .qlist-act { flex: 1; }
+            .qsvc-field-row { grid-template-columns: 1fr; }
         }
     </style>
 
@@ -192,6 +276,36 @@
             else { img.style.display = 'none'; fb.style.display = 'grid'; }
         });
 
+        // Fill the Edit modal from the clicked row's data, and point the form at the right record
+        const serviceEditModal = document.getElementById('serviceEditModal');
+        if (serviceEditModal) {
+            serviceEditModal.addEventListener('show.bs.modal', function (event) {
+                const b = event.relatedTarget;
+                if (!b) return;
+                document.getElementById('serviceEditForm').action = b.dataset.action || '';
+                document.getElementById('edit-name').value        = b.dataset.name || '';
+                document.getElementById('edit-description').value = b.dataset.description || '';
+                document.getElementById('edit-price').value       = b.dataset.price || '';
+                const sel = document.getElementById('edit-category_id');
+                if (sel) sel.value = b.dataset.category || '';
+                // Reset the file input — update() keeps the existing image unless a new file is chosen
+                const file = document.getElementById('edit-image');
+                if (file) file.value = '';
+                // Show the current image (if any) in the thumbnail
+                const thumb = document.getElementById('qfThumb_edit-image');
+                if (thumb) {
+                    if (b.dataset.image) {
+                        thumb.innerHTML = '';
+                        const im = document.createElement('img');
+                        im.src = b.dataset.image; im.alt = b.dataset.name || 'Service image';
+                        thumb.appendChild(im);
+                    } else {
+                        thumb.innerHTML = "<i class='bx bx-image-add'></i>";
+                    }
+                }
+            });
+        }
+
         (function () {
             const input = document.getElementById('search-input');
             const empty = document.getElementById('service-empty');
@@ -208,6 +322,15 @@
             });
         })();
     </script>
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const el = document.getElementById('serviceCreateModal');
+            if (el) new bootstrap.Modal(el).show();
+        });
+    </script>
+    @endif
 
     @foreach (['showAlertCreate' => 'created', 'showAlertEdit' => 'edited', 'showAlertDelete' => 'deleted'] as $flag => $verb)
         @if(session($flag))

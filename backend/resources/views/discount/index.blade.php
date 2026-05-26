@@ -19,10 +19,10 @@
                     <input type="text" id="search-input" placeholder="Search discounts…" aria-label="Search discounts">
                 </div>
                 @can('Discount create')
-                    <a href="{{ route('admin.discounts.create') }}" class="qdisc-create">
+                    <button type="button" class="qdisc-create" data-bs-toggle="modal" data-bs-target="#discountCreateModal">
                         <i class='bx bx-plus'></i>
                         <span>Create New</span>
-                    </a>
+                    </button>
                 @endcan
             </div>
         </header>
@@ -127,6 +127,49 @@
             </div>
         </div>
     </div>
+
+    {{-- ===== Create modal (Bootstrap) ===== --}}
+    @can('Discount create')
+    <div class="modal fade" id="discountCreateModal" tabindex="-1" aria-labelledby="discountCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content qdisc-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="discountCreateModalLabel"><i class='bx bxs-discount'></i> Create Discount</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.discounts.store') }}">
+                    @csrf
+                    <div class="modal-body qdisc-form">
+                        <div class="qdisc-field">
+                            <label for="create-discount">Discount (%)</label>
+                            <input id="create-discount" type="number" name="discount" min="0" max="100"
+                                   value="{{ old('discount') }}" placeholder="e.g. 25" required>
+                        </div>
+                        <div class="qdisc-field">
+                            <label for="create-description">Description</label>
+                            <textarea id="create-description" name="description" rows="3"
+                                      placeholder="Enter description">{{ old('description') }}</textarea>
+                        </div>
+                        <div class="qdisc-field-row">
+                            <div class="qdisc-field">
+                                <label for="create-start_date">Start Date</label>
+                                <input id="create-start_date" type="date" name="start_date" value="{{ old('start_date') }}">
+                            </div>
+                            <div class="qdisc-field">
+                                <label for="create-end_date">End Date</label>
+                                <input id="create-end_date" type="date" name="end_date" value="{{ old('end_date') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="qdisc-btn qdisc-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="qdisc-btn qdisc-btn--primary"><i class='bx bx-check'></i> Create Discount</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
 
     <style>
         .qdisc-page { padding: 1.75rem 1.5rem 2.5rem; }
@@ -272,10 +315,35 @@
         .qdisc-modal__meta i { font-size: 1.1rem; color: #f59e0b; }
         .qdisc-modal__meta strong { color: #1f2937; width: 100%; }
 
+        /* ===== Create form (inside modal) ===== */
+        .qdisc-form { display: flex; flex-direction: column; gap: 1rem; }
+        .qdisc-field { display: flex; flex-direction: column; gap: .35rem; }
+        .qdisc-field label { font-size: .82rem; font-weight: 600; color: #374151; }
+        .qdisc-field input, .qdisc-field textarea {
+            width: 100%; border: 1px solid #e5e7eb; border-radius: 10px; padding: .6rem .8rem;
+            font-size: .9rem; color: #111827; outline: 0; background: #fff;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .qdisc-field input:focus, .qdisc-field textarea:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+        .qdisc-field textarea { resize: vertical; }
+        .qdisc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .qdisc-modal .modal-footer { border-top: 1px solid #f1f5f9; gap: .5rem; }
+        .qdisc-btn {
+            display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .88rem;
+            padding: .6rem 1.1rem; border-radius: 10px; border: 1px solid transparent; cursor: pointer;
+            transition: filter .15s ease, background .15s ease, color .15s ease;
+        }
+        .qdisc-btn i { font-size: 1.1rem; }
+        .qdisc-btn--ghost { background: #f1f5f9; color: #475569; }
+        .qdisc-btn--ghost:hover { background: #e2e8f0; }
+        .qdisc-btn--primary { background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff; box-shadow: 0 6px 16px rgba(245,158,11,.32); }
+        .qdisc-btn--primary:hover { filter: brightness(1.05); }
+
         @media (max-width: 560px) {
             .qdisc-head__actions { width: 100%; }
             .qdisc-search { flex: 1; min-width: 0; }
             .qdisc-act span { display: none; }
+            .qdisc-field-row { grid-template-columns: 1fr; }
         }
     </style>
 
@@ -327,6 +395,15 @@
             });
         })();
     </script>
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const el = document.getElementById('discountCreateModal');
+            if (el) new bootstrap.Modal(el).show();
+        });
+    </script>
+    @endif
 
     @foreach (['showAlertCreate' => 'created', 'showAlertEdit' => 'edited', 'showAlertDelete' => 'deleted'] as $flag => $verb)
         @if(session($flag))

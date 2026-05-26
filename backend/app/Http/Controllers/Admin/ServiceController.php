@@ -35,7 +35,8 @@ class ServiceController extends Controller
         $perPage = (int) request('per_page', 20);
         $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
         $Service = Service::with('category')->paginate($perPage);
-        return view('service.index',['services'=>$Service]);
+        $categories = Category::all();
+        return view('service.index', ['services' => $Service, 'categories' => $categories]);
     }
 
 
