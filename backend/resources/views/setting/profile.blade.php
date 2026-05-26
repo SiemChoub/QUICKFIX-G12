@@ -73,6 +73,10 @@
                 <input type="text" id="username" value="{{ $u->name }}" placeholder="Your name">
               </div>
               <div class="qf-pp-field">
+                <label for="email">Email</label>
+                <input type="email" id="email" value="{{ $u->email }}" placeholder="Your email">
+              </div>
+              <div class="qf-pp-field">
                 <label for="phone">Phone number</label>
                 <input type="tel" id="phone" value="{{ $u->phone }}" placeholder="Your phone number">
               </div>
@@ -237,6 +241,7 @@
     function updateUser(userId) {
       var userData = {
         name: $('#username').val(),
+        email: $('#email').val(),
         phone: $('#phone').val(),
         _token: '{{ csrf_token() }}'
       };
@@ -253,7 +258,11 @@
         },
         error: function (xhr) {
           console.error('Error updating information:', xhr.responseText);
-          alert('Failed to update information');
+          var msg = 'Failed to update information';
+          if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
+            msg = Object.values(xhr.responseJSON.errors).map(function (e) { return e[0]; }).join('\n');
+          }
+          alert(msg);
         }
       });
     }

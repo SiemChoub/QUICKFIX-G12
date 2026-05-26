@@ -143,16 +143,19 @@ class UserController extends Controller
 
     public function updateInformation(Request $request)
     {
+        // Update the user data
+        $user = Auth::user();
+
         // Validate the request data
         $request->validate([
             'name' => 'required',
             'phone' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
         ]);
 
-        // Update the user data
-        $user = Auth::user();
         $user->name = $request->input('name');
         $user->phone = $request->input('phone');
+        $user->email = $request->input('email');
         $user->save();
 
         return response()->json(['message' => 'User updated successfully']);
