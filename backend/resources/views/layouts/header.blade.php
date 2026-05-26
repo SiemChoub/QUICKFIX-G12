@@ -1,12 +1,16 @@
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <header class="qf-header">
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-4">
-      <a class="navbar-brand qf-brand d-flex align-items-center gap-2" href="#">
-        <span class="qf-brand-icon"><i class="bx bxs-wrench"></i></span>
-        <span class="qf-brand-text">Admin <span class="qf-brand-accent">Panel</span></span>
-      </a>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="qf-toggle" @click="sidebarOpen = !sidebarOpen"
+                :aria-expanded="sidebarOpen.toString()" aria-label="Toggle sidebar" title="Toggle sidebar">
+          <i class="bx" :class="sidebarOpen ? 'bx-x' : 'bx-menu'"></i>
+        </button>
+        <a class="navbar-brand qf-brand d-flex align-items-center gap-2 m-0" href="#">
+          <span class="qf-brand-icon"><i class="bx bxs-wrench"></i></span>
+          <span class="qf-brand-text">Admin <span class="qf-brand-accent">Panel</span></span>
+        </a>
+      </div>
 
       <div class="d-flex align-items-center gap-1">
 
@@ -126,6 +130,16 @@
     box-shadow: 0 2px 14px rgba(0, 0, 0, .18);
     padding: .55rem 0;
   }
+  /* Sidebar toggle */
+  .qf-toggle {
+    display: grid; place-items: center;
+    width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(255, 255, 255, .06); color: #cdd2da;
+    font-size: 1.55rem; border: 0; cursor: pointer; flex-shrink: 0;
+    transition: background .2s ease, color .2s ease;
+  }
+  .qf-toggle:hover { background: rgba(255, 255, 255, .12); color: var(--qf-accent-light); }
+  .qf-toggle:active { transform: scale(.94); }
   /* Brand */
   .qf-brand { text-decoration: none; }
   .qf-brand-icon {
@@ -222,7 +236,32 @@
   @media (max-width: 767px) { .qf-brand-text { display: none; } }
 </style>
 <!-- ---------------------top service detail------------------ -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Toggle the header dropdowns (profile + notifications) directly instead of via
+  // Bootstrap's data-api. Several admin pages load a second, Popper-less Bootstrap
+  // build that breaks data-api dropdowns; this keeps them working on every page,
+  // independent of which Bootstrap version a page happens to load.
+  document.addEventListener('DOMContentLoaded', function () {
+    var header = document.querySelector('header');
+    if (!header) return;
+    header.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(function (toggle) {
+      toggle.removeAttribute('data-bs-toggle'); // stop Bootstrap from also handling it
+      var menu = (toggle.closest('.dropdown') || toggle.parentElement).querySelector('.dropdown-menu');
+      if (!menu) return;
+      toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        header.querySelectorAll('.dropdown-menu.show').forEach(function (m) {
+          if (m !== menu) m.classList.remove('show');
+        });
+        menu.classList.toggle('show');
+      });
+    });
+    document.addEventListener('click', function () {
+      header.querySelectorAll('.dropdown-menu.show').forEach(function (m) { m.classList.remove('show'); });
+    });
+  });
+</script>
 
 <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-fullscreen">

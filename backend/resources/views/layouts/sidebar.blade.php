@@ -1,5 +1,3 @@
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 @php
     $pendingBookings = 0;
@@ -16,7 +14,7 @@
 @endphp
 
 <aside
-    :class="sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
+    :class="[ sidebarOpen ? 'translate-x-0 ease-out' : '-translate-x-full ease-in', sidebarOpen ? '' : 'qf-sidebar--collapsed' ]"
     class="qf-sidebar fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform lg:translate-x-0 lg:static lg:inset-0">
 
     {{-- Brand --}}
@@ -110,6 +108,13 @@
         flex-direction: column;
         box-shadow: 4px 0 16px rgba(0, 0, 0, 0.18);
         overflow: hidden;
+    }
+
+    /* Desktop collapse: when closed, the in-flow sidebar shrinks to 0 so the
+       content area expands. (On mobile it slides off-canvas via the translate classes.) */
+    @media (min-width: 1024px) {
+        .qf-sidebar { transition: width .3s ease, transform .3s ease; }
+        .qf-sidebar.qf-sidebar--collapsed { width: 0; min-width: 0; box-shadow: none; }
     }
 
     /* ----- Brand ----- */
