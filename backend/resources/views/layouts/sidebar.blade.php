@@ -110,11 +110,26 @@
         overflow: hidden;
     }
 
-    /* Desktop collapse: when closed, the in-flow sidebar shrinks to 0 so the
-       content area expands. (On mobile it slides off-canvas via the translate classes.) */
+    /* Desktop collapse: when closed, the in-flow sidebar shrinks to an icon-only
+       rail (icons stay, text/labels hide). On mobile it slides off-canvas via the
+       translate classes instead. */
     @media (min-width: 1024px) {
-        .qf-sidebar { transition: width .3s ease, transform .3s ease; }
-        .qf-sidebar.qf-sidebar--collapsed { width: 0; min-width: 0; box-shadow: none; }
+        .qf-sidebar { transition: width .25s ease, transform .3s ease; }
+        .qf-sidebar.qf-sidebar--collapsed { width: 76px; }
+
+        /* Hide every piece of text — keep only the icons */
+        .qf-sidebar--collapsed .qf-brand__text,
+        .qf-sidebar--collapsed .qf-nav__label,
+        .qf-sidebar--collapsed .qf-nav__section,
+        .qf-sidebar--collapsed .qf-badge { display: none; }
+
+        /* Center the brand mark and the nav icons in the rail */
+        .qf-sidebar--collapsed .qf-sidebar__brand { padding: 1.1rem 0; }
+        .qf-sidebar--collapsed .qf-brand { justify-content: center; gap: 0; }
+        .qf-sidebar--collapsed .qf-nav { padding: 0.5rem 0.4rem 1rem; }
+        .qf-sidebar--collapsed .qf-nav__item { justify-content: center; padding: 0.65rem 0; gap: 0; }
+        .qf-sidebar--collapsed .qf-nav__item.is-active::before { left: 0; }
+        .qf-sidebar--collapsed .qf-nav__icon { font-size: 1.4rem; }
     }
 
     /* ----- Brand ----- */

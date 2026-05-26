@@ -135,7 +135,8 @@
     </div>
     </Teleport>
 
-    <!-- Offers modal (unchanged behavior) -->
+    <!-- Offers modal (teleported to body so the nav's backdrop-filter doesn't trap the fixed overlay) -->
+    <Teleport to="body">
     <div
       class="modal fade custom-slide-modal"
       id="staticBackdrop"
@@ -157,12 +158,12 @@
             <div v-if="promotions && promotions.length" class="qf-promo-list">
               <div class="qf-promo" v-for="p in promotions" :key="p.id">
                 <div class="qf-promo__pct">
-                  <span class="qf-promo__num">{{ p.discount }}</span><span class="qf-promo__sym">%</span>
+                  <span class="qf-promo__num">{{ pct(p.discount) }}</span><span class="qf-promo__sym">%</span>
                 </div>
                 <div class="qf-promo__body">
                   <div class="qf-promo__desc">{{ p.description }}</div>
                   <div class="qf-mono qf-promo__dates">
-                    {{ p.start_date }} → {{ p.end_date }}
+                    {{ fmtDate(p.start_date) }} → {{ fmtDate(p.end_date) }}
                   </div>
                 </div>
               </div>
@@ -172,8 +173,10 @@
         </div>
       </div>
     </div>
+    </Teleport>
 
-    <!-- Cart modal (unchanged behavior) -->
+    <!-- Cart modal (teleported to body so the nav's backdrop-filter doesn't trap the fixed overlay) -->
+    <Teleport to="body">
     <div
       class="modal fade bd-cart-modal"
       tabindex="-1"
@@ -229,6 +232,7 @@
         </div>
       </div>
     </div>
+    </Teleport>
   </nav>
 </template>
 
@@ -266,6 +270,16 @@ async function listPromotion() {
   } catch (error) {
     console.log('error getting promotion')
   }
+}
+
+// Discounts may be stored as "34" or "34%" — strip any trailing % so the template's own % isn't doubled.
+function pct(value) {
+  return String(value ?? '').replace(/%\s*$/, '')
+}
+
+// Dates arrive as "2026-05-23 14:49:06"; show just the date for a clean range.
+function fmtDate(value) {
+  return value ? String(value).slice(0, 10) : '—'
 }
 
 async function listbooking() {
