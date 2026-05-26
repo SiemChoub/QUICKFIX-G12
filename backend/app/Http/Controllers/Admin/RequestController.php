@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Http\Controllers\Admin\Concerns\ResolvesBookingDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Booking;
@@ -12,6 +13,8 @@ use App\Models\Service;
 
 class RequestController extends Controller
 {
+    use ResolvesBookingDetail;
+
     //
     public function index()
     {
@@ -38,6 +41,15 @@ class RequestController extends Controller
             'immediatelys'  => $Bookin_immediately,
             'services'      => $service,
         ]);
+    }
+
+    public function show(int $id)
+    {
+        return $this->showBookingDetail($id, [
+            'back' => route('admin.requests.index'),
+            'tab'  => 'Requests',
+            'icon' => 'bx-receipt',
+        ], 'Request access');
     }
 
     // public function destroy(Request $request)

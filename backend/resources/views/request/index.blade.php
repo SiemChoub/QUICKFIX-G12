@@ -78,39 +78,9 @@
 
                                 {{-- Actions --}}
                                 <div class="qf-bk-actions">
-                                    <button class="btn btn-outline-warning btn-sm qf-bk-btn"
-                                        data-bs-toggle="modal" data-bs-target="#bookingDetailsModal"
-                                        data-booking-image="{{ $customer?->profile }}"
-                                        data-booking-stars="{{$service_name}}"
-                                        data-booking-type="{{$booking->type}}"
-                                        data-booking-date="{{$booking_date}}"
-                                        data-booking-deadline="{{$deadline}}"
-                                        data-booking-fixname="{{$fixer_name}}"
-                                        data-booking-customername="{{ $customer?->name ?? 'Unknown user' }}"
-                                        data-booking-customeremail="{{ $customer?->email ?? '—' }}"
-                                        data-booking-customerphone="{{ $customer?->phone ?? '—' }}"
-                                        data-booking-customeraddress="{{ $customer?->address ?? '—' }}"
-                                        @if($fixer)
-                                            data-booking-fixername="{{$fixer->name}}"
-                                            data-booking-fixeremail="{{$fixer->email}}"
-                                            data-booking-fixerphone="{{$fixer->phone}}"
-                                            data-booking-fixeraddress="{{$fixer->address}}"
-                                        @else
-                                            data-booking-fixername="No fixer selected !!"
-                                            data-booking-fixeremail="none"
-                                            data-booking-fixerphone="none"
-                                            data-booking-fixeraddress="none"
-                                        @endif
-                                        @if($customer_message  || $customer_imagesend)
-                                            data-booking-customermessage="{{$customer_message}}"
-                                            data-booking-customerimage="{{$customer_imagesend}}"
-                                            data-booking-nomessage="There are message!!"
-                                        @else
-                                            data-booking-nomessage="No message!!"
-                                        @endif
-                                        data-booking-additional-info="This is additional information about the booking.">
-                                        <i class="bx bx-show"></i> Detail
-                                    </button>
+                                    <a href="{{ route('admin.requests.show', $booking->id) }}" class="btn btn-outline-warning btn-sm qf-bk-btn">
+                                            <i class="bx bx-show"></i> Detail
+                                        </a>
                                     @can('Request delete')
                                         <button type="button" class="btn btn-danger btn-sm qf-bk-btn" onclick="confirmDelete({{ $booking->id }})">
                                             <i class="bx bx-trash"></i> Delete
@@ -137,113 +107,6 @@
             @include('booking._pagination', ['paginator' => $requests, 'default' => 20])
         </div>
     </div>
-
-    <!-- Booking detail modal -->
-    <div class="modal fade" id="bookingDetailsModal" tabindex="-1" aria-labelledby="bookingDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" style="margin-left:350px">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-white">
-                    <h5 class="modal-title" id="bookingDetailsModalLabel">Booking Detail</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" id='close'></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                    <div class="col-md-5" id='image-customer'style='display:none'>
-                        <div class="service-image-container" style="height: 230px;">
-                            <img src="" class="img-fluid rounded" style="object-fit: cover;width:100%;height:100%"  alt="Base64 Image" id="booking-customerSendImage"> 
-                            <span class="bg-warning p-2 border rounded-lg text-white" id='booking-customerMessage'></span>
-                        </div>
-                        <div class="btn mt-5 text-center " id='back'>
-                           <i class="bx bx-arrow-back mr-2 animate-pulse"></i>
-                            Back 
-                        </div>   
-                    </div>
-                    <!-- ---------------------customer profile------------------------ -->
-                        <div class="col-md-5"  id='profile-customer'>
-                            <div class="booking-image-container" style="height: 230px;">
-                                <div class="d-flex align-items-center gap-3  ">
-                                    <img src="" class="card rounded-circle" alt="..." style="height: 5rem; width: 5rem;" alt="Booking Image" id="booking-image">
-                                    <div>
-                                        <h5 id='booking-customerName'></h5>
-                                        <span class="text-gray-600 text-sm" style="font-size: 12px;" id='booking-customerEmail'></span>
-                                    </div>
-                                </div>
-                                <div class="user-details-body mt-4">
-                                    <div class="user-details d-flex align-items-center">
-                                        <i class='bx bxs-user-detail'></i>
-                                        <span class="ms-2"><strong>Role: </strong> <span id="user-role">Custommer</span></span>
-                                    </div>
-                                    <div class="user-details d-flex align-items-center">
-                                        <i class='bx bxs-map'></i>
-                                        <span class="ms-2 mt-3"><strong>Address:</strong> <span  id='booking-customerAddress'></span></span>
-                                    </div>
-                                    <div class="user-details d-flex align-items-center">
-                                        <i class='bx bxs-phone'></i>
-                                        <span class="ms-2 mt-3"><strong>Phone:</strong> <span id='booking-customerPhone'></span></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="btn mt-3 text-center " id='customer_message'>
-                            Custommer Message
-                            </div>
-                            <i class='bx bxs-message-rounded-dots bx-tada text-yellow-300 text-3xl -ml-3' ></i>
-                        </div>
-                        <!-- --------------------------------customer profile end------------------------------- -->
-                        <!-- --------------------------------fixer profile ------------------------------- -->
-                        <div class="col-md-5"  id='profile-fixer' style='display:none'>
-                            <div class="booking-image-container" style="height: 230px;">
-                                <div class="d-flex align-items-center gap-3  ">
-                                    <img src="" class="card rounded-circle" alt="..." style="height: 5rem; width: 5rem;" alt="Booking Image" id="booking-profile">
-                                    <div>
-                                        <h5 id='booking-fixerName'></h5>
-                                        <span class="text-gray-600 text-sm" style="font-size: 12px;" id='booking-fixerEmail'></span>
-                                    </div>
-                                </div>
-                                <div class="user-details-body mt-4">
-                                    <div class="user-details d-flex align-items-center">
-                                        <i class='bx bxs-user-detail'></i>
-                                        <span class="ms-2"><strong>Role: </strong> <span id="user-role">Fixer</span></span>
-                                    </div>
-                                    <div class="user-details d-flex align-items-center">
-                                        <i class='bx bxs-map'></i>
-                                        <span class="ms-2 mt-3"><strong>Address:</strong> <span  id='booking-fixerAddress'></span></span>
-                                    </div>
-                                    <div class="user-details d-flex align-items-center">
-                                        <i class='bx bxs-phone'></i>
-                                        <span class="ms-2 mt-3"><strong>Phone:</strong> <span id='booking-fixerPhone'></span></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="btn  text-center " id='backs'>
-                           <i class="bx bx-arrow-back mr-2 animate-pulse"></i>
-                            Back 
-                        </div>  
-                        </div>
-                        <div class="col-md-7 mt-4" id='booking-info' >
-                            <div class="shadow p-2 " style='background-color: #f8f9fa;'>
-                                <h4 class="text-warning" id="booking-type">
-                                </h4>
-                                <div class="rating mb-3">
-                                    <p><i class='bx bxs-star'></i> <strong>Service: </strong> <span id="booking-stars"></span></p>
-                                </div>  
-                                <div class="booking-details">
-                                    <p><i class='bx bxs-calendar'></i> <strong>Booking date: </strong><span id="booking-date"></span></p>
-                                    <p><i class='bx bxs-calendar-check'></i> <strong>Deadline: </strong><span id="booking-deadline"></span></p>
-                                    <p><i class='bx bxs-user'></i> <strong>Fixer: </strong><span id="booking-fixName"></span><span class="btn text-center" id='fixer_view'><i class="bx bx-right-arrow-alt animate-pulse "style='font-size: 2rem;'></i></span></p>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="additional-info m-3">
-                        <h5><i class='bx bx-info-circle'></i> Additional Information</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -303,64 +166,7 @@
             });
         });
 
-        let close = document.querySelector('#close');
-        let back = document.querySelector('#back');
-        let backs = document.querySelector('#backs');
-        let customer_message = document.querySelector('#customer_message');
-        let image_customer = document.querySelector('#image-customer');
-        let profile_customer = document.querySelector('#profile-customer');
-        let profile_fixer = document.querySelector('#profile-fixer');
-        let booking_info = document.querySelector('#booking-info');
-        let fixer_view = document.querySelector('#fixer_view');
 
-        backs.addEventListener('click', function () {
-            profile_fixer.style.display='none';
-            booking_info.style.display = 'block';
-        });
-        close.addEventListener('click', function () {
-            profile_fixer.style.display='none';
-            booking_info.style.display = 'block';
-        });
-        back.addEventListener('click', function () {
-            image_customer.style.display='none';
-            profile_customer.style.display = 'block';
-        });
-        close.addEventListener('click', function () {
-            image_customer.style.display='none';
-            profile_customer.style.display = 'block';
-        });
-        customer_message.addEventListener('click', function () {
-            image_customer.style.display='block';
-            profile_customer.style.display = 'none';
-        });
-
-        fixer_view.addEventListener('click', function () {
-            profile_fixer.style.display='block';
-            booking_info.style.display = 'none';
-        });
-
-    document.getElementById('bookingDetailsModal').addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        document.getElementById('booking-image').src = button.dataset.bookingImage;
-        document.getElementById('booking-customerSendImage').src = button.dataset.bookingCustomerimage;
-        document.getElementById('customer_message').textContent = button.dataset.bookingNomessage;
-        document.getElementById('booking-stars').textContent = button.dataset.bookingStars;
-        document.getElementById('booking-type').textContent = button.dataset.bookingType;
-        document.getElementById('booking-date').textContent = button.dataset.bookingDate;
-        document.getElementById('booking-deadline').textContent = button.dataset.bookingDeadline;
-        document.getElementById('booking-fixName').textContent = button.dataset.bookingFixname;
-        document.getElementById('booking-customerName').textContent = button.dataset.bookingCustomername;
-        document.getElementById('booking-customerEmail').textContent = button.dataset.bookingCustomeremail; 
-        document.getElementById('booking-customerPhone').textContent = button.dataset.bookingCustomerphone; 
-        document.getElementById('booking-customerAddress').textContent = button.dataset.bookingCustomeraddress; 
-        document.getElementById('booking-customerMessage').textContent = button.dataset.bookingCustomermessage; 
-        document.getElementById('booking-fixerName').textContent = button.dataset.bookingFixername;
-        document.getElementById('booking-fixerEmail').textContent = button.dataset.bookingFixeremail; 
-        document.getElementById('booking-fixerPhone').textContent = button.dataset.bookingFixerphone; 
-        document.getElementById('booking-fixerAddress').textContent = button.dataset.bookingFixeraddress; 
-        document.getElementById('booking-customerMessage').textContent = button.dataset.bookingCustomermessage; 
-        document.getElementById('booking-additional-info').textContent = button.dataset.bookingAdditionalInfo;
-    });
 
     </script>
 </x-app-layout>

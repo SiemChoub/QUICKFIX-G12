@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Http\Controllers\Admin\Concerns\ResolvesBookingDetail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Done;
 use App\Models\Booking;
@@ -13,6 +14,8 @@ use App\Models\FixingProgress;
 
 class DoneController extends Controller
 {
+    use ResolvesBookingDetail;
+
     //
     public function index()
     {
@@ -41,6 +44,15 @@ class DoneController extends Controller
             'services'      => $service,
             'fixing_progress' => $fixing_progress,
         ]);
+    }
+
+    public function show(int $id)
+    {
+        return $this->showBookingDetail($id, [
+            'back' => route('admin.dones.index'),
+            'tab'  => 'Done',
+            'icon' => 'bx-check-circle',
+        ], 'Done access');
     }
 
     public function destroy(int $id)
