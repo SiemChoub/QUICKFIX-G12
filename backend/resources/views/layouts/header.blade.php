@@ -189,6 +189,11 @@
     min-width: 240px; box-shadow: 0 12px 32px rgba(0, 0, 0, .18) !important;
   }
   .qf-dropdown-notif { min-width: 340px; }
+  /* Right-align under the toggle. The header dropdowns are toggled manually, so
+     Bootstrap's .dropdown-menu-end (which needs the [data-bs-popper] attribute)
+     doesn't kick in; this keeps them inside the nav padding instead of running
+     to the viewport edge. */
+  .qf-header .qf-dropdown.dropdown-menu-end { right: 0; left: auto; }
   .qf-dropdown-header {
     font-weight: 700; font-size: .8rem; color: var(--qf-dark);
     padding: .4rem .6rem .6rem; text-transform: uppercase; letter-spacing: .5px;
