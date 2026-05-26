@@ -21,9 +21,9 @@
                     @if(request('per_page'))<input type="hidden" name="per_page" value="{{ request('per_page') }}">@endif
                 </form>
                 @can('Payment create')
-                    <a href="{{ route('admin.payments.create') }}" class="qlist-create">
+                    <button type="button" class="qlist-create" data-bs-toggle="modal" data-bs-target="#paymentCreateModal">
                         <i class='bx bx-plus'></i><span>Create Payment</span>
-                    </a>
+                    </button>
                 @endcan
             </div>
         </header>
@@ -105,6 +105,18 @@
                             <i class='bx bx-time-five'></i> Incomplete
                         @endif
                     </span>
+
+                    @can('Payment edit')
+                        <button type="button" class="qlist-act qlist-act--edit"
+                            data-bs-toggle="modal" data-bs-target="#paymentEditModal"
+                            data-action="{{ route('admin.payments.update', $payment->id) }}"
+                            data-amount="{{ $payment->amount }}"
+                            data-datepay="{{ $payment->datepay ? \Carbon\Carbon::parse($payment->datepay)->format('Y-m-d') : '' }}"
+                            data-dateline="{{ $payment->dateline ? \Carbon\Carbon::parse($payment->dateline)->format('Y-m-d') : '' }}"
+                            data-description="{{ $payment->description }}">
+                            <i class='bx bx-edit-alt'></i><span>Edit</span>
+                        </button>
+                    @endcan
                 </div>
             @empty
                 <div class="qlist-empty">
@@ -117,6 +129,56 @@
         @include('booking._pagination', ['paginator' => $payments, 'default' => 20])
         @endcan
     </div>
+
+    {{-- Create modal --}}
+    @can('Payment create')
+    <div class="modal fade" id="paymentCreateModal" tabindex="-1" aria-labelledby="paymentCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentCreateModalLabel"><i class='bx bxs-credit-card'></i> Create Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.payments.store') }}">
+                    @csrf
+                    <div class="modal-body qpay-form">
+                        <p class="qpay-form__note"><i class='bx bx-info-circle'></i> Generates payslips for every fixer with completed jobs in the chosen pay-date month.</p>
+                        @include('payments._form-fields', ['uid' => 'create'])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="qpay-btn qpay-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="qpay-btn qpay-btn--primary"><i class='bx bx-check'></i> Create Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    {{-- Edit modal (same form component as Create; filled via JS from the card's data-* attributes) --}}
+    @can('Payment edit')
+    <div class="modal fade" id="paymentEditModal" tabindex="-1" aria-labelledby="paymentEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentEditModalLabel"><i class='bx bx-edit-alt'></i> Edit Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="" id="paymentEditForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body qpay-form">
+                        @include('payments._form-fields', ['uid' => 'edit'])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="qpay-btn qpay-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="qpay-btn qpay-btn--primary"><i class='bx bx-check'></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
 
     <style>
         /* ===== Toolbar ===== */
@@ -192,9 +254,40 @@
         .qpay-card--no   .qpay-status { color: #d97706; background: #fff7ed; }
         .qpay-status i { font-size: .95rem; }
 
+        /* ===== Create/Edit form (inside modal) ===== */
+        .qpay-form { display: flex; flex-direction: column; gap: 1rem; }
+        .qpay-form__note {
+            display: flex; align-items: center; gap: .4rem; margin: 0;
+            font-size: .8rem; color: #b45309; background: #fff7ed; border: 1px solid #fed7aa;
+            padding: .55rem .8rem; border-radius: 10px;
+        }
+        .qpay-field { display: flex; flex-direction: column; gap: .35rem; }
+        .qpay-field label { font-size: .82rem; font-weight: 600; color: #374151; }
+        .qpay-field input, .qpay-field textarea {
+            width: 100%; border: 1px solid #e5e7eb; border-radius: 10px; padding: .6rem .8rem;
+            font-size: .9rem; color: #111827; outline: 0; background: #fff;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .qpay-field input:focus, .qpay-field textarea:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+        .qpay-field textarea { resize: vertical; }
+        .qpay-field__error { color: #e11d48; font-size: .75rem; }
+        .qpay-field-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+        .qlist-modal .modal-footer { border-top: 1px solid #f1f5f9; gap: .5rem; }
+        .qpay-btn {
+            display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .88rem;
+            padding: .6rem 1.1rem; border-radius: 10px; border: 1px solid transparent; cursor: pointer;
+            transition: filter .15s ease, background .15s ease, color .15s ease;
+        }
+        .qpay-btn i { font-size: 1.1rem; }
+        .qpay-btn--ghost { background: #f1f5f9; color: #475569; }
+        .qpay-btn--ghost:hover { background: #e2e8f0; }
+        .qpay-btn--primary { background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff; box-shadow: 0 6px 16px rgba(245,158,11,.32); }
+        .qpay-btn--primary:hover { filter: brightness(1.05); }
+
         @media (max-width: 720px) {
             .qpay-figure, .qpay-dates { width: 100%; }
             .qpay-status { margin-left: 0; }
+            .qpay-field-row { grid-template-columns: 1fr; }
         }
         @media (max-width: 560px) { .qlist-head__actions { width: 100%; } .qlist-search { flex: 1; min-width: 0; } }
     </style>
@@ -203,9 +296,30 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        // Fill the Edit modal from the clicked card's data, and point the form at the right record
+        const paymentEditModal = document.getElementById('paymentEditModal');
+        if (paymentEditModal) {
+            paymentEditModal.addEventListener('show.bs.modal', function (event) {
+                const b = event.relatedTarget;
+                if (!b) return;
+                document.getElementById('paymentEditForm').action  = b.dataset.action || '';
+                document.getElementById('edit-amount').value       = b.dataset.amount || '';
+                document.getElementById('edit-datepay').value      = b.dataset.datepay || '';
+                document.getElementById('edit-dateline').value     = b.dataset.dateline || '';
+                document.getElementById('edit-description').value  = b.dataset.description || '';
+            });
+        }
+    </script>
+
     @if(session('showAlertCreate'))
     <script>
         Swal.fire({ title: 'Payment created successfully!', text: '{{ session("success") }}', icon: 'success', confirmButtonText: 'OK', confirmButtonColor: '#ff9800', showCloseButton: true });
+    </script>
+    @endif
+    @if(session('showAlertEdit'))
+    <script>
+        Swal.fire({ title: 'Payment edited successfully!', text: '{{ session("success") }}', icon: 'success', confirmButtonText: 'OK', confirmButtonColor: '#ff9800', showCloseButton: true });
     </script>
     @endif
     @if(session('showAlertNo'))

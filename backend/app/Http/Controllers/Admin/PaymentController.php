@@ -157,14 +157,14 @@ class PaymentController extends Controller
          return view('payments.edit', ['payment'=>$payment]);
      }
     public function update(Request $request, Payments $payment){
-    
-        //
-        // $payment = Payments::find($id);
-        // $payment->price = $request->price;
-        // $payment->deadline = $request->deadline;
-        // $payment->description = $request->description;
-        // $payment->save();
-        $payment->update($request->all());
+        $data = $request->only(['amount', 'datepay', 'dateline', 'description']);
+
+        // Keep the total in sync with the (possibly changed) rate.
+        if (array_key_exists('amount', $data)) {
+            $data['total'] = (float) $data['amount'] * (int) $payment->number_fixed;
+        }
+
+        $payment->update($data);
         return redirect('admin/payments')->with('showAlertEdit', true);
     }
 

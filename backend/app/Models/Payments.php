@@ -13,11 +13,14 @@ class Payments extends Model
 
     protected $fillable =
     [
-        // 'user_id',
-        'price',
-        'deadline',
+        'fixer_id',
+        'amount',
+        'number_fixed',
+        'total',
+        'datepay',
+        'dateline',
         'description',
-        // 'status',
+        'status',
     ];
 
     public function user():BelongsToMany {

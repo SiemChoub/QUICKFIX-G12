@@ -24,8 +24,9 @@ class UserController extends Controller
         $perPage = (int) request('per_page', 20);
         $perPage = in_array($perPage, [5, 10, 20, 50, 100], true) ? $perPage : 20;
         $users = User::paginate($perPage);
+        $roles = Role::all();
 
-        return view('setting.user.index', ['users' => $users]);
+        return view('setting.user.index', ['users' => $users, 'roles' => $roles]);
     }
 
     public function create()

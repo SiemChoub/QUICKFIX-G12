@@ -18,9 +18,9 @@
                     <input type="text" id="search-input" placeholder="Search users…" aria-label="Search users">
                 </div>
                 @can('User create')
-                    <a href="{{ route('admin.users.create') }}" class="qlist-create">
+                    <button type="button" class="qlist-create" data-bs-toggle="modal" data-bs-target="#userCreateModal">
                         <i class='bx bx-plus'></i><span>Create New</span>
-                    </a>
+                    </button>
                 @endcan
             </div>
         </header>
@@ -74,9 +74,18 @@
                             <i class='bx bx-detail'></i><span>Details</span>
                         </button>
                         @can('User edit')
-                            <a href="{{ route('admin.users.edit', $user->id) }}" class="qlist-act qlist-act--edit">
+                            <button type="button" class="qlist-act qlist-act--edit"
+                                data-bs-toggle="modal" data-bs-target="#userEditModal"
+                                data-action="{{ route('admin.users.update', $user->id) }}"
+                                data-name="{{ $user->name }}"
+                                data-email="{{ $user->email }}"
+                                data-phone="{{ $user->phone }}"
+                                data-address="{{ $user->address }}"
+                                data-role="{{ $user->role }}"
+                                data-profile="{{ $user->profile }}"
+                                data-initials="{{ $initials }}">
                                 <i class='bx bx-edit-alt'></i><span>Edit</span>
-                            </a>
+                            </button>
                         @endcan
                         @can('User delete')
                             <button type="button" class="qlist-act qlist-act--del" onclick="confirmDelete({{ $user->id }})">
@@ -129,6 +138,55 @@
             </div>
         </div>
     </div>
+
+    {{-- ===== Create modal ===== --}}
+    @can('User create')
+    <div class="modal fade" id="userCreateModal" tabindex="-1" aria-labelledby="userCreateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userCreateModalLabel"><i class='bx bxs-user-plus'></i> Create User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body quser-form">
+                        @include('setting.user._form-fields', ['uid' => 'create', 'mode' => 'create', 'roles' => $roles])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="quser-btn quser-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="quser-btn quser-btn--primary"><i class='bx bx-check'></i> Create User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    {{-- ===== Edit modal (same form component as Create; filled via JS from the row's data-* attributes) ===== --}}
+    @can('User edit')
+    <div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content qlist-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userEditModalLabel"><i class='bx bx-edit-alt'></i> Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="" id="userEditForm" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body quser-form">
+                        @include('setting.user._form-fields', ['uid' => 'edit', 'mode' => 'edit', 'roles' => $roles])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="quser-btn quser-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="quser-btn quser-btn--primary"><i class='bx bx-check'></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
 
     <style>
         .quser-page { padding: 1.75rem 1.5rem 2.5rem; }
@@ -245,12 +303,53 @@
         .quser-modal__meta i { font-size: 1.1rem; color: #f59e0b; }
         .quser-modal__meta strong { color: #1f2937; width: 100%; word-break: break-word; }
 
+        /* ===== Create/Edit form (inside modal) ===== */
+        .quser-form { display: flex; flex-direction: column; gap: 1rem; }
+        .quser-field { display: flex; flex-direction: column; gap: .35rem; }
+        .quser-field label { font-size: .82rem; font-weight: 600; color: #374151; }
+        .quser-field input, .quser-field select {
+            width: 100%; border: 1px solid #e5e7eb; border-radius: 10px; padding: .6rem .8rem;
+            font-size: .9rem; color: #111827; outline: 0; background: #fff;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .quser-field input:focus, .quser-field select:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
+        .quser-field__error { color: #e11d48; font-size: .75rem; }
+        .quser-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .quser-form__avatar { display: flex; align-items: center; gap: 1rem; }
+        .quser-form__avatar-img {
+            width: 76px; height: 76px; border-radius: 50%; object-fit: cover;
+            border: 3px solid #f59e0b; box-shadow: 0 4px 12px rgba(0,0,0,.1); background: #f3f4f6; flex-shrink: 0;
+        }
+        .quser-form__avatar-body { display: flex; flex-direction: column; gap: .25rem; }
+        .quser-form__avatar-body label { font-size: .82rem; font-weight: 600; color: #374151; }
+        .quser-form__file { font-size: .85rem; color: #4b5563; }
+        .quser-form__file::file-selector-button {
+            margin-right: .6rem; padding: .4rem .8rem; border: 0; border-radius: 8px;
+            background: #ffc107; color: #1b1f24; font-weight: 600; font-size: .82rem; cursor: pointer;
+            transition: filter .15s ease;
+        }
+        .quser-form__file::file-selector-button:hover { filter: brightness(.95); }
+        .quser-form__hint { font-size: .72rem; color: #9ca3af; margin: 0; }
+        .quser-form__showpass { display: inline-flex; align-items: center; gap: .4rem; font-size: .82rem; color: #4b5563; cursor: pointer; }
+        .qlist-modal .modal-footer { border-top: 1px solid #f1f5f9; gap: .5rem; }
+        .quser-btn {
+            display: inline-flex; align-items: center; gap: .4rem; font-weight: 600; font-size: .88rem;
+            padding: .6rem 1.1rem; border-radius: 10px; border: 1px solid transparent; cursor: pointer;
+            transition: filter .15s ease, background .15s ease, color .15s ease;
+        }
+        .quser-btn i { font-size: 1.1rem; }
+        .quser-btn--ghost { background: #f1f5f9; color: #475569; }
+        .quser-btn--ghost:hover { background: #e2e8f0; }
+        .quser-btn--primary { background: linear-gradient(135deg, #f59e0b, #f97316); color: #fff; box-shadow: 0 6px 16px rgba(245,158,11,.32); }
+        .quser-btn--primary:hover { filter: brightness(1.05); }
+
         @media (max-width: 560px) {
             .qlist-head__actions { width: 100%; }
             .qlist-search { flex: 1; min-width: 0; }
             .quser-role { display: none; }
             .qlist-act span { display: none; }
             .quser-modal__meta { grid-template-columns: 1fr; }
+            .quser-field-row { grid-template-columns: 1fr; }
         }
     </style>
 
@@ -280,6 +379,41 @@
             else { img.style.display = 'none'; fb.style.display = 'grid'; }
         });
 
+        // Fill the Edit modal from the clicked row's data, and point the form at the right record
+        const userEditModal = document.getElementById('userEditModal');
+        if (userEditModal) {
+            userEditModal.addEventListener('show.bs.modal', function (event) {
+                const b = event.relatedTarget;
+                if (!b) return;
+                document.getElementById('userEditForm').action = b.dataset.action || '';
+                document.getElementById('edit-name').value    = b.dataset.name || '';
+                document.getElementById('edit-email').value   = b.dataset.email || '';
+                document.getElementById('edit-phone').value   = b.dataset.phone || '';
+                document.getElementById('edit-address').value = b.dataset.address || '';
+                const sel = document.getElementById('edit-role');
+                if (sel) sel.value = b.dataset.role || '';
+                // Reset the file input — update() keeps the existing photo unless a new file is chosen
+                const file = document.getElementById('edit-profile');
+                if (file) file.value = '';
+                // Show the current photo (or a generated avatar) in the preview
+                const prev = document.getElementById('edit-profile-preview');
+                if (prev) {
+                    prev.src = b.dataset.profile
+                        || ('https://ui-avatars.com/api/?name=' + encodeURIComponent(b.dataset.name || 'User') + '&background=f59e0b&color=fff&bold=true');
+                }
+            });
+        }
+
+        // Live profile-photo preview for any file input flagged with data-preview (create + edit modals)
+        document.querySelectorAll('input[type=file][data-preview]').forEach(function (inp) {
+            inp.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const prev = document.getElementById(inp.dataset.preview);
+                if (prev) prev.src = URL.createObjectURL(file);
+            });
+        });
+
         (function () {
             const input = document.getElementById('search-input');
             const empty = document.getElementById('user-empty');
@@ -296,6 +430,15 @@
             });
         })();
     </script>
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const el = document.getElementById('userCreateModal');
+            if (el) new bootstrap.Modal(el).show();
+        });
+    </script>
+    @endif
 
     @foreach (['showAlertCreate' => 'created', 'showAlertEdit' => 'edited', 'showAlertDelete' => 'deleted'] as $flag => $verb)
         @if(session($flag))

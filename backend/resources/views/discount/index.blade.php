@@ -78,9 +78,15 @@
                             <i class='bx bx-detail'></i><span>Details</span>
                         </button>
                         @can('Discount edit')
-                            <a href="{{ route('admin.discounts.edit', $discount->id) }}" class="qdisc-act qdisc-act--edit">
+                            <button type="button" class="qdisc-act qdisc-act--edit"
+                                data-bs-toggle="modal" data-bs-target="#discountEditModal"
+                                data-action="{{ route('admin.discounts.update', $discount->id) }}"
+                                data-discount="{{ $discount->discount }}"
+                                data-description="{{ $discount->description }}"
+                                data-start="{{ $start ? $start->format('Y-m-d') : '' }}"
+                                data-end="{{ $end ? $end->format('Y-m-d') : '' }}">
                                 <i class='bx bx-edit-alt'></i><span>Edit</span>
-                            </a>
+                            </button>
                         @endcan
                         @can('Discount delete')
                             <button type="button" class="qdisc-act qdisc-act--del" onclick="confirmDelete({{ $discount->id }})">
@@ -140,30 +146,36 @@
                 <form method="POST" action="{{ route('admin.discounts.store') }}">
                     @csrf
                     <div class="modal-body qdisc-form">
-                        <div class="qdisc-field">
-                            <label for="create-discount">Discount (%)</label>
-                            <input id="create-discount" type="number" name="discount" min="0" max="100"
-                                   value="{{ old('discount') }}" placeholder="e.g. 25" required>
-                        </div>
-                        <div class="qdisc-field">
-                            <label for="create-description">Description</label>
-                            <textarea id="create-description" name="description" rows="3"
-                                      placeholder="Enter description">{{ old('description') }}</textarea>
-                        </div>
-                        <div class="qdisc-field-row">
-                            <div class="qdisc-field">
-                                <label for="create-start_date">Start Date</label>
-                                <input id="create-start_date" type="date" name="start_date" value="{{ old('start_date') }}">
-                            </div>
-                            <div class="qdisc-field">
-                                <label for="create-end_date">End Date</label>
-                                <input id="create-end_date" type="date" name="end_date" value="{{ old('end_date') }}">
-                            </div>
-                        </div>
+                        @include('discount._form-fields', ['uid' => 'create'])
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="qdisc-btn qdisc-btn--ghost" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="qdisc-btn qdisc-btn--primary"><i class='bx bx-check'></i> Create Discount</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endcan
+
+    {{-- ===== Edit modal (same form component as Create; filled via JS from the row's data-* attributes) ===== --}}
+    @can('Discount edit')
+    <div class="modal fade" id="discountEditModal" tabindex="-1" aria-labelledby="discountEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content qdisc-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="discountEditModalLabel"><i class='bx bx-edit-alt'></i> Edit Discount</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="" id="discountEditForm">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-body qdisc-form">
+                        @include('discount._form-fields', ['uid' => 'edit'])
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="qdisc-btn qdisc-btn--ghost" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="qdisc-btn qdisc-btn--primary"><i class='bx bx-check'></i> Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -326,6 +338,7 @@
         }
         .qdisc-field input:focus, .qdisc-field textarea:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.15); }
         .qdisc-field textarea { resize: vertical; }
+        .qdisc-field__error { color: #e11d48; font-size: .75rem; }
         .qdisc-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .qdisc-modal .modal-footer { border-top: 1px solid #f1f5f9; gap: .5rem; }
         .qdisc-btn {
@@ -377,6 +390,20 @@
             document.getElementById('discount-start_date').textContent  = b.dataset.discountStart_date;
             document.getElementById('discount-end_date').textContent    = b.dataset.discountEnd_date;
         });
+
+        // Fill the Edit modal from the clicked row's data, and point the form at the right record
+        const discountEditModal = document.getElementById('discountEditModal');
+        if (discountEditModal) {
+            discountEditModal.addEventListener('show.bs.modal', function (event) {
+                const b = event.relatedTarget;
+                if (!b) return;
+                document.getElementById('discountEditForm').action  = b.dataset.action || '';
+                document.getElementById('edit-discount').value      = b.dataset.discount || '';
+                document.getElementById('edit-description').value   = b.dataset.description || '';
+                document.getElementById('edit-start_date').value    = b.dataset.start || '';
+                document.getElementById('edit-end_date').value      = b.dataset.end || '';
+            });
+        }
 
         // Live search across cards
         (function () {
