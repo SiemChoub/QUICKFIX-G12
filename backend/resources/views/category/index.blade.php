@@ -26,18 +26,27 @@
         </header>
 
         @can('Category access')
-        <div class="qcat-grid" id="category-list">
+        <div class="qcat-list" id="category-list">
             @foreach ($categories as $i => $category)
-                <article class="qcat-card" style="animation-delay: {{ $i * 55 }}ms"
+                <article class="qcat-row" style="animation-delay: {{ $i * 45 }}ms"
                          data-search="{{ strtolower($category->name . ' ' . $category->description) }}">
-                    <div class="qcat-card__head">
-                        <span class="qcat-icon"><i class='bx bxs-category-alt'></i></span>
-                        <h3 class="qcat-name">{{ $category->name }}</h3>
+                    <div class="qcat-thumb">
+                        @if($category->image)
+                            <img src="{{ $category->image }}" alt="{{ $category->name }}"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+                            <span class="qcat-thumb__fallback" style="display:none"><i class='bx bxs-category-alt'></i></span>
+                        @else
+                            <span class="qcat-thumb__fallback"><i class='bx bxs-category-alt'></i></span>
+                        @endif
                     </div>
-                    <p class="qcat-desc">{{ $category->description ?: 'No description provided.' }}</p>
+                    <div class="qcat-row__body">
+                        <h3 class="qcat-name">{{ $category->name }}</h3>
+                        <p class="qcat-desc">{{ $category->description ?: 'No description provided.' }}</p>
+                    </div>
                     <div class="qcat-actions">
                         <button type="button" class="qlist-act qlist-act--info"
                             data-bs-toggle="modal" data-bs-target="#categoryDetailsModal"
+                            data-category-image="{{ $category->image }}"
                             data-category-title="{{ $category->name }}"
                             data-category-description="{{ $category->description }}">
                             <i class='bx bx-detail'></i><span>Details</span>
@@ -80,7 +89,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="qcat-modal__hero">
-                        <span class="qcat-icon qcat-icon--lg"><i class='bx bxs-category-alt'></i></span>
+                        <div class="qcat-modal__img">
+                            <img src="" alt="" id="category-image" onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+                            <span class="qcat-modal__imgfallback" style="display:none"><i class='bx bxs-category-alt'></i></span>
+                        </div>
                         <h4 id="category-title">—</h4>
                     </div>
                     <p class="qcat-modal__desc" id="category-description">—</p>
@@ -90,34 +102,47 @@
     </div>
 
     <style>
-        .qcat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.1rem; }
-        .qcat-card {
-            background: #fff; border: 1px solid #eef0f4; border-radius: 16px; padding: 1.25rem;
-            display: flex; flex-direction: column; gap: .85rem; position: relative; overflow: hidden;
+        .qcat-list { display: flex; flex-direction: column; gap: .7rem; }
+        .qcat-row {
+            background: #fff; border: 1px solid #eef0f4; border-radius: 14px; padding: .85rem 1rem;
+            display: flex; align-items: center; gap: 1rem;
             transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
-            opacity: 0; transform: translateY(10px);
-            animation: qcat-in .5s cubic-bezier(.16,.84,.44,1) forwards;
+            opacity: 0; transform: translateY(8px);
+            animation: qcat-in .45s cubic-bezier(.16,.84,.44,1) forwards;
         }
         @keyframes qcat-in { to { opacity: 1; transform: translateY(0); } }
-        .qcat-card:hover { border-color: #e2e5ea; box-shadow: 0 14px 32px rgba(17,24,39,.1); transform: translateY(-3px); }
-        .qcat-card__head { display: flex; align-items: center; gap: .8rem; }
-        .qcat-icon {
-            width: 48px; height: 48px; border-radius: 13px; flex-shrink: 0;
-            display: grid; place-items: center; font-size: 1.6rem; color: #d97706;
+        .qcat-row:hover { border-color: #e2e5ea; box-shadow: 0 10px 24px rgba(17,24,39,.08); transform: translateY(-2px); }
+
+        .qcat-thumb {
+            width: 58px; height: 58px; border-radius: 13px; flex-shrink: 0; overflow: hidden;
             background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa;
         }
-        .qcat-icon--lg { width: 60px; height: 60px; font-size: 2rem; border-radius: 16px; }
-        .qcat-name { font-size: 1.05rem; font-weight: 700; color: #1f2937; margin: 0; }
+        .qcat-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .qcat-thumb__fallback { width: 100%; height: 100%; display: grid; place-items: center; font-size: 1.7rem; color: #d97706; }
+
+        .qcat-row__body { flex: 1; min-width: 0; }
+        .qcat-name { font-size: 1.02rem; font-weight: 700; color: #1f2937; margin: 0 0 .15rem; }
         .qcat-desc {
-            margin: 0; color: #6b7280; font-size: .88rem; line-height: 1.5; flex: 1;
-            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; min-height: 3.9em;
+            margin: 0; color: #6b7280; font-size: .85rem; line-height: 1.45;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
-        .qcat-actions { display: flex; gap: .45rem; }
-        .qcat-actions .qlist-act { flex: 1; }
+        .qcat-actions { display: flex; gap: .45rem; flex-shrink: 0; }
+
         .qcat-modal__hero { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .qcat-modal__img {
+            width: 70px; height: 70px; border-radius: 16px; overflow: hidden; flex-shrink: 0;
+            background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa;
+        }
+        .qcat-modal__img img { width: 100%; height: 100%; object-fit: cover; }
+        .qcat-modal__imgfallback { width: 100%; height: 100%; display: grid; place-items: center; font-size: 2rem; color: #d97706; }
         .qcat-modal__hero h4 { margin: 0; font-size: 1.3rem; font-weight: 800; color: #111827; }
         .qcat-modal__desc { color: #4b5563; font-size: .95rem; line-height: 1.6; margin: 0; }
-        @media (max-width: 560px) { .qcat-actions .qlist-act span { display: inline; } }
+
+        @media (max-width: 560px) {
+            .qcat-row { flex-wrap: wrap; }
+            .qcat-actions { width: 100%; }
+            .qcat-actions .qlist-act { flex: 1; }
+        }
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -136,6 +161,10 @@
             const b = event.relatedTarget;
             document.getElementById('category-title').textContent = b.dataset.categoryTitle;
             document.getElementById('category-description').textContent = b.dataset.categoryDescription || 'No description provided.';
+            const img = document.getElementById('category-image');
+            const fb  = img.nextElementSibling;
+            if (b.dataset.categoryImage) { img.src = b.dataset.categoryImage; img.style.display = ''; fb.style.display = 'none'; }
+            else { img.style.display = 'none'; fb.style.display = 'grid'; }
         });
 
         (function () {
@@ -145,9 +174,9 @@
             input.addEventListener('input', function () {
                 const q = this.value.toLowerCase().trim();
                 let shown = 0;
-                document.querySelectorAll('#category-list .qcat-card').forEach(card => {
-                    const match = card.dataset.search.includes(q);
-                    card.style.display = match ? '' : 'none';
+                document.querySelectorAll('#category-list .qcat-row').forEach(row => {
+                    const match = row.dataset.search.includes(q);
+                    row.style.display = match ? '' : 'none';
                     if (match) shown++;
                 });
                 if (empty) empty.hidden = shown !== 0;

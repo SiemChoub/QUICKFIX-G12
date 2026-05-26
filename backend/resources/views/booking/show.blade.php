@@ -12,7 +12,7 @@
         };
         $avatar = fn ($u, $bg) => $u && filled($u->profile)
             ? $u->profile
-            : 'https://ui-avatars.com/api/?name=' . urlencode($u->name ?? 'User') . "&background={$bg}&color=fff&bold=true";
+            : 'https://ui-avatars.com/api/?name=' . urlencode($u?->name ?? 'User') . "&background={$bg}&color=fff&bold=true";
     @endphp
 
     <div class="container-fluid px-4 py-4 qf-detail">
@@ -29,7 +29,7 @@
                     @else
                         <span class="qf-tag qf-tag-deadline"><i class='bx bxs-calendar'></i> Deadline</span>
                     @endif
-                    <span class="qf-tag qf-tag-status">{{ ucfirst($progress->action ?? $booking->action) }}</span>
+                    <span class="qf-tag qf-tag-status">{{ ucfirst($progress?->action ?? $booking->action) }}</span>
                 </div>
             </div>
         </div>
@@ -42,20 +42,20 @@
                     <div class="qf-card-body">
                         <div class="qf-person">
                             <img src="{{ $avatar($customer, 'f59e0b') }}"
-                                 onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($customer->name ?? 'User') }}&background=f59e0b&color=fff&bold=true'"
+                                 onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($customer?->name ?? 'User') }}&background=f59e0b&color=fff&bold=true'"
                                  class="qf-person-avatar" alt="customer">
                             <div>
-                                <div class="qf-person-name">{{ $show($customer->name ?? null) }}</div>
-                                <div class="qf-person-sub">{{ $show($customer->email ?? null) }}</div>
+                                <div class="qf-person-name">{{ $show($customer?->name ?? null) }}</div>
+                                <div class="qf-person-sub">{{ $show($customer?->email ?? null) }}</div>
                             </div>
                         </div>
                         <dl class="qf-fields">
-                            <div><dt><i class='bx bxs-user-detail'></i> Role</dt><dd>{{ $show($customer->role ?? null) }}</dd></div>
-                            <div><dt><i class='bx bxs-phone'></i> Phone</dt><dd>{{ $show($customer->phone ?? null) }}</dd></div>
-                            <div><dt><i class='bx bxs-map'></i> Address</dt><dd>{{ $show($customer->address ?? null) }}</dd></div>
-                            <div><dt><i class='bx bx-briefcase'></i> Career</dt><dd>{{ $show($customer->career ?? null) }}</dd></div>
-                            <div><dt><i class='bx bx-map-pin'></i> Location</dt><dd>{{ $show($customer->location ?? null) }}</dd></div>
-                            <div><dt><i class='bx bx-calendar-plus'></i> Joined</dt><dd>{{ $date($customer->created_at ?? null) }}</dd></div>
+                            <div><dt><i class='bx bxs-user-detail'></i> Role</dt><dd>{{ $show($customer?->role ?? null) }}</dd></div>
+                            <div><dt><i class='bx bxs-phone'></i> Phone</dt><dd>{{ $show($customer?->phone ?? null) }}</dd></div>
+                            <div><dt><i class='bx bxs-map'></i> Address</dt><dd>{{ $show($customer?->address ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-briefcase'></i> Career</dt><dd>{{ $show($customer?->career ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-map-pin'></i> Location</dt><dd>{{ $show($customer?->location ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-calendar-plus'></i> Joined</dt><dd>{{ $date($customer?->created_at ?? null) }}</dd></div>
                         </dl>
                     </div>
                 </div>
@@ -124,19 +124,19 @@
                     <div class="qf-card-head"><i class='bx bx-detail'></i> Request Details</div>
                     <div class="qf-card-body">
                         <dl class="qf-fields">
-                            <div class="qf-field-wide"><dt><i class='bx bxs-message-rounded-dots'></i> Message</dt><dd>{{ $show($detail->message ?? null) }}</dd></div>
+                            <div class="qf-field-wide"><dt><i class='bx bxs-message-rounded-dots'></i> Message</dt><dd>{{ $show($detail?->message ?? null) }}</dd></div>
                             <div>
                                 <dt><i class='bx bxs-calendar-check'></i> {{ $booking->type === 'immediately' ? 'Deadline' : 'Scheduled date' }}</dt>
-                                <dd>{{ $booking->type === 'immediately' ? 'Fix now' : $date($detail->date ?? null, 'd M Y') }}</dd>
+                                <dd>{{ $booking->type === 'immediately' ? 'Fix now' : $date($detail?->date ?? null, 'd M Y') }}</dd>
                             </div>
-                            <div><dt><i class='bx bx-purchase-tag'></i> Promotion ID</dt><dd>{{ $show($detail->promotion_id ?? null) }}</dd></div>
-                            <div><dt><i class='bx bx-current-location'></i> Latitude</dt><dd>{{ $show($detail->latitude ?? null) }}</dd></div>
-                            <div><dt><i class='bx bx-current-location'></i> Longitude</dt><dd>{{ $show($detail->longitude ?? null) }}</dd></div>
-                            <div><dt><i class='bx bx-calendar'></i> Requested at</dt><dd>{{ $date($detail->created_at ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-purchase-tag'></i> Promotion ID</dt><dd>{{ $show($detail?->promotion_id ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-current-location'></i> Latitude</dt><dd>{{ $show($detail?->latitude ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-current-location'></i> Longitude</dt><dd>{{ $show($detail?->longitude ?? null) }}</dd></div>
+                            <div><dt><i class='bx bx-calendar'></i> Requested at</dt><dd>{{ $date($detail?->created_at ?? null) }}</dd></div>
                         </dl>
-                        @if ($detail && filled($detail->latitude) && filled($detail->longitude))
+                        @if ($detail && filled($detail?->latitude) && filled($detail?->longitude))
                             <a class="qf-map-link" target="_blank" rel="noopener"
-                               href="https://www.google.com/maps?q={{ $detail->latitude }},{{ $detail->longitude }}">
+                               href="https://www.google.com/maps?q={{ $detail?->latitude }},{{ $detail?->longitude }}">
                                 <i class='bx bx-map'></i> Open location in Google Maps
                             </a>
                         @endif
